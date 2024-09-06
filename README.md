@@ -43,16 +43,38 @@ Discuss what you need to develop this project. This includes background informat
         <a href="https://github.com/ApplebaumIan">
             <img src="https://avatars.githubusercontent.com/u/9451941?v=4" width="100;" alt="ApplebaumIan"/>
             <br />
-            <sub><b>Ian Tyler Applebaum</b></sub>
+            <sub><b>Jordan</b></sub>
         </a>
     </td>
     <td align="center">
         <a href="https://github.com/leighflagg">
             <img src="https://avatars.githubusercontent.com/u/77810293?v=4" width="100;" alt="leighflagg"/>
             <br />
-            <sub><b>Null</b></sub>
+            <sub><b>Barry</b></sub>
         </a>
-    </td></tr>
+    </td>
+    <td align="center">
+        <a href="https://github.com/ApplebaumIan">
+            <img src="https://avatars.githubusercontent.com/u/9451941?v=4" width="100;" alt="ApplebaumIan"/>
+            <br />
+            <sub><b>Alyssa</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/ApplebaumIan">
+            <img src="https://avatars.githubusercontent.com/u/9451941?v=4" width="100;" alt="ApplebaumIan"/>
+            <br />
+            <sub><b>Iskra</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/ApplebaumIan">
+            <img src="https://avatars.githubusercontent.com/u/9451941?v=4" width="100;" alt="ApplebaumIan"/>
+            <br />
+            <sub><b>Madison</b></sub>
+        </a>
+    </td>
+</tr>
 </table>
 
 [//]: # ( readme: collaborators -end )
