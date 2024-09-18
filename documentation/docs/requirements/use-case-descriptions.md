@@ -4,12 +4,12 @@ sidebar_position: 5
 
 # Use-case descriptions
 # Use-Case 1
-A student wants to finish a challenging operating systems lab assignment. (Boss battle) 
+A student wants to finish a large assignment. (Boss battle) 
 1. After logging into the app and Canvas, the user clicks on a rpg theme to start.
 2. User is then directed to a map with their avatar to navigate the world 
-3. User taps on the quest finder to help reach the npc quest giver .
-4. Users can read the story dialogue made from ChatGPT or choose to skip .
-5. The user then navigates around the map trying to get to the Boss aka the OS lab .
+3. User taps on the quest finder to help reach the npc quest giver.
+4. Users can read the story dialogue made from ChatGPT or choose to skip.
+5. The user then navigates around the map trying to get to the Boss.
 6. Once the user gets to the boss, a pomodoro timer will be shown and activated.
 
 # Use-Case 2
