@@ -24,4 +24,10 @@ Entity-relation diagram.
 
 Table design.
 
+# Entity Relationship (ER) Diagram
+![ER_Diagram](ERD.png) 
+
+# Relational Diagram
+![Relational](Relational.webp) 
+
 A check list for architecture design is attached here [architecture\_design\_checklist.pdf](https://templeu.instructure.com/courses/106563/files/16928870/download?wrap=1 "architecture_design_checklist.pdf")  and should be used as a guidance.
