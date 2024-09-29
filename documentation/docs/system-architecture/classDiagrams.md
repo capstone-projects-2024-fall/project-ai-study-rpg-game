@@ -6,6 +6,130 @@ sidebar_position: 2
 # Class Diagrams
 
 ## Front End Class Diagram
+```mermaid 
+classDiagram 
+
+  class App{
+  
+  }
+
+  class LoginPage{
+
+  }
+  class SignupPage{
+    
+  }
+
+  class CustomizeCharacterPage{
+    
+  }
+  class TutorialPage{
+    
+  }
+
+  class MainMenuPage{
+
+  }
+  
+  class AssignmentsPage{
+
+  }
+
+  class ProgressPage{
+
+  }
+  class AssignmentListPage{
+
+  }
+  class AssignmentSettingsPage{
+
+  }
+
+  class MapPage{
+
+  }
+  
+  class MapBanner{
+
+  }
+  class NotesPage{
+
+  }
+  class MapHelp{
+
+  }
+
+  class QuestPage{
+
+  }
+  class QuestBanner{
+
+  }
+
+
+
+  class CharacterPage{
+
+  } 
+  class StorePage{
+    
+  }
+
+  class MainMenuSettingsPage{
+
+  }
+  class MainMenuHelpPage{
+
+  }
+
+
+
+
+  App<|--LoginPage
+  App<|--SignupPage
+
+
+  LoginPage<|--MainMenuPage
+  SignupPage<|--CustomizeCharacterPage
+  SignupPage<|--TutorialPage
+  SignupPage<|--MainMenuPage
+
+
+
+  MainMenuPage<|--AssignmentsPage
+  MainMenuPage<|--MapPage
+  MainMenuPage<|--CharacterPage
+  MainMenuPage<|--StorePage
+  MainMenuPage<|--MainMenuSettingsPage
+  MainMenuPage<|--MainMenuHelpPage
+  
+
+  AssignmentsPage<|--ProgressPage
+  AssignmentsPage<|--AssignmentListPage
+  AssignmentsPage<|--AssignmentPage
+  AssignmentsPage<|--AssignmentSettingsPage
+  
+  MapPage<|--MapBanner
+  MapPage<|--QuestPage
+
+  QuestPage<|--QuestBanner
+
+  %%CharacterPage<--MapBanner   
+  MapBanner<|--NotesPage
+  MapBanner<|--MapHelp
+  %%MainMenuPage<--MapBanner    
+
+  %%MapPage<--QuestBanner 
+  %%MainMenuPage<--QuestBanner  
+
+
+
+  
+
+
+
+
+```
 
 ## Back End Class Diagram
 
