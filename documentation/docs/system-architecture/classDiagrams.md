@@ -4,6 +4,7 @@ sidebar_position: 2
 
 
 # Class Diagrams
+:)
 
 ## Front End Class Diagram
 ```mermaid 
