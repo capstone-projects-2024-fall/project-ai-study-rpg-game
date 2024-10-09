@@ -7,260 +7,180 @@ sidebar_position: 2
 
 ## Front End Class Diagram
 ```mermaid 
+ 
 classDiagram 
 
   class App{
-  
+   +width: int 1000
+   +height:int 700
+   +music_loop() void
   }
 
   class LoginPage{
-
+    +username:string
+    -password:string
+    +login_page()
   }
   class SignupPage{
-    
+    -Name: string
+    +Username: string
+    -Password: string
+    +sign_up() void
   }
 
   class CustomizeCharacterPage{
+    -totalSlots
+    -currentLevel
+    -availableslots
+    -unavailableslots
+    +addGold(int)
+    +removeGold(int)
+    +removeItem()
+    +addItem()
+
     
   }
   class TutorialPage{
-    
+    + text: string
   }
 
   class MainMenuPage{
+    + screen: int
+    +character_page()
+    +store_page()
+    +help()
+    +tutorial() void
+    +settings() void
+    +start_map_page()
+    +assignment_page()
+    +stopStartMusic()void
 
   }
   
   class AssignmentsPage{
-
+    +Goal:string
+    +itemReward: Item
+    +ExpReward:int
+    +Goldreward:int
+    +Assignments() void
+    +Quizzes() void
+    +Lab()
+    +Discussian()
   }
 
   class ProgressPage{
+    +AssignmentInProgress: string
+    +Gold:int
+    +EXP:int
 
   }
   class AssignmentListPage{
-
+    +RenderAllAssignment()void
   }
-  class AssignmentSettingsPage{
 
-  }
 
   class MapPage{
+    -camera
+    -player
+    -controls
+    +NPC(assignment)
+    +movement() void
+    +interaction_button()
+    +generate_map()
+    +LoadAssignments()
+    +currentGame()
+    +AssignmentInProgress()void
+    +ListWeekAssignment()void
 
   }
   
   class MapBanner{
-
-  }
-  class NotesPage{
-
-  }
-  class MapHelp{
+    +helpPage:string
+    +changeMap()void
 
   }
 
-  class QuestPage{
-
-  }
-  class QuestBanner{
-
-  }
 
 
 
   class CharacterPage{
+    -currentLevel
+    -currentEXP
+    -currentGOLD
+    -currentItems
 
   } 
   class StorePage{
-    
+    -armor:int 
+    -classofWeapon:string
+    -Goldcost:int
+    -LevelReq:int
   }
 
   class MainMenuSettingsPage{
+    +Logout
+    +reconnectCanvas
+
 
   }
   class MainMenuHelpPage{
+    + text:string
 
   }
 
+ class AssignmentSettingsPage{
+    +addAssignment
+    +deleteAssignment
+    +modifyAssignment
+    +reloadAssignments
+ }
+
+class Equipment{
+    +rarirty:int
+    +cost:int
+    +classreq:string
+    +damage:int
+    
+    
+}
+
+class Weapon{
+    +rarirty:int
+    +cost:int
+    +classreq:string
+    +damage:int
+    
+}
+
+  App*--LoginPage :Contains
+  App*--SignupPage :Contains
+  StorePage "1"<-- "1..*" Equipment
+  StorePage "1"<-- "1..*"Weapon
+
+  LoginPage  o--MainMenuPage
+  MainMenuPage o--CustomizeCharacterPage
+  SignupPage  *--TutorialPage :Contains
+  SignupPage o--MainMenuPage
 
 
 
-  App<|--LoginPage
-  App<|--SignupPage
-
-
-  LoginPage<|--MainMenuPage
-  SignupPage<|--CustomizeCharacterPage
-  SignupPage<|--TutorialPage
-  SignupPage<|--MainMenuPage
-
-
-
-  MainMenuPage<|--AssignmentsPage
-  MainMenuPage<|--MapPage
-  MainMenuPage<|--CharacterPage
-  MainMenuPage<|--StorePage
-  MainMenuPage<|--MainMenuSettingsPage
-  MainMenuPage<|--MainMenuHelpPage
+  MainMenuPage o--AssignmentsPage 
+  MapPage o--AssignmentsPage 
+  MainMenuPage o--MapPage
+  MainMenuPage o--CharacterPage
+  CustomizeCharacterPage o--StorePage
+  MainMenuPage o--MainMenuSettingsPage
+  MainMenuPage o--MainMenuHelpPage 
   
 
-  AssignmentsPage<|--ProgressPage
-  AssignmentsPage<|--AssignmentListPage
-  AssignmentsPage<|--AssignmentPage
-  AssignmentsPage<|--AssignmentSettingsPage
+  AssignmentsPage<--ProgressPage
+  AssignmentsPage<--AssignmentListPage
+
+  AssignmentsPage *--AssignmentSettingsPage :Contains
   
-  MapPage<|--MapBanner
-  MapPage<|--QuestPage
+  MapPage o--MapBanner
 
-  QuestPage<|--QuestBanner
-
-  %%CharacterPage<--MapBanner   
-  MapBanner<|--NotesPage
-  MapBanner<|--MapHelp
-  %%MainMenuPage<--MapBanner    
-
-  %%MapPage<--QuestBanner 
-  %%MainMenuPage<--QuestBanner  
 
 
 
   
-
-
-
-
-```
-
-## Back End Class Diagram
-
-
-```mermaid
-classDiagram
- 
-
-
-  class PlayerSerializer{
-    -int Player_Id
-    -int canvas
-    -String First_Name
-    -String Last_Name
-    +GetUserData(int Player_Id) JSON "canvas, First_Name, Last_Name"
-  }
-
-
-  class playerView{
-    +createPlayer(JSON playerObject)
-    +updatePlayer(JSON playerObject)
-    -deletePlayer(JSON playerObject)
-  }
-
-
-  class characterSerializer{
-    -int Character_Id
-    -String Name
-    -String class
-    -int level
-    -int health
-    -int Player_Id
-    -int Assignment_Id
-    -int Battle_Id
-    -int Inventory_Id
-    +GetCharacterByPlayerId(int Player_Id) JSON "name, class, level, health, Battle_Id, Inventory_Id"
-    +GetCurrentAssignment(int Player_Id) JSON "Player_Id, Assignment_Id"
-    +GetInventory(int Player_Id, int Inventory_Id) JSON "List of items"
-  }
- 
-  class characterView{
-    +UpdateCharacter(JSON characterObject)
-    +CreateCharacter(JSON characterObject)
-  }
-
-
-  class questSerializer{
-    -int Assignment_Id
-    -String Assignment_Name
-    -String description
-    -int reward
-    -String difficulty
-    +GetQuest(int Assignment_Id) JSON "Assignment_Id, Assignment_Name, description, reward, difficulty"
-  }
-
-
-  class questView{
-    +CreateQuest(JSON questObject)
-    +UpdateQuest(JSON questObject)
-    -FinishQuest(JSON questObject)
-  }
-
-
-  class battleSerializer{
-    -int Battle_Id
-    -String Assignment_Name
-    -boolean Victory_Status
-    -int Exp_Gained
-    +GetBattle(int Character_Id) JSON "Battle_Id, Assignment_Name, Victory_Status, int Exp_Gained"
-  }
-
-
-  class battleView{
-    +CreateBattle(JSON battleObject)
-    +UpdateBattle(JSON battleObject)
-    -FinishBattle(JSON battleObject)
-  }
-
-
-  class storeSerializer{
-    -int store_id
-    -String store_name
-    -int Character_Id
-    -int item_id
-    +GetStoreItems(int store_id) JSON "list of items"
-    +GetStoreItemsByCharacterId(int Character_Id) JSON "list of items"
-  }
-
-
-  class storeView{
-    +UpdateStore(JSON storeObject)
-    +PurchaseItem(int item_id, int Character_Id)
-  }
-
-
-  class itemSerializer{
-    -int item_id
-    -String item_name
-    -boolean weapon
-    -boolean armor
-  }
-
-
-  class itemView{
-    +AddItem(JSON itemObject)
-    -RemoveItem(JSON itemObject)
-  }
-
-
-  class inventorySerializer{
-    -int inventory_id
-    -int quantity
-  }
-
-
-  class inventoryView{
-    +updateInventory(JSON inventoryObject)
-  }
-
-
-  PlayerSerializer<-->playerView
-  characterSerializer<-->characterView
-  questSerializer<-->questView
-  characterSerializer--|>questSerializer
-  PlayerSerializer --|>characterSerializer
-  battleSerializer <--> battleView
-  battleSerializer --|>questSerializer
-  storeSerializer <--> storeView
-  storeSerializer --|> characterSerializer
-  itemSerializer <--> itemView
-  storeSerializer --|> itemSerializer
-  inventorySerializer <--> inventoryView
-  characterSerializer --|> inventorySerializer
-```
