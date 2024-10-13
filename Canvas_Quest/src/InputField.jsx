@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './SignUpForm.module.css';
 
-const InputField = ({ label, type, id, placeholder }) => {
+const InputField = ({ label, type, id, placeholder, value, onChange }) => {
   return (
     <div className={styles.inputField}>
       <label htmlFor={id} className={styles.label}>{label}</label>
@@ -11,6 +11,8 @@ const InputField = ({ label, type, id, placeholder }) => {
         className={styles.input}
         placeholder={placeholder}
         aria-label={label}
+        value={value}
+        onChange={onChange}
       />
     </div>
   );
