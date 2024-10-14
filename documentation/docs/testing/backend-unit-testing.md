@@ -16,6 +16,18 @@ This section outlines the unit tests for backend functionalities to ensure API e
 * **Coverage Requirements:** Aim for 90%+ coverage of key backend functions.
 * **Input Validation:** Verify that invalid inputs are properly handled with appropriate error responses.
 
+### SignUp/Login Tests
+
+**`test_signup()`**:
+   - Tests the `/signup` endpoint by registering a new user with valid details.  
+   - Verifies that a successful signup returns a **201** status code and the message `'User registered successfully'`.  
+   - Checks for proper handling of duplicate signups by reattempting to register the same user, expecting a **400** status code and the message `'User already exists'`.
+
+**`test_login()`**:
+   - First, registers a user to enable testing of login functionality.
+   - Validates that logging in with correct credentials returns a **200** status code and the message `'Login successful'`.
+   - Ensures that incorrect login attempts (e.g., with an invalid password) return a **401** status code and the message `'Invalid credentials'`.
+
 
 For each method, one or more test cases.
 
