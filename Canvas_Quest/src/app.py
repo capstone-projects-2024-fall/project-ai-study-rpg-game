@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+import requests
+import json
 import sqlite3
 from flask_cors import CORS
 
@@ -57,6 +59,37 @@ def login():
         return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"message": "Invalid credentials"}), 401
+
+def canvasGetUserId():
+    try:
+        userResp = requests.get('https://templeu.instructure.com/api/v1/users/self', headers={'Authorization': 'Bearer 9957~nLVAnfweEWYCnMuUXGYFnDQwx7VyXhmA4N7U7nJCmMcJ8YEFCkVWCnmFZ83Ze2tU'})
+        if userResp:
+            userRespData = userResp.json()
+            return userRespData['id']    
+    except:
+        print('failed to find user or canvas token not valid')
+
+
+        
+def getCoursesByUserId(userId):
+    url = 'https://templeu.instructure.com/api/v1/users/self/courses'
+    print(url)
+    courseResp = requests.get(url=url, headers={'Authorization': 'Bearer 9957~nLVAnfweEWYCnMuUXGYFnDQwx7VyXhmA4N7U7nJCmMcJ8YEFCkVWCnmFZ83Ze2tU'})
+    if courseResp:
+        courseRespData = courseResp.json()
+        return courseRespData
+        
+        
+        
+def getAssignmentsByCourse(course):
+    for course in courses:
+        url = 'https://templeu.instructure.com/api/v1/users/self/courses/'+str(course['id'])+'/assignments'
+        assignmentsResp = requests.get(url=url, headers={'Authorization': 'Bearer 9957~nLVAnfweEWYCnMuUXGYFnDQwx7VyXhmA4N7U7nJCmMcJ8YEFCkVWCnmFZ83Ze2tU'})
+        if assignmentsResp:
+            assignmentRespData = assignmentsResp.json()
+            return assignmentRespData
+
+
 
 if __name__ == '__main__':
     init_db()  # Initialize the database
