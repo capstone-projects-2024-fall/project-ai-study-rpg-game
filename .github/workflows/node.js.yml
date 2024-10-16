@@ -26,7 +26,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run : cd Canvas_Quest
-    - run: npm run build --if-present
-    - run: npm test
-    - run: npm run deploy
+    - run: cd Canvas_Quest && npm run build --if-present
+    - run: cd Canvas_Quest && npm test
+    # - run: npm run deploy
