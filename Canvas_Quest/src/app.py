@@ -3,9 +3,9 @@ import sqlite3
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  
+CORS(app)  # To allow cross-origin requests from your React frontend
 
-
+# Create SQLite database and table if not exists
 def init_db():
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
@@ -57,6 +57,11 @@ def login():
         return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"message": "Invalid credentials"}), 401
+def get_db_connection():
+    conn = sqlite3.connect('users.db')
+    conn.row_factory = sqlite3.Row  # Makes fetching rows easier with named columns
+    return conn
+
 
 if __name__ == '__main__':
     init_db()  # Initialize the database
