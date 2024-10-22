@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './LoginPage.module.css';
 import InputField from './InputField';
-import wizardLogo from './assets/wizardLogo.png';
+import wizardLogo from './assets/WizardLogo.png';
 
 const LoginPage = ({ onToggleForm }) => { 
   const [email, setEmail] = useState('');
