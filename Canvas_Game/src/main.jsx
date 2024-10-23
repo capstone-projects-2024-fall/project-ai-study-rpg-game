@@ -11,7 +11,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className='main'>
       {isSignUp ? <SignUpForm /> : <LoginPage />} 
       <button onClick={toggleForm}>
         {isSignUp ? 'Switch to Login' : 'Switch to Sign Up'}

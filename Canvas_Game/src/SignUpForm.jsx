@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './SignUpForm.module.css';
 import InputField from './InputField';
-import wizardLogo from './assets/wizardLogo.png';
+import wizardLogo from './assets/WizardLogo.png';
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
