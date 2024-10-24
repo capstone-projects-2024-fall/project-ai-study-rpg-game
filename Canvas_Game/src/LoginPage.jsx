@@ -3,7 +3,7 @@ import styles from './LoginPage.module.css';
 import InputField from './InputField';
 import wizardLogo from './assets/WizardLogo.png';
 
-const LoginPage = ({ onToggleForm }) => { 
+const LoginPage = ({ switchToSignUp }) => { 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -16,7 +16,7 @@ const LoginPage = ({ onToggleForm }) => {
 
   return (
     <main className={styles.loginContainer}>
-        <img src={wizardLogo} alt="Wizard Logo" className={styles.logo} /> {""} 
+        <img src={wizardLogo} alt="Wizard Logo" className={styles.logo} />
       <h1 className={styles.title}>
         <strong>CanvasQuest</strong>
       </h1>
@@ -37,9 +37,9 @@ const LoginPage = ({ onToggleForm }) => {
         />
         <div className={styles.buttonGroup}>
           <button type="submit" className={styles.button}>Sign In</button>
-          <button type="button" onClick={onToggleForm} className={styles.signUpButton}>
+          <button type="button" onClick={switchToSignUp} className={styles.signUpButton}>
             Sign Up
-          </button> {/* Adjusted the button to navigate back */}
+          </button>
         </div>
       </form>
     </main>
