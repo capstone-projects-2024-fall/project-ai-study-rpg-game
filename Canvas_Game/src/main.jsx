@@ -1,23 +1,10 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
-import SignUpForm from './SignUpForm';
-import LoginPage from './LoginPage';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import AppRouter from './Router';
+import './index.css';
 
-const App = () => {
-  const [isSignUp, setIsSignUp] = useState(true); 
-
-  const toggleForm = () => {
-    setIsSignUp(!isSignUp); 
-  };
-
-  return (
-    <div className='main'>
-      {isSignUp ? <SignUpForm /> : <LoginPage />} 
-      <button onClick={toggleForm}>
-        {isSignUp ? 'Switch to Login' : 'Switch to Sign Up'}
-      </button>
-    </div>
-  );
-};
-
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.createRoot(document.getElementById('root')).render(
+    <React.StrictMode>
+        <AppRouter />
+    </React.StrictMode>
+);
