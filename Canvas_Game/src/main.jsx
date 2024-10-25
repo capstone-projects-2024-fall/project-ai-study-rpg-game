@@ -4,18 +4,23 @@ import SignUpForm from './SignUpForm';
 import LoginPage from './LoginPage';
 
 const App = () => {
-  const [isSignUp, setIsSignUp] = useState(true); 
+  const [isLogin, setIsLogin] = useState(true);  // Change the initial state to login first
 
-  const toggleForm = () => {
-    setIsSignUp(!isSignUp); 
+  const switchToSignUp = () => {
+    setIsLogin(false);  // Switch to sign up
+  };
+
+  const switchToLogin = () => {
+    setIsLogin(true);  // Switch to login
   };
 
   return (
     <div className='main'>
-      {isSignUp ? <SignUpForm /> : <LoginPage />} 
-      <button onClick={toggleForm}>
-        {isSignUp ? 'Switch to Login' : 'Switch to Sign Up'}
-      </button>
+      {isLogin ? (
+        <LoginPage switchToSignUp={switchToSignUp} />
+      ) : (
+        <SignUpForm switchToLogin={switchToLogin} />
+      )}
     </div>
   );
 };
