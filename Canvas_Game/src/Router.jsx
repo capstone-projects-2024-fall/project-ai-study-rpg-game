@@ -16,6 +16,8 @@ import {
   // Stream,
 } from "./scenes";
 import LoginPage from "./LoginPage";
+import ConnectCanvas from "./ConnectCanvas";
+
 
 const AppRouter = () => {
   return (
@@ -24,6 +26,7 @@ const AppRouter = () => {
         <Route path="/" element={<App />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/LoginPage" element={<LoginPage />} />
+          <Route path="/ConnectCanvas" element={<ConnectCanvas/>}/>
           {/* <Route path="/team" element={<Team />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/invoices" element={<Invoices />} />
