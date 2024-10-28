@@ -3,7 +3,7 @@ import styles from './SignUpForm.module.css';
 import InputField from './InputField';
 import wizardLogo from './assets/WizardLogo.png';
 
-const SignUpForm = () => {
+const SignUpForm = ({ switchToLogin }) => {
   const [formData, setFormData] = useState({
     name: '',
     lastName: '',
@@ -106,7 +106,7 @@ const SignUpForm = () => {
           ))}
           <div className={styles.buttonWrapper}>
             <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="button" className={styles.submitButton}>Already have an account?</button>
+            <button type="button" onClick={switchToLogin} className={styles.submitButton}>Already have an account?</button>
           </div>
         </form>
         {message && <p className={styles.successMessage}>{message}</p>}
