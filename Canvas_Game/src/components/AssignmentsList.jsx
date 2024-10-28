@@ -22,11 +22,22 @@ const AssignmentList = (props) => {
 
                 {categories.map((category) => (  //for all categories in key
                     <div className='category-list' key ={category}>
-                        <h2>{category}</h2>       
-                        {
-                        //for all assignments in category, add info to list ->
-                            //<AssignmentListItem thisCat = {catgory} assignments = {assignments}></AssignmentListItem>
-                        }      
+                        <h2>{category}</h2>    
+                    
+                        {/*<ul> //uncomment when you get program to actually work
+                            {assignments.map((assignment) => (
+                                if(category === assignment.category){
+                                    <li key = {assignment.id}> 
+                                        <h2>{assigment.title}</h2>
+                                        <p>{assigment.due_date}</p>
+                                    </li>
+                                }
+                                //for all assignments in category, add info to list ->
+                                //<AssignmentListItem thisCat = {catgory} assignments = {assignments}></AssignmentListItem>
+                            ))}
+                            
+                            </ul>*/}
+                         
                     </div>
                 ))}
 

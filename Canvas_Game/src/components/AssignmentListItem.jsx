@@ -4,7 +4,7 @@
         assignments = props.assignments
         //for all assingments in assignments
         {assignments.map((assignment) => (  
-                    if(assignment.category == thisCategory){
+                    cc{
                         <div className='assignment-list' key ={assignment.id}>
                             <h2>{assignment.title}</h2>
                         <div> 
