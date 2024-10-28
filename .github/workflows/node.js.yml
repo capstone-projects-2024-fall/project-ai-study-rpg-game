@@ -20,12 +20,22 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: cd Canvas_Game && npm install && npm run build --if-present
-    #- run: cd Canvas_Game && npm test
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: cd Canvas_Game && npm install && npm run build --if-present
+
+      # Set up Python environment and install dependencies
+      - name: Set up Python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Install Python dependencies
+        run: |
+          pip install pytest flask flask_cors    
+      - run: cd Canvas_Game && npm test
     # - run: npm run deploy
