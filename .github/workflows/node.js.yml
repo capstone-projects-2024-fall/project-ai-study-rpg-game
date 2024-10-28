@@ -35,7 +35,7 @@ jobs:
           python-version: '3.x'
       
       - name: Install Python dependencies
-        run: |
+      - run: |
           pip install pytest flask flask_cors    
       - run: cd Canvas_Game && npm test
     # - run: npm run deploy
