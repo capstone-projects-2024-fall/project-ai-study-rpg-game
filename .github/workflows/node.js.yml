@@ -39,6 +39,8 @@ jobs:
         run: |
           pip install pytest
           pip install flask flask_cors
-      
+          
+      - name: Run Node.js tests
+        run: cd Canvas_Game && npm test      
     # - run: cd Canvas_Game && npm test
     # - run: npm run deploy
