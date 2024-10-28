@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './SignUpForm.module.css';
 import InputField from './InputField';
-import wizardLogo from './assets/WizardLogo.png';
+import wizardLogo from './assets/wizardLogo.png';
 
-const SignUpForm = ({ switchToLogin }) => {
+const SignUpForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     lastName: '',
@@ -11,17 +11,73 @@ const SignUpForm = ({ switchToLogin }) => {
     password: '',
     confirmPassword: '',
   });
-  
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    // Load saved form data from localStorage on component mount
+    const savedFormData = localStorage.getItem('signupFormData');
+    if (savedFormData) {
+      setFormData(JSON.parse(savedFormData));
+    }
+  }, []);
+
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+    const updatedFormData = { ...formData, [id]: value };
+    setFormData(updatedFormData);
+    // Save form data to localStorage as user types
+    localStorage.setItem('signupFormData', JSON.stringify(updatedFormData));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle sign up logic here
+    setMessage('');
+    setError('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+      }
+
+      setMessage(data.message);
+      // Clear form and localStorage after successful signup
+      setFormData({
+        name: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      });
+      localStorage.removeItem('signupFormData');
+    } catch (error) {
+      console.error('Error details:', error);
+      if (error.message === 'Failed to fetch') {
+        setError('Unable to connect to the server. Please check your internet connection and try again.');
+      } else {
+        setError(`An error occurred: ${error.message}. Please try again later.`);
+      }
+    }
   };
 
   const formFields = [
@@ -50,7 +106,7 @@ const SignUpForm = ({ switchToLogin }) => {
           ))}
           <div className={styles.buttonWrapper}>
             <button type="submit" className={styles.submitButton}>Submit</button>
-            <button type="button" onClick={switchToLogin} className={styles.submitButton}>Already have an account?</button>
+            <button type="button" className={styles.submitButton}>Already have an account?</button>
           </div>
         </form>
         {message && <p className={styles.successMessage}>{message}</p>}
