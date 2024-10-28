@@ -178,7 +178,7 @@ const SideBar = () => {
             title="Assignment"
             path="/assignment"
             colors={colors}
-            icon={<AssignmentOutlined />}
+            icon={<AssignmentsPage />}
           />
           <Item
             title="Store"
