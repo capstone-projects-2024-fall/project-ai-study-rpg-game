@@ -5,7 +5,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)  # To allow cross-origin requests from your React frontend
 
-# Create SQLite database and table if not exists
+# Will Create SQLite database and table if not exists
 def init_db():
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
@@ -20,7 +20,7 @@ def init_db():
     ''')
     conn.commit()
     conn.close()
-
+#sign up logic here
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.json
