@@ -1,28 +1,10 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
-import SignUpForm from './SignUpForm';
-import LoginPage from './LoginPage';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import AppRouter from './Router';
+import './index.css';
 
-const App = () => {
-  const [isLogin, setIsLogin] = useState(true);  // Change the initial state to login first
-
-  const switchToSignUp = () => {
-    setIsLogin(false);  // Switch to sign up
-  };
-
-  const switchToLogin = () => {
-    setIsLogin(true);  // Switch to login
-  };
-
-  return (
-    <div className='main'>
-      {isLogin ? (
-        <LoginPage switchToSignUp={switchToSignUp} />
-      ) : (
-        <SignUpForm switchToLogin={switchToLogin} />
-      )}
-    </div>
-  );
-};
-
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.createRoot(document.getElementById('root')).render(
+    <React.StrictMode>
+        <AppRouter />
+    </React.StrictMode>
+);
