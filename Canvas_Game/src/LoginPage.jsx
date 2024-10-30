@@ -2,16 +2,24 @@ import React, { useState } from 'react';
 import styles from './LoginPage.module.css';
 import InputField from './InputField';
 import wizardLogo from './assets/WizardLogo.png';
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./Router"; // Import the custom hook
+
 
 const LoginPage = ({ switchToSignUp }) => { 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const { setIsSignIn } = useAuth();
 
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // On successful login:
+    setIsSignIn(true);
+    
   };
 
   return (

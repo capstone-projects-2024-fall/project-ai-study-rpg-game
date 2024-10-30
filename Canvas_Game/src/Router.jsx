@@ -1,6 +1,8 @@
-import React from "react";
+import React, { createContext, useState, useContext } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import App from "./App";
+import LoginPage from "./LoginPage";
+import AuthPage from "./auth";
 import {
   Dashboard,
   // Team,
@@ -15,13 +17,22 @@ import {
   // Calendar,
   // Stream,
 } from "./scenes";
-import LoginPage from "./LoginPage";
+
+// Create AuthContext
+const AuthContext = createContext();
+
+// Custom hook for easy access to Context
+export const useAuth = () => useContext(AuthContext);
 
 const AppRouter = () => {
+  const [isSignedIn, setIsSignIn] = useState(false); // data base, local browser storage.
+
   return (
+    <AuthContext.Provider value={{ isSignedIn, setIsSignIn }}>
     <Router>
       <Routes>
-        <Route path="/" element={<App />}>
+      <Route path="/" element={isSignedIn? <App /> : <AuthPage/>}>
+        {/* <Route path="/" element={<App />}> */}
           <Route path="/" element={<Dashboard />} />
           <Route path="/LoginPage" element={<LoginPage />} />
           <Route path="/AssignmentsPage" element={<AssignmentsPage />} />
@@ -39,6 +50,7 @@ const AppRouter = () => {
         </Route>
       </Routes>
     </Router>
+    </AuthContext.Provider>
   );
 };
 
