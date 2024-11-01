@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Box, Typography, useTheme } from "@mui/material";
 import { tokens } from "../theme";
+import React from 'react';
 
 const Header = ({ title, subtitle }) => {
   const theme = useTheme();

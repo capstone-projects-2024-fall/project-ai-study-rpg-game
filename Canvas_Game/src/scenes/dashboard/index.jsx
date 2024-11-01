@@ -23,6 +23,7 @@ import {
 //   Traffic,
 // } from "@mui/icons-material";
 import { tokens } from "../../theme";
+import React from 'react';
 //import { mockTransactions } from "../../data/mockData";
 
 function Dashboard() {

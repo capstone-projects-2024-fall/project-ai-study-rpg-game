@@ -18,6 +18,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from 'react-router-dom';
 import { ToggledContext } from "../../../App";
+import React from 'react';
 
 const Navbar = () => {
   const theme = useTheme();

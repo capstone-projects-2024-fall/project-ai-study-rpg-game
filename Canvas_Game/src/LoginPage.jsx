@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styles from './LoginPage.module.css';
 import InputField from './InputField';
 import wizardLogo from './assets/WizardLogo.png';
-import { Dashboard } from './scenes';
 
 const LoginPage = ({switchToSignUp,switchToDashboard}) => { 
   const [email, setEmail] = useState('');
