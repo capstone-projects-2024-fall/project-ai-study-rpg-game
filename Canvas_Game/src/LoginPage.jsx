@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "./Router"; // Import the custom hook
 
 
-const LoginPage = ({ switchToSignUp }) => { 
+const LoginPage = ({switchToSignUp,switchToDashboard}) => { 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -44,10 +44,8 @@ const LoginPage = ({ switchToSignUp }) => {
           onChange={handlePasswordChange}
         />
         <div className={styles.buttonGroup}>
-          <button type="submit" className={styles.button}>Sign In</button>
-          <button type="button" onClick={switchToSignUp} className={styles.signUpButton}>
-            Sign Up
-          </button>
+          <button type="submit" onClick={switchToDashboard}className={styles.signUpButton}>Sign In </button>
+          <button type="button" onClick={switchToSignUp} className={styles.signUpButton}>Sign Up </button>
         </div>
       </form>
     </main>

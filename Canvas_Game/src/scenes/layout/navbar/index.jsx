@@ -18,6 +18,10 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from 'react-router-dom';
 import { ToggledContext } from "../../../App";
+<<<<<<< HEAD
+=======
+import React from 'react';
+>>>>>>> cca5d74aa5064df46b9fe144826e622a75f7ab59
 
 const Navbar = () => {
   const theme = useTheme();

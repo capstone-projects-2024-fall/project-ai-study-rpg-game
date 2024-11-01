@@ -1,5 +1,9 @@
 /* eslint-disable react/prop-types */
 import { Avatar, Box, IconButton, Typography, useTheme } from "@mui/material";
+<<<<<<< HEAD
+=======
+import React from 'react';
+>>>>>>> cca5d74aa5064df46b9fe144826e622a75f7ab59
 import { useContext, useState } from "react";
 import { tokens } from "../../../theme";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
@@ -178,7 +182,11 @@ const SideBar = () => {
             title="Assignment"
             path="/assignment"
             colors={colors}
+<<<<<<< HEAD
             icon={<AssignmentsPage />}
+=======
+            icon={<AssignmentOutlined />}
+>>>>>>> cca5d74aa5064df46b9fe144826e622a75f7ab59
           />
           <Item
             title="Store"

@@ -23,6 +23,10 @@ import {
 //   Traffic,
 // } from "@mui/icons-material";
 import { tokens } from "../../theme";
+<<<<<<< HEAD
+=======
+import React from 'react';
+>>>>>>> cca5d74aa5064df46b9fe144826e622a75f7ab59
 //import { mockTransactions } from "../../data/mockData";
 
 function Dashboard() {
