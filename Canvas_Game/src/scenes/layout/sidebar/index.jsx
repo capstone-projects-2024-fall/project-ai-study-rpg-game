@@ -171,7 +171,7 @@ const SideBar = () => {
           />
           <Item
             title="Profile"
-            path="/profile"
+            path="/userProfile"
             colors={colors}
             icon={<PersonOutlined />}
           />
