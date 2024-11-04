@@ -26,7 +26,7 @@
 import { useState } from "react"; 
 import AssignmentsPageNavBar from './AssignmentsPageNavBar.jsx';
 //import AssignmentList from './AssignmentList';
-
+import React from "react";
 
 const AssignmentsPage = () => {
     //mock assignments  //going to query database and gather this data, this is just a mockup
