@@ -17,6 +17,8 @@ import {
   // Calendar,
   // Stream,
 } from "./scenes";
+import UserProfile from "./scenes/userProfile";
+import { user } from './data/mockProfileData';
 
 // Create AuthContext
 const AuthContext = createContext();
@@ -35,6 +37,7 @@ const AppRouter = () => {
         {/* <Route path="/" element={<App />}> */}
           <Route path="/" element={<Dashboard />} />
           <Route path="/LoginPage" element={<LoginPage />} />
+          <Route path="/userProfile" element={<UserProfile user={user} />} />
           {/* <Route path="/team" element={<Team />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/invoices" element={<Invoices />} />
