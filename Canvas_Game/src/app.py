@@ -15,7 +15,8 @@ def init_db():
             name TEXT NOT NULL,
             last_name TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL
+            password TEXT NOT NULL,
+            canvas_key TEXT
         )
     ''')
     conn.commit()
@@ -62,6 +63,21 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row  # Makes fetching rows easier with named columns
     return conn
 
+@app.route('/canvasKey', methods=['POST'])
+def logCanvasKey():
+        data = request.json
+        email = data['email']
+        canvasKey = data['canvasKey']
+
+        conn = sqlite3.connect('users.db')
+        cursor = conn.cursor()
+        resp = cursor.execute("Insert into users (canvas_key) values ($) where email = ?", (email, canvasKey))
+        conn.close()
+        
+        if resp:
+                return jsonify({"message": "Connection Successful"}), 200
+        else:
+                return jsonify({"message": "Connection not successful. Try re-submitting the key or generate a new key."}), 400
 
 if __name__ == '__main__':
     init_db()  # Initialize the database

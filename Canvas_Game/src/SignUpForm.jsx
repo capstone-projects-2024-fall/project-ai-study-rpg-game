@@ -69,7 +69,7 @@ const SignUpForm = ({ switchToLogin }) => {
         password: '',
         confirmPassword: '',
       });
-      localStorage.removeItem('signupFormData');
+      //localStorage.removeItem('signupFormData');
     } catch (error) {
       console.error('Error details:', error);
       if (error.message === 'Failed to fetch') {
