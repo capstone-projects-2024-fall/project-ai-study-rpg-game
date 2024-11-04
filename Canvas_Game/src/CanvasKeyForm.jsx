@@ -25,9 +25,10 @@ const CanvasKeyForm = () => {
     // Reset previous error/success state
     setError(null);
     setSuccess(false);
+    console.log(email);
 
     try {
-      const response = await fetch('https://127.0.0.1:5000/canvasKeys', {
+      const response = await fetch('http://localhost:5000/canvasKey', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

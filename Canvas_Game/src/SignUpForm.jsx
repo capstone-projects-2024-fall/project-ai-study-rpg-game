@@ -54,11 +54,12 @@ const SignUpForm = ({ switchToLogin }) => {
         }),
       });
 
-      const data = await response.json();
+      
 
       if (!response.ok) {
         throw new Error(data.message || `HTTP error! status: ${response.status}`);
       }
+      const data = await response.json();
 
       setMessage(data.message);
       // Clear form and localStorage after successful signup
