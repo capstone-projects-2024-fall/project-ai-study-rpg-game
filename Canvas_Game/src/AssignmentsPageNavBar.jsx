@@ -2,6 +2,7 @@
 
 //settings icon -> links to settings page 
 //
+import React from "react";
 
 const AssignmentsPageNavBar = () => {
 
