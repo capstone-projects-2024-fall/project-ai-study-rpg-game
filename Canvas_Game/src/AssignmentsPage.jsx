@@ -50,9 +50,9 @@ const AssignmentsPage = () => {
                 <AssignmentsPageNavBar></AssignmentsPageNavBar>
 
             </div>
-            {/*<div className="AssignmentList">
+            {<div className="AssignmentList">
                 <AssignmentList assignments = {assignments} course = {course} category = {category}></AssignmentList>
-            </div>*/}
+            </div>}
         </>
     ); 
 }

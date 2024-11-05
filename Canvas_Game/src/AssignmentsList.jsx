@@ -3,8 +3,6 @@
 //import AssignmentListItems from './AssignmentListItems'; 
 
 
-
-
 const AssignmentList = (props) => {
     //category ie tests etc
         //assignment name, due date, points
@@ -21,11 +19,11 @@ const AssignmentList = (props) => {
     return(
         <>
             <div className="AssignmentList">
-
-                {categories.map((category) => (  //for all categories in key
+                <h2>in assignments list</h2>
+                {/*categories.map((category) => (  //for all categories in key
                     <div className='category-list' key ={category}>
                         <h2>{category}</h2>    
-                    
+                 */   
                         {/*<ul> //uncomment when you get program to actually work
                             {assignments.map((assignment) => (
                                 if(category === assignment.category){
@@ -40,8 +38,8 @@ const AssignmentList = (props) => {
                             
                             </ul>*/}
                          
-                    </div>
-                ))}
+                    /*</div>
+                ))*/}
 
             </div>
         </>
