@@ -15,7 +15,8 @@ def init_db():
             name TEXT NOT NULL,
             last_name TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL
+            password TEXT NOT NULL,
+            canvas_key TEXT
         )
     ''')
     conn.commit()
@@ -40,6 +41,23 @@ def signup():
         return jsonify({"message": "User already exists"}), 400
     finally:
         conn.close()
+
+@app.route('/canvasKey', methods=['POST'])
+def logCanvasKey():
+        data = request.json
+        email = data['email']
+        canvasKey = data['canvasKey']
+
+        conn = sqlite3.connect('users.db')
+        cursor = conn.cursor()
+        resp = cursor.execute("UPDATE users SET canvas_key= ? where email = ?", (canvasKey, email))
+        conn.close()
+        
+        if resp:
+                return jsonify({"message": "Connection Successful"}), 200
+        else:
+                return jsonify({"message": "Connection not successful. Try re-submitting the key or generate a new key."}), 400
+
 
 @app.route('/login', methods=['POST'])
 def login():
