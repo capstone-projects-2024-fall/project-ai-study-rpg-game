@@ -2,6 +2,7 @@ import Navbar from "./layout/navbar";
 import SideBar from "./layout/sidebar";
 import Dashboard from "./dashboard";
 import UserProfile from "./userProfile";
+import HelpPage from "./help";
 // import Team from "./team";
 // import Invoices from "./invoices";
 // import Contacts from "./contacts";
@@ -19,6 +20,7 @@ export {
   SideBar,
   Dashboard,
   UserProfile,
+  HelpPage,
   // Team,
   // Invoices,
   // Contacts,
