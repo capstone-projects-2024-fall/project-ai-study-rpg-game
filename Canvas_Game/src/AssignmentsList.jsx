@@ -1,9 +1,9 @@
 
 
 //import AssignmentListItems from './AssignmentListItems'; 
+import React from "react";
 
-
-const AssignmentList = (props) => {
+const AssignmentsList = (props) => {
     //category ie tests etc
         //assignment name, due date, points
 
@@ -47,7 +47,7 @@ const AssignmentList = (props) => {
 
 }
 
-export default AssignmentList
+export default AssignmentsList
 
 //displayAssignments(char category){
     //assignments[] = category.assignments[] 

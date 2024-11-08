@@ -25,7 +25,7 @@
 
 import { useState } from "react"; 
 import AssignmentsPageNavBar from './AssignmentsPageNavBar.jsx';
-//import AssignmentList from './AssignmentList';
+import AssignmentsList from './AssignmentsList';
 import React from "react";
 
 const AssignmentsPage = () => {
@@ -46,13 +46,12 @@ const AssignmentsPage = () => {
     return (
         <>
             <div className="AssignmentsPage">
-                <h1>hello</h1>
                 <AssignmentsPageNavBar></AssignmentsPageNavBar>
 
             </div>
-            {<div className="AssignmentList">
-                <AssignmentList assignments = {assignments} course = {course} category = {category}></AssignmentList>
-            </div>}
+            {/*<div className="AssignmentList">
+                <AssignmentsList assignments = {assignments} course = {course} category = {category}></AssignmentsList>
+            </div>*/}
         </>
     ); 
 }
