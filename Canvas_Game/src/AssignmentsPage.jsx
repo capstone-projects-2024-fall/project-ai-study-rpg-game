@@ -1,28 +1,4 @@
-//maybe a drop down menu to switch between classes
-//get classes
-    //get assignments in classes 
-        //list info for each assignment 
-
-
-
-
-//maybe demo is just 3 classes in mock assignment card 
-    //maybe add an extra assignment in one of the classes so you can break them up into categories
-    
-
-//outline 
-    //Assignments Nav bar: title, settings btn, back to main menu btn 
-    //class list bar -> when selected, draw up info
-        //scroll menu broken up into categories 
-            //category 1 
-                //assignment -> display assignment info
-            //category 2 
-                //assignment -> display assignment info
-
-//TEST TO RUN AsSIGNMENTS PAge
-
-
-
+import React from "react";
 import { useState } from "react"; 
 
 //formatting --> more options on dashboard and userprofile
@@ -36,19 +12,18 @@ import {
   } from "@mui/material";
 import { tokens } from "./theme";
 
-
+//imported components
 import AssignmentsPageNavBar from './AssignmentsPageNavBar.jsx';
 import AssignmentsList from './AssignmentsList';
-import React from "react";
 
 const AssignmentsPage = () => {
     //sets theme 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     //adjusts based on device size
-    const isXlDevices = useMediaQuery("(min-width: 1260px)");
+    /*const isXlDevices = useMediaQuery("(min-width: 1260px)");
     const isMdDevices = useMediaQuery("(min-width: 724px)");
-    const isXsDevices = useMediaQuery("(max-width: 436px)");
+    const isXsDevices = useMediaQuery("(max-width: 436px)");*/
 
 
     //mock assignments  //going to query database and gather this data, this is just a mockup
@@ -69,14 +44,34 @@ const AssignmentsPage = () => {
     return (
         <>
             <Box m="20px">
-                <div className="AssignmentsPage">
+                {/*<div className="AssignmentsPage">
                     <AssignmentsPageNavBar></AssignmentsPageNavBar>
-                </div>
+                </div>*/}
                 <div className="AssignmentList">
-                    <AssignmentsList assignments = {assignments} course = {course} category = {category}></AssignmentsList>
+                    {/*<AssignmentsList assignments = {assignments} course = {course} category = {category}></AssignmentsList>*/}
                 </div>
             </Box>
         </>
     ); 
 }
 export default AssignmentsPage
+
+
+
+//OUTLINE/NOTES
+
+//maybe a drop down menu to switch between classes
+//get classes
+    //get assignments in classes -->//list info for each assignment 
+    
+
+//outline 
+    //Assignments Nav bar: title, settings btn, back to main menu btn 
+    //class list bar -> when selected, draw up info
+        //scroll menu broken up into categories 
+            //category 1 
+                //assignment -> display assignment info
+            //category 2 
+                //assignment -> display assignment info
+
+//TEST TO RUN AsSIGNMENTS PAge

@@ -25,7 +25,7 @@ const AssignmentsPageNavBar = () => {
 
 
     return (
-            <nav display="flex" justifyContent="space-between"> {/*idk if this formatting works for nav*/}
+            <nav> {/*idk if this formatting works for nav*/}
                 <h1>Assignments</h1>
 
                 <ul className="links">
