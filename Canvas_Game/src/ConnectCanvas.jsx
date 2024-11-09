@@ -5,6 +5,7 @@ import './index.css';
 import { Box, CssBaseline, ThemeProvider, TextField, Button, FormControl } from "@mui/material";
 import {Card, CardHeader, CardContent, Typography} from '@mui/material';
 import CanvasKeyForm from './CanvasKeyForm.jsx';
+import { SideBar } from './scenes/index.js';
 
 
 export default function ConnectCanvas(){
