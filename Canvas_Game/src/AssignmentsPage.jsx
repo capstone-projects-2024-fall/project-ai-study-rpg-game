@@ -24,11 +24,33 @@
 
 
 import { useState } from "react"; 
+
+//formatting --> more options on dashboard and userprofile
+import {
+    Box,
+    // Button,
+    // IconButton,
+    // Typography,
+    useMediaQuery,
+    useTheme,
+  } from "@mui/material";
+import { tokens } from "./theme";
+
+
 import AssignmentsPageNavBar from './AssignmentsPageNavBar.jsx';
 import AssignmentsList from './AssignmentsList';
 import React from "react";
 
 const AssignmentsPage = () => {
+    //sets theme 
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+    //adjusts based on device size
+    const isXlDevices = useMediaQuery("(min-width: 1260px)");
+    const isMdDevices = useMediaQuery("(min-width: 724px)");
+    const isXsDevices = useMediaQuery("(max-width: 436px)");
+
+
     //mock assignments  //going to query database and gather this data, this is just a mockup
     const [assignments, setAssignments] = useState([
         { id: 1, title: "Discussion Week 4", course: "CIS 4331", category: "Discussions", due_date: "September 28 at 11:59"},
@@ -43,15 +65,17 @@ const AssignmentsPage = () => {
     const [category, setCategory] = useState(["Discussions", "Assignments", "Labs"])
 
 
+
     return (
         <>
-            <div className="AssignmentsPage">
-                <AssignmentsPageNavBar></AssignmentsPageNavBar>
-
-            </div>
-            {/*<div className="AssignmentList">
-                <AssignmentsList assignments = {assignments} course = {course} category = {category}></AssignmentsList>
-            </div>*/}
+            <Box m="20px">
+                <div className="AssignmentsPage">
+                    <AssignmentsPageNavBar></AssignmentsPageNavBar>
+                </div>
+                <div className="AssignmentList">
+                    <AssignmentsList assignments = {assignments} course = {course} category = {category}></AssignmentsList>
+                </div>
+            </Box>
         </>
     ); 
 }
