@@ -14,12 +14,13 @@ import { tokens } from "./theme";
 
 //imported components
 import AssignmentsPageNavBar from './AssignmentsPageNavBar.jsx';
-import AssignmentsList from './AssignmentsList';
+import AssignmentsList from './AssignmentsList.jsx';
+import AssignmentsListDUMMY from './AssignmentsListDUMMYComp.jsx'; 
 
 const AssignmentsPage = () => {
     //sets theme 
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
+    //const theme = useTheme();
+    //const colors = tokens(theme.palette.mode);
     //adjusts based on device size
     /*const isXlDevices = useMediaQuery("(min-width: 1260px)");
     const isMdDevices = useMediaQuery("(min-width: 724px)");
@@ -27,7 +28,7 @@ const AssignmentsPage = () => {
 
 
     //mock assignments  //going to query database and gather this data, this is just a mockup
-    const [assignments, setAssignments] = useState([
+    /*const [assignments, setAssignments] = useState([
         { id: 1, title: "Discussion Week 4", course: "CIS 4331", category: "Discussions", due_date: "September 28 at 11:59"},
         { id: 2, title: "Research Paper", course: "ENG 102", category: "Assignments", due_date: "October 2 at 11:59"},
         { id: 3, title: "Lab 4", course: "CIS 4345", category: "Labs", due_date: "October 3 at 11:59"},
@@ -38,7 +39,7 @@ const AssignmentsPage = () => {
 
     const [course, setCourse] = useState(["CIS 4331", "ENG 102", "CIS 4345", "CIS 4398", "DANC 1807"])
     const [category, setCategory] = useState(["Discussions", "Assignments", "Labs"])
-
+    */
 
 
     return (
@@ -48,6 +49,7 @@ const AssignmentsPage = () => {
                     <AssignmentsPageNavBar></AssignmentsPageNavBar>
                 </div>*/}
                 <div className="AssignmentList">
+                    <AssignmentsListDUMMY></AssignmentsListDUMMY>
                     {/*<AssignmentsList assignments = {assignments} course = {course} category = {category}></AssignmentsList>*/}
                 </div>
             </Box>

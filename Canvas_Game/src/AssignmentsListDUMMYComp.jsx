@@ -1,24 +1,21 @@
 
+//NO PROPS
+
 //import AssignmentListItems from './AssignmentListItems'; 
 import React from "react";
 
-const AssignmentsList = (props) => {
+const AssignmentsListDUMMY = () => {
     //category ie tests etc
         //assignment name, due date, points
 
     //for all items in thisclass.test
         //print info on test
-
-    const assignments = props.assignments; 
-    const categories = props.category;    //grab this from database queries right
-
     //need scroll bar with classes
 
     //have to add something to sort shit into classes
     return(
-        <>
             <div className="AssignmentList">
-                <h2>in assignments list</h2>
+                <p>in assignments list</p>
                 {/*categories.map((category) => (  //for all categories in key
                     <div className='category-list' key ={category}>
                         <h2>{category}</h2>    
@@ -41,12 +38,11 @@ const AssignmentsList = (props) => {
                 ))*/}
 
             </div>
-        </>
     );
 
 }
 
-export default AssignmentsList
+export default AssignmentsListDUMMY
 
 //displayAssignments(char category){
     //assignments[] = category.assignments[] 
