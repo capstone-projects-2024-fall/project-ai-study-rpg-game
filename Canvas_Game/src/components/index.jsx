@@ -8,10 +8,11 @@ import Header from "./Header";
 // import ProgressCircle from "./ProgressCircle";
 // import StatBox from "./StatBox";
 import JiraBoard from "./JiraBoard";
+import AccordionItem from "./AccordionItem";
 
 export {
   Header,
-  // AccordionItem,
+  AccordionItem,
   // BarChart,
   // PieChart,
   // LineChart,
