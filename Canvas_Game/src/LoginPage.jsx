@@ -36,8 +36,15 @@ const LoginPage = ({switchToSignUp,switchToDashboard}) => {
           onChange={handlePasswordChange}
         />
         <div className={styles.buttonGroup}>
-          <button type="submit" onClick={switchToDashboard}className={styles.signUpButton}>Sign In </button>
-          <button type="button" onClick={switchToSignUp} className={styles.signUpButton}>Sign Up </button>
+          <button 
+            type="submit" 
+            onClick={switchToDashboard} 
+            className={styles.signUpButton}
+            disabled={!email || !password}  // Disable button if email or password is empty
+          >
+            Sign In
+          </button>
+          <button type="button" onClick={switchToSignUp} className={styles.signUpButton}>Sign Up</button>
         </div>
       </form>
     </main>
