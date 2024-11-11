@@ -3,24 +3,46 @@
 
 //import AssignmentListItems from './AssignmentListItems'; 
 import React from "react";
+import {assignments, courses, categories} from './data/mockAssignmentsData.js';
+import Team from './team.jsx'; 
 
 const AssignmentsListDUMMY = () => {
     //category ie tests etc
         //assignment name, due date, points
+        //button that says strt assignment and moves it to the board
 
     //for all items in thisclass.test
         //print info on test
     //need scroll bar with classes
 
     //have to add something to sort shit into classes
+
+    //const[ncourses, setCourses] = useState(courses); 
+
     return(
             <div className="AssignmentList">
+                
+                <Team></Team>
+                
+                
+                
+                {/*//works!!
                 <p>in assignments list</p>
+
+                {courses.map((course) => (
+                        <p>{course}</p>
+
+                ))}
+
+                {assignments.map((assignment) => (
+                        <p>{assignment.title}</p>
+
+                ))}  */}              
                 {/*categories.map((category) => (  //for all categories in key
                     <div className='category-list' key ={category}>
                         <h2>{category}</h2>    
                  */   
-                        {/*<ul> //uncomment when you get program to actually work
+                        /*<ul> //uncomment when you get program to actually work
                             {assignments.map((assignment) => (
                                 if(category === assignment.category){
                                     <li key = {assignment.id}> 
@@ -32,7 +54,7 @@ const AssignmentsListDUMMY = () => {
                                 //<AssignmentListItem thisCat = {catgory} assignments = {assignments}></AssignmentListItem>
                             ))}
                             
-                            </ul>*/}
+                            </ul>*/
                          
                     /*</div>
                 ))*/}
