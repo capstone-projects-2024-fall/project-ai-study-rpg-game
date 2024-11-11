@@ -34,8 +34,8 @@ import Item from "./Item";
 import { ToggledContext } from "../../../App";
 
 const SideBar = () => {
+  const { toggled, setToggled } = useContext(ToggledContext) || {}; // Ensure context is not null
   const [collapsed, setCollapsed] = useState(false);
-  const { toggled, setToggled } = useContext(ToggledContext);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
@@ -46,7 +46,7 @@ const SideBar = () => {
         height: "100%",
       }}
       collapsed={collapsed}
-      onBackdropClick={() => setToggled(false)}
+      onBackdropClick={() => setToggled && setToggled(false)} // Ensure setToggled is defined
       toggled={toggled}
       breakPoint="md"
     >

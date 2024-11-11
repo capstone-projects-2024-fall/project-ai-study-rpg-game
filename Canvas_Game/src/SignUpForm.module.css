@@ -96,14 +96,14 @@
 .submitButton {
   align-self: stretch; 
   border-radius: 8px;
-  background-color: #5a5a5a;
+  background-color: #6b9acf;
   min-width: 80px; 
   width: auto; 
   overflow: hidden;
   flex: none; 
   margin: 20px 0 0; 
   padding: 8px; 
-  border: 1px solid #2c2c2c;
+  border: 1px solid #050505;
   color: var(--sds-color-text-brand-on-brand);
   cursor: pointer;
 }
