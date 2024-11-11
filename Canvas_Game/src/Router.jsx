@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import App from "./App";
 import LoginPage from "./LoginPage";
 import AuthPage from "./auth";
+
+import AssignmentsPage from "./AssignmentsPage"
+
 import {
   Dashboard,
   // Team,
@@ -49,8 +52,8 @@ const AppRouter = () => {
 
           <Route path="/ConnectCanvas" element={<ConnectCanvas/>}/>
 
-          {/* <Route path="/team" element={<Team />} />
-          <Route path="/contacts" element={<Contacts />} />
+          <Route path="/AssignmentsPage" element={<AssignmentsPage></AssignmentsPage>}/>
+          {/*<Route path="/contacts" element={<Contacts />} />
           <Route path="/invoices" element={<Invoices />} />
           <Route path="/form" element={<Form />} />
           <Route path="/calendar" element={<Calendar />} />
