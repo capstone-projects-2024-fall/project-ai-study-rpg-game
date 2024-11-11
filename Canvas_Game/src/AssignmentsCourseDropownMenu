@@ -1,8 +1,11 @@
-const CourseDropdownMenu = (props) => {
-    const [isOpen, setIsOpen] = useState(false);
+import {courses} from './mockAssignmentsPage'; 
+
+
+const CourseDropdownMenu = () => {
+    /*const [isOpen, setIsOpen] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState("");
 
-    const courses = props.course; 
+    const courses = props.course; */
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);

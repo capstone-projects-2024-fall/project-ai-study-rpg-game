@@ -37,6 +37,7 @@ import {assignments} from './data/mockAssignmentsData.js';
 export default GameMapInProgressBar;*/
 import { tokens } from "./theme";
 
+
 const GameMapInProgressBar = () =>{
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
