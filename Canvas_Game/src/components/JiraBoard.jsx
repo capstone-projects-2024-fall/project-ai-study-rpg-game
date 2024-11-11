@@ -13,6 +13,36 @@ const JiraBoard = () => {
   const columns = ['Undecided', 'To Do', 'In Progress','Done'];
 
   const [tasks, setTasks] = useState(initialTasks);
+  const [draggedTask, setDraggedTask] = useState(null);
+
+  // Handle drag start
+  const handleDragStart = (task, currentColumn) => {
+    setDraggedTask({ task, currentColumn });
+  };
+
+  // Handle drag over (allows dropping)
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  // Handle drop
+  const handleDrop = (targetColumn) => {
+    if (!draggedTask || draggedTask.currentColumn === targetColumn) return;
+
+    const { task, currentColumn } = draggedTask;
+    const updatedTasks = { ...tasks };
+
+    // Remove task from the current column
+    updatedTasks[currentColumn] = updatedTasks[currentColumn].filter((t) => t.id !== task.id);
+
+    // Add task to the target column
+    updatedTasks[targetColumn] = [...updatedTasks[targetColumn], task];
+
+    // Update the state
+    setTasks(updatedTasks);
+    setDraggedTask(null);
+  };
+
 
   // Function to handle the "Next Step" action
   const handleNextStep = (taskId, currentColumn) => {
@@ -59,13 +89,41 @@ const JiraBoard = () => {
     <Grid container spacing={2} style={{ padding: 20, backgroundColor: theme.palette.background.default }}>
       {columns.map((column) => (
       //{Object.keys(jiraBoardTasks).map((column) => (
-        <Grid item xs={12} sm={6} md={3} key={column}>
+        <Grid 
+          item 
+          xs={12} 
+          sm={6} 
+          md={3} 
+          key={column}
+          onDragOver={handleDragOver}
+          onDrop={() => handleDrop(column)}
+          style={{
+            minHeight: '80vh',
+            maxHeight: '80vh',
+            overflowY: 'auto',
+            //border: `1px solid ${colors.gray[400]}`,
+            padding: '10px',
+            //backgroundColor: colors.gray[100],
+            //borderRadius: '8px',
+          }}
+          >
           <Typography variant="h4" fontWeight="bold" style={{ color: colors.gray[700], marginBottom: 12 }}>
             {column}
           </Typography>
           {tasks[column]?.map((task) => (
-          //{jiraBoardTasks[column].map((task) => (
-            <Card key={task.id} style={{ marginBottom: 8, backgroundColor: colors.gray[700], color: colors.gray[100] }}>
+            <Card 
+              key={task.id}
+              draggable
+              onDragStart={() => handleDragStart(task, column)} 
+              style={{ 
+                marginBottom: 8, 
+                backgroundColor: colors.gray[700], 
+                color: colors.gray[100],
+                padding: '10px',
+                borderRadius: '8px',
+                cursor: 'grab', 
+              }}
+            >
               <CardContent>
                 <Typography variant="h5">{task.title}</Typography>
                 <Typography color="textSecondary">{task.description}</Typography>
