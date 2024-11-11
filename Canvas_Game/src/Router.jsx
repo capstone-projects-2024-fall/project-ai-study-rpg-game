@@ -23,7 +23,7 @@ import {
 import UserProfile from "./scenes/userProfile";
 import { user } from './data/mockProfileData';
 import ConnectCanvas from './ConnectCanvas';
-
+import GamePage from './GamePage'
 
 import HelpPage from "./scenes/help";
 
@@ -45,7 +45,7 @@ const AppRouter = () => {
           <Route path="/" element={<Dashboard />} />
           <Route path="/LoginPage" element={<LoginPage />} />
           <Route path="/userProfile" element={<UserProfile user={user} />} />
-
+          <Route path="/game" element={<GamePage/>}/>
 
         
           <Route path="/help" element={<HelpPage />} />
