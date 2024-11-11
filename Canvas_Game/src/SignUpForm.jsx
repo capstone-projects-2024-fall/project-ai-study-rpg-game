@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styles from './SignUpForm.module.css';
 import InputField from './InputField';
 import wizardLogo from './assets/WizardLogo.png';
+import CanvasPage from './ConnectCanvas';
 
-const SignUpForm = ({ switchToLogin }) => {
+const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
   const [formData, setFormData] = useState({
     name: '',
     lastName: '',
@@ -71,6 +72,7 @@ const SignUpForm = ({ switchToLogin }) => {
         confirmPassword: '',
       });
       //localStorage.removeItem('signupFormData');
+      switchToCanvas(); // Switch to ConnectCanvas page after successful signup
     } catch (error) {
       console.error('Error details:', error);
       if (error.message === 'Failed to fetch') {

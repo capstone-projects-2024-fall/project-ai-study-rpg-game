@@ -84,7 +84,7 @@
   .signUpButton {
     align-self: stretch;
     border-radius: 8px;
-    background-color: #5a5a5a;
+    background-color: #6b9acf;
     gap: 8px;
     overflow: hidden;
     color: var(--sds-color-text-brand-on-brand);
