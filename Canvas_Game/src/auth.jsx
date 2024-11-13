@@ -1,16 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react'; // Combined imports
 import ReactDOM from 'react-dom';
 import SignUpForm from './SignUpForm';
 import LoginPage from './LoginPage';
-import { Dashboard } from './scenes';
-import ConnectCanvas from './ConnectCanvas';
-import { useState } from 'react';
 import App from './App';
 
 const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);  // Change the initial state to login first
+  const [isLogin, setIsLogin] = useState(true);  // Login is the default state
   const [isDashboard, setIsDashboard] = useState(false);
-  const [isCanvas, setIsCanvas] = useState(false);
 
   const switchToSignUp = () => {
     setIsLogin(false);  // Switch to sign up
@@ -28,12 +24,10 @@ const AuthPage = () => {
     <div className='auth'>
       {isDashboard ? (
         <App />
-      ) : isCanvas ? (
-        <ConnectCanvas />
       ) : isLogin ? (
         <LoginPage switchToSignUp={switchToSignUp} switchToDashboard={switchToDashboard} />
       ) : (
-        <SignUpForm switchToSignUp={switchToSignUp} switchToCanvas={switchToLogin} />
+        <SignUpForm switchToLogin={switchToLogin} />
       )}
     </div>
   );
