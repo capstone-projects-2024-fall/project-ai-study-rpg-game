@@ -67,6 +67,16 @@ def login():
 
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
+
+    # Check if the account exists
+    cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
+    user = cursor.fetchone()
+
+    if not user:
+        conn.close()
+        return jsonify({"message": "Account does not exist"}), 404
+
+    # Validate the password for the existing account
     cursor.execute('SELECT * FROM users WHERE email = ? AND password = ?', (email, password))
     user = cursor.fetchone()
     conn.close()
@@ -74,7 +84,8 @@ def login():
     if user:
         return jsonify({"message": "Login successful"}), 200
     else:
-        return jsonify({"message": "Invalid credentials"}), 401
+        return jsonify({"message": "Invalid password"}), 401
+
 def get_db_connection():
     conn = sqlite3.connect('users.db')
     conn.row_factory = sqlite3.Row  # Makes fetching rows easier with named columns

@@ -72,7 +72,7 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
         confirmPassword: '',
       });
       //localStorage.removeItem('signupFormData');
-      switchToCanvas(); // Switch to ConnectCanvas page after successful signup
+      switchToLogin(); // Switch to Login page after successful signup
     } catch (error) {
       console.error('Error details:', error);
       if (error.message === 'Failed to fetch') {
