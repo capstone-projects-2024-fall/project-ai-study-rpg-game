@@ -3,36 +3,45 @@ import styles from './LoginPage.module.css';
 import InputField from './InputField';
 import wizardLogo from './assets/WizardLogo.png';
 
-const LoginPage = ({ switchToSignUp, switchToDashboard }) => {
+const LoginPage = ({ switchToSignUp, switchToDashboard }) => { 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    await handleLogin();  // Call handleLogin when the form is submitted
+  };
+
+  const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3000/login', {
+      const response = await fetch('http://localhost:5000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
       });
-  
-      if (response.ok) {
-        switchToDashboard();
+
+      const result = await response.json();
+
+      if (response.status === 200) {
+        setMessage('Login successful');
+        switchToDashboard(); // Redirect to dashboard upon successful login
+      } else if (response.status === 404) {
+        setMessage('Account does not exist');
+      } else if (response.status === 401) {
+        setMessage('Invalid password');
       } else {
-        const data = await response.json();
-        setError(data.message);
+        setMessage('An error occurred. Please try again.');
       }
     } catch (error) {
-      setError('An error occurred. Please try again.');
+      setMessage('Failed to connect to the server. Please try again later.');
     }
   };
-  
 
   return (
     <main className={styles.loginContainer}>
@@ -55,18 +64,20 @@ const LoginPage = ({ switchToSignUp, switchToDashboard }) => {
           value={password}
           onChange={handlePasswordChange}
         />
-        {error && <p className={styles.error}>{error}</p>}
         <div className={styles.buttonGroup}>
-          <button
-            type="submit"
+          <button 
+            type="submit" 
             className={styles.signUpButton}
-            disabled={!email || !password}  // Disable button if email or password is empty
+            disabled={!email || !password} // Disable button if email or password is empty
           >
             Sign In
           </button>
-          <button type="button" onClick={switchToSignUp} className={styles.signUpButton}>Sign Up</button>
+          <button type="button" onClick={switchToSignUp} className={styles.signUpButton}>
+            Sign Up
+          </button>
         </div>
       </form>
+      {message && <p className={styles.message}>{message}</p>} {/* Display login messages */}
     </main>
   );
 };
