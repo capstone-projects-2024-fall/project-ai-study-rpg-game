@@ -24,10 +24,6 @@ const AuthPage = () => {
     setIsDashboard(true);  // Switch to dashboard
   };
 
-  const switchToCanvas = () => {
-    setIsCanvas(true);  // Switch to canvas
-  };
-
   return (
     <div className='auth'>
       {isDashboard ? (
@@ -37,7 +33,7 @@ const AuthPage = () => {
       ) : isLogin ? (
         <LoginPage switchToSignUp={switchToSignUp} switchToDashboard={switchToDashboard} />
       ) : (
-        <SignUpForm switchToLogin={switchToLogin} switchToCanvas={switchToCanvas} />
+        <SignUpForm switchToSignUp={switchToSignUp} switchToCanvas={switchToLogin} />
       )}
     </div>
   );
