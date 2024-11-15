@@ -1,0 +1,8 @@
+FROM node AS install
+COPY . /app
+WORKDIR /app
+RUN npm install
+FROM install AS dev
+EXPOSE 5173
+
+ENTRYPOINT ["npm","run","dev","--host"]
