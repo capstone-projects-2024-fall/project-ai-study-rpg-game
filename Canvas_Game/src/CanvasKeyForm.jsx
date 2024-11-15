@@ -28,7 +28,7 @@ const CanvasKeyForm = () => {
     console.log(email);
 
     try {
-      const response = await fetch('http://localhost:5000/canvasKey', {
+      const response = await fetch('http://localhost:5001/canvasKey', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
