@@ -66,8 +66,9 @@ const Navbar = () => {
         </IconButton>
         <IconButton>
           <NotificationsOutlined />
+        {/* Connect to Canvas button (the gear icon) */}
         </IconButton>
-        <IconButton>
+        <IconButton onClick={() => navigate('/ConnectCanvas')}> 
           <SettingsOutlined />
         </IconButton>
         <IconButton onClick={() => navigate('/LoginPage')}>

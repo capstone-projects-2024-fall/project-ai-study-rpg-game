@@ -9,8 +9,7 @@ import { ToggledContext } from "./App.jsx";
 export default function ConnectCanvas() {
     return (
         <Box display="flex">
-            {/* Sidebar */}
-            <SideBar />
+
 
             {/* Main Content */}
             <Box flexGrow={1} padding={2}>
