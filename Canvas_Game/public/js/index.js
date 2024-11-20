@@ -145,12 +145,15 @@ const player = new Player({
   size: 15,
 })
 
-// NPC setup
-const NPC = {
+
+const NpcSprites = {
+  x: 0,
+  y: 0,
   width: 16,
   height: 16,
   frameCount: 4,
-}
+};
+
 
 const monsterSprites = {
   walkDown: {
@@ -183,14 +186,15 @@ const monsterSprites = {
   },
 }
 
-const npc = [
+const npcs = [
   new NPC({
-  x: 300,
-  y: 200,
-  size: 16,
-  imageSrc: './images/OldWoman/SpriteSheet.png',
+    x: 300,
+    y: 200,
+    size: 16,
+    imageSrc: './images/OldWoman/SpriteSheet.png',
   }),
-]
+];
+
 
 const monsters = [
   new Monster({
@@ -355,7 +359,7 @@ function animate(backgroundCanvas) {
       player.y <= monster.y + monster.height &&
       !player.isInvincible
     ) {
-      player.receiveHit()
+      player.receiveHit(showDialogueBox('Ouch!'))
 
       const filledHearts = hearts.filter((heart) => heart.currentFrame === 4)
 
@@ -364,12 +368,12 @@ function animate(backgroundCanvas) {
       }
 
       if (filledHearts.length <= 1) {
-        console.log('game over')
+        showDialogueBox('You have died buy a health potion to continue');
       }
     }
   }
 
-  // render out our NPCs
+  /*
   for (let i = npcs.length - 1; i >= 0; i--) {
     const npc = npcs[i];
     npc.update(deltaTime, collisionBlocks);
@@ -388,7 +392,7 @@ function animate(backgroundCanvas) {
       hideDialogueBox();
     }
   }
-
+  */
 
   c.drawImage(frontRendersCanvas, 0, 0)
 

@@ -1,10 +1,10 @@
 class NPC {
-    constructor({ x, y, size, velocity = { x: 0, y: 0 } }) {
+    constructor({ x, y, size, velocity = { x: 0, y: 0 },imageSrc }) {
       this.x = x;
       this.y = y;
       this.width = size;
       this.height = size;
-      this.velocity = velocity;
+      this.velocity = { x: 0, y: 0 }; 
       this.center = {
         x: this.x + this.width / 2,
         y: this.y + this.height / 2,
@@ -15,14 +15,7 @@ class NPC {
       this.image.onload = () => {
         this.loaded = true;
       };
-      this.image.src = './images/SpriteSheet.png';
-  
-      this.weaponSpriteHasLoaded = false;
-      this.weaponSprite = new Image();
-      this.weaponSprite.onload = () => {
-        this.weaponSpriteHasLoaded = true;
-      };
-      this.weaponSprite.src = './images/lance.png';
+      this.image.src = './images/OldWoman/SpriteSheet.png';
   
       this.currentFrame = 0;
       this.elapsedTime = 0;
@@ -32,9 +25,10 @@ class NPC {
       this.elapsedInvincibilityTime = 0;
       this.invincibilityInterval = 0.8;
     }
+
   
     draw(c) {
-      if (!this.loaded || !this.weaponSpriteHasLoaded) return;
+      if (!this.loaded) return;
   
       let alpha = 1;
       if (this.isInvincible) alpha = 0.5;
