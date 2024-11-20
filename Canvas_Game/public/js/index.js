@@ -1,3 +1,4 @@
+
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 const dpr = window.devicePixelRatio || 1
@@ -144,6 +145,13 @@ const player = new Player({
   size: 15,
 })
 
+// NPC setup
+const NPC = {
+  width: 16,
+  height: 16,
+  frameCount: 4,
+}
+
 const monsterSprites = {
   walkDown: {
     x: 0,
@@ -174,6 +182,15 @@ const monsterSprites = {
     frameCount: 4,
   },
 }
+
+const npc = [
+  new NPC({
+  x: 300,
+  y: 200,
+  size: 16,
+  imageSrc: './images/OldWoman/SpriteSheet.png',
+  }),
+]
 
 const monsters = [
   new Monster({
@@ -352,6 +369,27 @@ function animate(backgroundCanvas) {
     }
   }
 
+  // render out our NPCs
+  for (let i = npcs.length - 1; i >= 0; i--) {
+    const npc = npcs[i];
+    npc.update(deltaTime, collisionBlocks);
+    npc.draw(c);
+
+    // Detect collision between player and NPC
+    if (
+      player.x + player.width >= npc.x &&
+      player.x <= npc.x + npc.width &&
+      player.y + player.height >= npc.y &&
+      player.y <= npc.y + npc.height
+    ) {
+      // Show dialogue when collision happens
+      showDialogueBox('Hello there! How can I help you today?');
+    } else {
+      hideDialogueBox();
+    }
+  }
+
+
   c.drawImage(frontRendersCanvas, 0, 0)
 
   for (let i = leafs.length - 1; i >= 0; i--) {
@@ -375,6 +413,18 @@ function animate(backgroundCanvas) {
   c.restore()
 
   requestAnimationFrame(() => animate(backgroundCanvas))
+}
+
+//Dialogue Box
+function showDialogueBox(message) {
+  const dialogueBox = document.getElementById('dialogueBox');
+  dialogueBox.innerText = message;
+  dialogueBox.style.display = 'block';
+}
+
+function hideDialogueBox() {
+  const dialogueBox = document.getElementById('dialogueBox');
+  dialogueBox.style.display = 'none';
 }
 
 const startRendering = async () => {
