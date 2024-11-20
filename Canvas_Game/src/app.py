@@ -51,6 +51,7 @@ def logCanvasKey():
         conn = sqlite3.connect('users.db')
         cursor = conn.cursor()
         resp = cursor.execute("UPDATE users SET canvas_key= ? where email = ?", (canvasKey, email))
+        conn.commit()
         conn.close()
         
         if resp:
