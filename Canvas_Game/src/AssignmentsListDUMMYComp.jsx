@@ -11,54 +11,12 @@ const AssignmentsListDUMMY = () => {
         //assignment name, due date, points
         //button that says strt assignment and moves it to the board
 
-    //for all items in thisclass.test
-        //print info on test
-    //need scroll bar with classes
-
-    //have to add something to sort shit into classes
-
-    //const[ncourses, setCourses] = useState(courses); 
 
     return(
             <div className="AssignmentList">
-                
+            
                 <Team></Team>
-                
-                
-                
-                {/*//works!!
-                <p>in assignments list</p>
-
-                {courses.map((course) => (
-                        <p>{course}</p>
-
-                ))}
-
-                {assignments.map((assignment) => (
-                        <p>{assignment.title}</p>
-
-                ))}  */}              
-                {/*categories.map((category) => (  //for all categories in key
-                    <div className='category-list' key ={category}>
-                        <h2>{category}</h2>    
-                 */   
-                        /*<ul> //uncomment when you get program to actually work
-                            {assignments.map((assignment) => (
-                                if(category === assignment.category){
-                                    <li key = {assignment.id}> 
-                                        <h2>{assigment.title}</h2>
-                                        <p>{assigment.due_date}</p>
-                                    </li>
-                                }
-                                //for all assignments in category, add info to list ->
-                                //<AssignmentListItem thisCat = {catgory} assignments = {assignments}></AssignmentListItem>
-                            ))}
-                            
-                            </ul>*/
-                         
-                    /*</div>
-                ))*/}
-
+            
             </div>
     );
 
@@ -66,11 +24,6 @@ const AssignmentsListDUMMY = () => {
 
 export default AssignmentsListDUMMY
 
-//displayAssignments(char category){
-    //assignments[] = category.assignments[] 
-    //for all assingments in category
-        //display whatever
-//}
 
 /*
     const AssignmentListItem = (props) => {

@@ -49,7 +49,7 @@ const AssignmentsPage = () => {
             <Box m="20px">
                 <div className="AssignmentList">
                     <CourseDropdownMenu courseValueSelected = {onCourseSelectedFromCDM}></CourseDropdownMenu>
-                    <AssignmentsList2Try courseValueSelected = {courseValue}></AssignmentsList2Try>
+                    {/*<AssignmentsList2Try courseValueSelected = {courseValue}></AssignmentsList2Try>*/}
                 </div>
 
                 {/*<div className = "AssignmentsListDummy">

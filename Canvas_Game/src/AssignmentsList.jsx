@@ -1,30 +1,51 @@
+import {assignments, categories, courses} from './mockAssignmentsData';
+import AssignmentsListItem from './AssignmentsListItem.jsx';
 
 
-//import AssignmentListItems from './AssignmentListItems'; 
-import React from "react";
+/*Makes a categorized list of assignments for a class: CourseAssignmentList 
+    //should be sorted by most recent date 
+    //new assignments should be added when they are created in canvas, but thats true for the whole program 
+*/
 
-const AssignmentsList = (props) => {
-    //category ie tests etc
-        //assignment name, due date, points
+const AssignmentsList2Try = (props) => {    //could do: {courseValueSelected}
+    //list with header and cards
 
-    //for all items in thisclass.test
-        //print info on test
+    const course = props.courseValueSelected; 
 
-    const assignments = props.assignments; 
-    const categories = props.category;    //grab this from database queries right
+    //filters assignments by course --> might have to change for db call (maybe use inmap filter)
+    const filterByCourse = (newCourse) =>{
+        if(newCourse == 'All'){
+            return assignments; 
+        }
+        return assignments.filter(assignments=>assignments.course===newCourse); 
+    };
 
-    //need scroll bar with classes
+    const filteredAssignments = filterByCourse(course);
 
-    //have to add something to sort shit into classes
+
     return(
         <>
-            <div className="AssignmentList">
-                <h2>in assignments list</h2>
-                {/*categories.map((category) => (  //for all categories in key
+            <div className="AssignmentsList">
+                <h1>COURSE: {props.courseValueSelected}</h1>
+
+                {categories.map((category) => (  //for all categories in categories array, category = cat[i]
+
                     <div className='category-list' key ={category}>
-                        <h2>{category}</h2>    
-                 */   
-                        {/*<ul> //uncomment when you get program to actually work
+                        <h1>{category}</h1>    
+                        <AssignmentsListItem cat={category} assList = {filteredAssignments}></AssignmentsListItem>  {/*creates a categorized assignmment list*/} 
+                    
+                    </div>
+
+                ))}
+
+            </div>
+        </>
+    )
+}
+export default AssignmentsList2Try
+
+
+                        /*<ul> //uncomment when you get program to actually work
                             {assignments.map((assignment) => (
                                 if(category === assignment.category){
                                     <li key = {assignment.id}> 
@@ -34,33 +55,44 @@ const AssignmentsList = (props) => {
                                 }
                                 //for all assignments in category, add info to list ->
                                 //<AssignmentListItem thisCat = {catgory} assignments = {assignments}></AssignmentListItem>
-                            ))}
+                            ));
+                            }
                             
-                            </ul>*/}
-                         
-                    /*</div>
-                ))*/}
+                            </ul>*/
 
-            </div>
-        </>
-    );
 
-}
+/**********extra notes**********************************
+ *               //tried to do it with useState
+ * 
+ *               //const [cat, setCat] = useState("Assignments"); 
+                //setCat("Assignments"); 
 
-export default AssignmentsList
+                /*const filterByCat = (cat) =>{
+                    return assignments.filter(assignments=>assignments.category==cat); 
+                };*/
 
-//displayAssignments(char category){
-    //assignments[] = category.assignments[] 
-    //for all assingments in category
-        //display whatever
-//}
+                //const filteredAssignments = filterByCat(cat); 
+                //const [filteredAssignments, setFilteredAssignments] = useState(assignments);
 
-/*
-    const AssignmentListItem = (props) => {
-        thisCategory = props.thisCat
-        //for all assingments in assignments
-            //if assignment.cat = thisCat
-                //display info about this assignment
-    }
-    export default AssignmentListItem
-*/
+
+ //               ----->return()
+  
+                    {/*categories.map((category) => (  //for all categories in key
+                        
+                        <div className='category-list' key ={category}>
+                            <h1>{category}</h1>    
+                            
+                            
+                            {/*this should be a separate component*/}
+                            {/*setFilteredAssignments(filterByCat(category))}
+
+                            {filteredAssignments.map((assignmentItem) => (
+                                <div className = 'assItem' key = {assignmentItem.id}>
+                                    <h2>{assignmentItem.title}</h2>
+                                </div>
+                            ))}
+
+                        </div>
+
+                    ))*/}
+ 
