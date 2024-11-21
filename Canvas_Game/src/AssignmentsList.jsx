@@ -27,20 +27,19 @@ const AssignmentsList2Try = (props) => {    //could do: {courseValueSelected}
 
     return(
         <>
-            <div className="AssignmentsList">
                 <h1>{props.courseValueSelected}</h1>
+                <ul className="AssignmentsList1">
+                    {categories.map((category) => (  //for all categories in categories array, category = cat[i]
 
-                {categories.map((category) => (  //for all categories in categories array, category = cat[i]
+                        <li className='category-list' key ={category}>
+                            <h2>{category}</h2>    
+                            <AssignmentsListItem cat={category} assList = {filteredAssignments}></AssignmentsListItem>  {/*creates a categorized assignmment list*/} 
+                        
+                        </li>
 
-                    <div className='category-list' key ={category}>
-                        <h2>{category}</h2>    
-                        <AssignmentsListItem cat={category} assList = {filteredAssignments}></AssignmentsListItem>  {/*creates a categorized assignmment list*/} 
-                    
-                    </div>
-
-                ))}
-
-            </div>
+                    ))}
+                </ul>
+                
         </>
     )
 }

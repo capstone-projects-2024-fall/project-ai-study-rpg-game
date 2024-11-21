@@ -15,7 +15,6 @@ import { tokens } from "./theme";
 
 //old imports
 import AssignmentsPageNavBar from './AssignmentsPageNavBar.jsx';
-import AssignmentsListDUMMY from './AssignmentsListDUMMYComp.jsx';
 
 //imported components
 import CourseDropdownMenu from './AssignmentsCourseDropdownMenu.jsx';
@@ -51,28 +50,10 @@ const AssignmentsPage = () => {
                     <AssignmentsList2Try courseValueSelected = {courseValue}></AssignmentsList2Try>
                 </div>
 
-
-
-                {/*<div className = "AssignmentsListDummy">
-                    <AssignmentsListDUMMY></AssignmentsListDUMMY>
-                </div>
-                <div>
+                {/*<div>
                     <GameMapInProgressBar></GameMapInProgressBar>
                 </div>*/}
-
-
-                {/*<div className="AssignmentsPage">
-                    <AssignmentsPageNavBar></AssignmentsPageNavBar>
-                    
-                </div>*/}
-                {/*<div className="courseDropdown">
-                    <CourseDropdownMenu></CourseDropdownMenu>
-                </div>*/}
-
-
-                {/*<div className="AssignmentList">
-                    <AssignmentsList assignments = {assignments} course = {course} category = {category}></AssignmentsList>
-                </div>*/}            
+       
             </Box>
         </>
     ); 
