@@ -26,7 +26,7 @@ const CanvasKeyForm = () => {
     setError(null);
     setSuccess(false);
     console.log(email);
-
+  
     try {
       const response = await fetch('http://localhost:5000/canvasKey', {
         method: 'POST',
@@ -37,7 +37,10 @@ const CanvasKeyForm = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        // Extract error message from the backend response
+        const errorData = await response.json();
+
+        throw new Error(errorData.message || 'An unknown error occurred.');
       }
 
       const data = await response.json();
@@ -45,7 +48,7 @@ const CanvasKeyForm = () => {
       setSuccess(true);
       setCanvasKey(''); // Clear the input field after successful submission
     } catch (err) {
-      console.error('Error:', err);
+      console.error('Error:', err.message);
       setError(err.message);
     }
   };
