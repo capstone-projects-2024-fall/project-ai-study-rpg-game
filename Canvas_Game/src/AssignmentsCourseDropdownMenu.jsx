@@ -1,4 +1,6 @@
-import {courses} from './mockAssignmentsData.js';
+import React from "react";
+
+import {courses} from './data/mockAssignmentsData.js';
 
 /*pick which class you want to see assignments from: CourseDropdownMenu*/ 
 

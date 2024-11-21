@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react"; 
 
 //formatting --> more options on dashboard and userprofile
-/*import {
+import {
     Box,
     // Button,
     // IconButton,
@@ -11,28 +11,27 @@ import { useState } from "react";
     useTheme,
   } from "@mui/material";
 import { tokens } from "./theme";
-*/
+
 
 //old imports
 import AssignmentsPageNavBar from './AssignmentsPageNavBar.jsx';
-import AssignmentsList from './AssignmentsList.jsx';
 import AssignmentsListDUMMY from './AssignmentsListDUMMYComp.jsx';
 
 //imported components
-import AssignmentsList2Try from './AssignmentsList2Try.jsx'; 
 import CourseDropdownMenu from './AssignmentsCourseDropdownMenu.jsx';
+import AssignmentsList2Try from './AssignmentsList.jsx'; 
 
 /*pick course you want to look at, assignments are displayed in a categorised list, can adjust settings*/
     //settings:should have toggle if you dont want categories --> can do that later/ also should be able to change/add categories
 
 const AssignmentsPage = () => {
     //sets theme 
-    //const theme = useTheme();
-    //const colors = tokens(theme.palette.mode);
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
     //adjusts based on device size
-    /*const isXlDevices = useMediaQuery("(min-width: 1260px)");
+    const isXlDevices = useMediaQuery("(min-width: 1260px)");
     const isMdDevices = useMediaQuery("(min-width: 724px)");
-    const isXsDevices = useMediaQuery("(max-width: 436px)");*/
+    const isXsDevices = useMediaQuery("(max-width: 436px)");
 
     //function to get course selection from dropdown menu
     const[courseValue, setCourseValue] = useState(''); 
@@ -49,8 +48,10 @@ const AssignmentsPage = () => {
             <Box m="20px">
                 <div className="AssignmentList">
                     <CourseDropdownMenu courseValueSelected = {onCourseSelectedFromCDM}></CourseDropdownMenu>
-                    {/*<AssignmentsList2Try courseValueSelected = {courseValue}></AssignmentsList2Try>*/}
+                    <AssignmentsList2Try courseValueSelected = {courseValue}></AssignmentsList2Try>
                 </div>
+
+
 
                 {/*<div className = "AssignmentsListDummy">
                     <AssignmentsListDUMMY></AssignmentsListDUMMY>

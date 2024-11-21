@@ -1,5 +1,7 @@
-import {assignments, categories, courses} from './mockAssignmentsData';
-import AssignmentsListItem from './AssignmentsListItem.jsx';
+import React from "react";
+
+import {assignments, categories, courses} from './data/mockAssignmentsData.js';
+import AssignmentsListItem from './AssignmentsListItems.jsx';
 
 
 /*Makes a categorized list of assignments for a class: CourseAssignmentList 
