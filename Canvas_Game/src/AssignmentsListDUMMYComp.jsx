@@ -1,7 +1,4 @@
-
-//NO PROPS
-
-//import AssignmentListItems from './AssignmentListItems'; 
+ 
 import React from "react";
 import {assignments, courses, categories} from './data/mockAssignmentsData.js';
 import Team from './team.jsx'; 

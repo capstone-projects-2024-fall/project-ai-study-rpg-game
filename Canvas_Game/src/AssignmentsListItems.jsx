@@ -1,12 +1,14 @@
 import React from "react";
 
+import GenerateAssignmentCard from "./GenerateAssignmentCard.jsx";
+
 /*Lists Items based on Category input: CategorizedAssignmentList*/
     //need an on/off settings toggle for categories 
 
 const AssignmentsListItem = (props) => {
 
     const cat = props.cat; 
-    const assignmentsList = props.assList; 
+    const assignmentsList = props.assList; //might wanna change name 
 
     //filters assignments by category --> might have to change for db call (maybe use inmap filter)
     const filterByCat = (newCat) =>{
@@ -21,7 +23,7 @@ const AssignmentsListItem = (props) => {
             <div className='filteredAssList'>
                 {filteredAssignments.map((assignmentItem) => (
                             <div className = 'assItem' key = {assignmentItem.id}>
-                                <h2>{assignmentItem.title}</h2>     {/*PUT GENERATE ASSIGNMENT CARD HERE - should be an option to add status*/}
+                                <GenerateAssignmentCard assignment = {assignmentItem}></GenerateAssignmentCard>
                             </div>
                 ))}
             </div>
