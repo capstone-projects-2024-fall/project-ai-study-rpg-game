@@ -5,7 +5,7 @@ import GenerateAssignmentCard from "./GenerateAssignmentCard.jsx";
 /*Lists Items based on Category input: CategorizedAssignmentList*/
     //need an on/off settings toggle for categories 
 
-const AssignmentsListItem = (props) => {
+const CategorizedAssignmentsList = (props) => {
 
     const cat = props.cat; 
     const assignmentsList = props.assList; //might wanna change name 
@@ -32,4 +32,4 @@ const AssignmentsListItem = (props) => {
 
 
 }
-export default AssignmentsListItem 
+export default CategorizedAssignmentsList

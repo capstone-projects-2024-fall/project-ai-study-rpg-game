@@ -12,13 +12,9 @@ import {
   } from "@mui/material";
 import { tokens } from "./theme";
 
-
-//old imports
-import AssignmentsPageNavBar from './AssignmentsPageNavBar.jsx';
-
 //imported components
 import CourseDropdownMenu from './AssignmentsCourseDropdownMenu.jsx';
-import AssignmentsList2Try from './AssignmentsList.jsx'; 
+import CourseAssignmentsList from './CourseAssignmentsList.jsx'; 
 
 /*pick course you want to look at, assignments are displayed in a categorised list, can adjust settings*/
     //settings:should have toggle if you dont want categories --> can do that later/ also should be able to change/add categories
@@ -47,7 +43,7 @@ const AssignmentsPage = () => {
             <Box m="20px">
                 <div className="AssignmentList">
                     <CourseDropdownMenu courseValueSelected = {onCourseSelectedFromCDM}></CourseDropdownMenu>
-                    <AssignmentsList2Try courseValueSelected = {courseValue}></AssignmentsList2Try>
+                    <CourseAssignmentsList courseValueSelected = {courseValue}></CourseAssignmentsList>
                 </div>
 
                 {/*<div>

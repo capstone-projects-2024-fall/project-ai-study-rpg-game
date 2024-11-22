@@ -1,15 +1,15 @@
 import React from "react";
 
 import {assignments, categories, courses} from './data/mockAssignmentsData.js';
-import AssignmentsListItem from './AssignmentsListItems.jsx';
+import CategorizedAssignmentsList from './CategorizedAssignmentsList.jsx';
 
 
-/*Makes a categorized list of assignments for a class: CourseAssignmentList 
+/*Makes a categorized list of assignments for a class: CourseAssignmentsList 
     //should be sorted by most recent date 
     //new assignments should be added when they are created in canvas, but thats true for the whole program 
 */
 
-const AssignmentsList2Try = (props) => {    //could do: {courseValueSelected}
+const CourseAssignmentsList= (props) => {    //could do: {courseValueSelected}
     //list with header and cards
 
     const course = props.courseValueSelected; 
@@ -33,7 +33,7 @@ const AssignmentsList2Try = (props) => {    //could do: {courseValueSelected}
 
                         <li className='category-list' key ={category}>
                             <h2>{category}</h2>    
-                            <AssignmentsListItem cat={category} assList = {filteredAssignments}></AssignmentsListItem>  {/*creates a categorized assignmment list*/} 
+                            <CategorizedAssignmentsList cat={category} assList = {filteredAssignments}></CategorizedAssignmentsList>  {/*creates a categorized assignmment list*/} 
                         
                         </li>
 
@@ -43,7 +43,7 @@ const AssignmentsList2Try = (props) => {    //could do: {courseValueSelected}
         </>
     )
 }
-export default AssignmentsList2Try
+export default CourseAssignmentsList
 
 
                         /*<ul> //uncomment when you get program to actually work
