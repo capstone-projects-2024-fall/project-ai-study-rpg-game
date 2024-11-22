@@ -25,6 +25,8 @@ import { user } from './data/mockProfileData';
 import ConnectCanvas from './ConnectCanvas';
 import GamePage from './GamePage'
 
+import Store from './Store'
+
 import HelpPage from "./scenes/help";
 
 // Create AuthContext
@@ -46,7 +48,7 @@ const AppRouter = () => {
           <Route path="/LoginPage" element={<LoginPage />} />
           <Route path="/userProfile" element={<UserProfile user={user} />} />
           <Route path="/game" element={<GamePage/>}/>
-
+          <Route path="/store" element={<Store/>}/>
         
           <Route path="/help" element={<HelpPage />} />
 
