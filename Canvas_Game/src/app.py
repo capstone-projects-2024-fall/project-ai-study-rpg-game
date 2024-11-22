@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
 import sqlite3
+import requests
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # To allow cross-origin requests from your React frontend
+CORS(app,  resources={r"/*": {"origins": "http://localhost:5173"}})  # To allow cross-origin requests from your React frontend
 
 # Will Create SQLite database and table if not exists
 def init_db():
@@ -48,16 +49,32 @@ def logCanvasKey():
         email = data['email']
         canvasKey = data['canvasKey']
 
-        conn = sqlite3.connect('users.db')
-        cursor = conn.cursor()
-        resp = cursor.execute("UPDATE users SET canvas_key= ? where email = ?", (canvasKey, email))
-        conn.close()
-        
-        if resp:
-                return jsonify({"message": "Connection Successful"}), 200
-        else:
-                return jsonify({"message": "Connection not successful. Try re-submitting the key or generate a new key."}), 400
+        canvasUrl = "https://templeu.instructure.com/api/v1/users/self/profile"
 
+        # Validate the Canvas API token by calling an API endpoint
+        headers = {"Authorization": f"Bearer {canvasKey}"}
+        try:
+            response = requests.get(canvasUrl, headers=headers)
+            if response.status_code == 200:
+                # Token is valid
+                user_profile = response.json()
+                print("Token is valid!")
+                print("User Profile:", user_profile)
+
+                # Save the token in the database
+                conn = sqlite3.connect('users.db')
+                cursor = conn.cursor()
+                cursor.execute("UPDATE users SET canvas_key = ? WHERE email = ?", (canvasKey, email))
+                conn.commit()
+                conn.close()
+                return jsonify({"message": "Canvas key successfully validated and stored"}), 200
+            else:
+                # Token is invalid
+                print("Token is invalid or expired.")
+                return jsonify({"message": "Invalid Canvas key. Please check your key and try again."}), 400
+        except Exception as e:
+            print("Error validating Canvas key:", str(e))
+            return jsonify({"message": "An error occurred while validating the Canvas key."}), 500
 
 @app.route('/login', methods=['POST'])
 def login():
