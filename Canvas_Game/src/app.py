@@ -20,8 +20,22 @@ def init_db():
             canvas_key TEXT
         )
     ''')
+    
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS assignments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            assignment_id INTEGER,
+            course_id INTEGER,
+            group_category_id INTEGER
+            name TEXT,
+            description TEXT,
+            due_at TEXT
+        )
+    ''')
+
     conn.commit()
     conn.close()
+    
 #sign up logic here
 @app.route('/signup', methods=['POST'])
 def signup():
