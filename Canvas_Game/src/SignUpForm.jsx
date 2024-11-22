@@ -42,7 +42,7 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/signup', {
+      const response = await fetch('http://localhost:5001/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
