@@ -17,7 +17,9 @@ def init_db():
             last_name TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
-            canvas_key TEXT
+            canvas_key TEXT,
+            score INTEGER DEFAULT 0,
+            picture_url TEXT DEFAULT EMPTY
         )
     ''')
     
@@ -74,11 +76,13 @@ def logCanvasKey():
                 user_profile = response.json()
                 print("Token is valid!")
                 print("User Profile:", user_profile)
+                picture=user_profile["avatar_url"]
+                print("picture is" + picture)
 
                 # Save the token in the database
                 conn = sqlite3.connect('users.db')
                 cursor = conn.cursor()
-                cursor.execute("UPDATE users SET canvas_key = ? WHERE email = ?", (canvasKey, email))
+                cursor.execute("UPDATE users SET canvas_key = ?, picture_url = ? WHERE email = ?", (canvasKey, picture, email ))
                 conn.commit()
                 conn.close()
                 return jsonify({"message": "Canvas key successfully validated and stored"}), 200
