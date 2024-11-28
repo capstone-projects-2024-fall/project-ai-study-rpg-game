@@ -424,6 +424,8 @@ function showDialogueBox(message) {
   const dialogueBox = document.getElementById('dialogueBox');
   dialogueBox.innerText = message;
   dialogueBox.style.display = 'block';
+  dialogueBox.style.width = '940px'; 
+  dialogueBox.style.height = '400px'; 
 }
 
 function hideDialogueBox() {
