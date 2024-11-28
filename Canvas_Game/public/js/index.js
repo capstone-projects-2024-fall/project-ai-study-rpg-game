@@ -146,15 +146,6 @@ const player = new Player({
 })
 
 
-const NpcSprites = {
-  x: 0,
-  y: 0,
-  width: 16,
-  height: 16,
-  frameCount: 4,
-};
-
-
 const monsterSprites = {
   walkDown: {
     x: 0,
@@ -186,15 +177,16 @@ const monsterSprites = {
   },
 }
 
-const npcs = [
-  new NPC({
-    x: 300,
-    y: 200,
-    size: 16,
-    imageSrc: './images/OldWoman/SpriteSheet.png',
-  }),
-];
 
+const npc2 = [
+  new NPC2({
+    x: 370,
+    y: 150,
+    size: 15,
+    imageSrc: './images/OldWoman/SpriteSheet.png',
+    sprites: monsterSprites,
+    }),
+]
 
 const monsters = [
   new Monster({
@@ -373,26 +365,13 @@ function animate(backgroundCanvas) {
     }
   }
 
-  /*
-  for (let i = npcs.length - 1; i >= 0; i--) {
-    const npc = npcs[i];
-    npc.update(deltaTime, collisionBlocks);
-    npc.draw(c);
-
-    // Detect collision between player and NPC
-    if (
-      player.x + player.width >= npc.x &&
-      player.x <= npc.x + npc.width &&
-      player.y + player.height >= npc.y &&
-      player.y <= npc.y + npc.height
-    ) {
-      // Show dialogue when collision happens
-      showDialogueBox('Hello there! How can I help you today?');
-    } else {
-      hideDialogueBox();
-    }
+  
+  // render out our npc
+   for (let i = npc2.length-1; i >= 0; i--) {
+    const npc = npc2[i]
+    npc.update(deltaTime, collisionBlocks)
+    npc.draw(c)
   }
-  */
 
   c.drawImage(frontRendersCanvas, 0, 0)
 
