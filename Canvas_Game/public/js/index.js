@@ -177,13 +177,20 @@ const monsterSprites = {
   },
 }
 
-
+// NPC setup 
 const npc2 = [
   new NPC2({
     x: 370,
     y: 150,
     size: 15,
     imageSrc: './images/OldWoman/SpriteSheet.png',
+    sprites: monsterSprites,
+    }),
+  new NPC2({
+    x: 85,
+    y: 90,
+    size: 15,
+    imageSrc: './images/Princess/SpriteSheet.png',
     sprites: monsterSprites,
     }),
 ]
