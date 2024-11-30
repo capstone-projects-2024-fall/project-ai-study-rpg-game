@@ -193,6 +193,13 @@ const npc2 = [
     imageSrc: './images/Princess/SpriteSheet.png', //princess near spawn
     sprites: monsterSprites,
     }),
+    new NPC2({
+      x: 300,
+      y: 320,
+      size: 15,
+      imageSrc: './images/Samurai/SpriteSheet.png',
+      sprites: monsterSprites,
+      })
 ]
 
 const monsters = [
@@ -379,8 +386,10 @@ function animate(backgroundCanvas) {
     npc.update(deltaTime, player, (npc) => {
       if (npc === npc2[0]) { // Specific dialogue for the first NPC (princess)
         showDialogueBox('Hello, traveler! Welcome to our village.');
-      } else if (npc === npc2[1]) {// Specific dialogue for the second NPC (purple old lady )
+      }if (npc === npc2[1]) {// Specific dialogue for the second NPC (purple old lady )
         showDialogueBox('The forest is dangerous. Be cautious!');
+      } else if (npc === npc2[2]) {
+        showDialogueBox('I am the samurai of the village. You look weak buy something from the shop to get stronger.');
       }
     });
     npc.draw(c);

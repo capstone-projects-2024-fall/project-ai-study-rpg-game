@@ -181,18 +181,7 @@ class Player {
   draw(c) {
     if (!this.loaded || !this.weaponSpriteHasLoaded) return
 
-    // Red square debug code
-    // c.fillStyle = 'rgba(0, 0, 255, 0.5)'
-    // c.fillRect(this.x, this.y, this.width, this.height)
 
-    // Attack box debug code
-    // c.fillStyle = 'rgba(0, 0, 255, 0.5)'
-    // c.fillRect(
-    //   this.attackBox.x,
-    //   this.attackBox.y,
-    //   this.attackBox.width,
-    //   this.attackBox.height
-    // )
 
     let alpha = 1
     if (this.isInvincible) alpha = 0.5
