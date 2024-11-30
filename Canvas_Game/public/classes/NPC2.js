@@ -56,32 +56,33 @@ class NPC2 {
       }
       
   
-    update(deltaTime, player) {
+    update(deltaTime, player, onCollision) {
       if (!deltaTime) return;
-  
+    
       this.elapsedTime += deltaTime;
-  
+    
       // Handle invincibility timer
       if (this.isInvincible) {
         this.elapsedInvincibilityTime += deltaTime;
-  
+    
         if (this.elapsedInvincibilityTime >= this.invincibilityInterval) {
           this.isInvincible = false;
           this.elapsedInvincibilityTime = 0;
         }
       }
-  
-      // Animate sprite to idle state 
-      const intervalToGoToNextFrame = 0.15
+    
+      // Animate sprite to idle state
+      const intervalToGoToNextFrame = 0.15;
       if (this.elapsedTime > intervalToGoToNextFrame) {
         this.currentFrame = 0;
       }
+    
       // Check for collision with player
       if (this.checkPlayerCollision(player)) {
-        console.log("Collision detected with player!");
-        // Handle collision response here (e.g., reduce player health)
+        if (onCollision) onCollision(this); // Trigger collision callback
       }
     }
+      
   
     checkPlayerCollision(player) {
       return (

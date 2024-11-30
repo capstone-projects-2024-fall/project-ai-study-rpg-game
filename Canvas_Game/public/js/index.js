@@ -183,14 +183,14 @@ const npc2 = [
     x: 370,
     y: 150,
     size: 15,
-    imageSrc: './images/OldWoman/SpriteSheet.png',
+    imageSrc: './images/OldWoman/SpriteSheet.png', // purple old lady 
     sprites: monsterSprites,
     }),
   new NPC2({
     x: 85,
     y: 90,
     size: 15,
-    imageSrc: './images/Princess/SpriteSheet.png',
+    imageSrc: './images/Princess/SpriteSheet.png', //princess near spawn
     sprites: monsterSprites,
     }),
 ]
@@ -374,11 +374,18 @@ function animate(backgroundCanvas) {
 
   
   // render out our npc
-   for (let i = npc2.length-1; i >= 0; i--) {
-    const npc = npc2[i]
-    npc.update(deltaTime, collisionBlocks)
-    npc.draw(c)
+  for (let i = npc2.length - 1; i >= 0; i--) {
+    const npc = npc2[i];
+    npc.update(deltaTime, player, (npc) => {
+      if (npc === npc2[0]) { // Specific dialogue for the first NPC (princess)
+        showDialogueBox('Hello, traveler! Welcome to our village.');
+      } else if (npc === npc2[1]) {// Specific dialogue for the second NPC (purple old lady )
+        showDialogueBox('The forest is dangerous. Be cautious!');
+      }
+    });
+    npc.draw(c);
   }
+  
 
   c.drawImage(frontRendersCanvas, 0, 0)
 
@@ -411,8 +418,11 @@ function showDialogueBox(message) {
   dialogueBox.innerText = message;
   dialogueBox.style.display = 'block';
   dialogueBox.style.width = '940px'; 
-  dialogueBox.style.height = '400px'; 
+  dialogueBox.style.height = '380px'; 
+
+  setTimeout(hideDialogueBox, 3000); // Auto-hide after 3 seconds
 }
+
 
 function hideDialogueBox() {
   const dialogueBox = document.getElementById('dialogueBox');
