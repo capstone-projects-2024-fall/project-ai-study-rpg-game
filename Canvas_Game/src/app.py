@@ -15,11 +15,13 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             last_name TEXT NOT NULL,
+            nickname TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
             canvas_key TEXT,
             score INTEGER DEFAULT 0,
-            picture_url TEXT DEFAULT EMPTY
+            selectedMotto TEXT NOT NULL,
+            picture_url TEXT DEFAULT ''
         )
     ''')
     
@@ -43,15 +45,18 @@ def init_db():
 def signup():
     data = request.json
     name = data['name']
+    nickname = data ['nickname']
     last_name = data['lastName']
     email = data['email']
     password = data['password']
+    canvas_key = data['canvasKey']
+    selectedMotto = data['selectedMotto']
 
     try:
         conn = sqlite3.connect('users.db')
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO users (name, last_name, email, password) VALUES (?, ?, ?, ?)', 
-                       (name, last_name, email, password))
+        cursor.execute('INSERT INTO users (name, last_name, nickname, email, password, canvas_key, selectedMotto) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+                       (name, last_name, nickname, email, password, canvas_key, selectedMotto))
         conn.commit()
         return jsonify({"message": "User registered successfully"}), 201
     except sqlite3.IntegrityError:
@@ -62,8 +67,12 @@ def signup():
 @app.route('/canvasKey', methods=['POST'])
 def logCanvasKey():
         data = request.json
-        email = data['email']
-        canvasKey = data['canvasKey']
+        print('Received payload:', data)
+        # email = data['email']
+        email = data.get('email')
+        # canvasKey = data['canvasKey']
+        canvasKey = data.get('canvasKey')
+        print(f'Canvas Key: {canvasKey}, Email: {email}') 
 
         canvasUrl = "https://templeu.instructure.com/api/v1/users/self/profile"
 
@@ -76,7 +85,8 @@ def logCanvasKey():
                 user_profile = response.json()
                 print("Token is valid!")
                 print("User Profile:", user_profile)
-                picture=user_profile["avatar_url"]
+                #picture=user_profile["avatar_url"]
+                picture = user_profile.get('avatar_url')
                 print("picture is" + picture)
 
                 # Save the token in the database
@@ -120,6 +130,26 @@ def login():
         return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"message": "Invalid password"}), 401
+    
+
+# Getting user data from the database    
+@app.route('/api/user', methods=['GET'])
+def get_user_by_email():
+    email = request.args.get('email')  # Get the email from query parameters
+
+    if not email:
+        return jsonify({"message": "Email is required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.execute('SELECT * FROM users WHERE email = ?', (email,))
+    user = cursor.fetchone()
+    conn.close()
+
+    if user:
+        return jsonify(dict(user))  # Convert the row to a dictionary and return as JSON
+    else:
+        return jsonify({"message": "User not found"}), 404
+
 
 def get_db_connection():
     conn = sqlite3.connect('users.db')

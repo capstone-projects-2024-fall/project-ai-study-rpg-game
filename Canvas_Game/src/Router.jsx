@@ -21,7 +21,7 @@ import {
   // Stream,
 } from "./scenes";
 import UserProfile from "./scenes/userProfile";
-import { user } from './data/mockProfileData';
+// import { user } from './data/mockProfileData';
 import ConnectCanvas from './ConnectCanvas';
 import GamePage from './GamePage'
 
@@ -37,16 +37,17 @@ export const useAuth = () => useContext(AuthContext);
 
 const AppRouter = () => {
   const [isSignedIn, setIsSignIn] = useState(false); // data base, local browser storage.
+  const [userEmail, setUserEmail] = useState(null);
 
   return (
-    <AuthContext.Provider value={{ isSignedIn, setIsSignIn }}>
+    <AuthContext.Provider value={{ isSignedIn, setIsSignIn, userEmail, setUserEmail  }}>
     <Router>
       <Routes>
       <Route path="/" element={isSignedIn? <App /> : <AuthPage/>}>
         {/* <Route path="/" element={<App />}> */}
           <Route path="/" element={<Dashboard />} />
           <Route path="/LoginPage" element={<LoginPage />} />
-          <Route path="/userProfile" element={<UserProfile user={user} />} />
+          <Route path="/userProfile" element={<UserProfile email={userEmail} />} />
           <Route path="/game" element={<GamePage/>}/>
           <Route path="/store" element={<Store/>}/>
         

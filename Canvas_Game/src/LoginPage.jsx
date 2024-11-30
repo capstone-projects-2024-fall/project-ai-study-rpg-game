@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import styles from './LoginPage.module.css';
 import InputField from './InputField';
 import wizardLogo from './assets/WizardLogo.png';
+import { useAuth } from './Router'; 
 
 const LoginPage = ({ switchToSignUp, switchToDashboard }) => { 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const { setIsSignIn} = useAuth();
+  console.log("useAuth values:", useAuth());
+  const { setUserEmail } = useAuth(); // Access setUserEmail from AuthContext
+  console.log("setUserEmail function:", setUserEmail);
 
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
@@ -29,7 +34,16 @@ const LoginPage = ({ switchToSignUp, switchToDashboard }) => {
       const result = await response.json();
 
       if (response.status === 200) {
+        console.log("Login successful, setting userEmail:", email);
         setMessage('Login successful');
+        setIsSignIn(true); // Update global signed-in state
+        //setUserEmail(email); // Store logged-in user's email
+        setUserEmail((prev) => {
+          console.log("Previous email:", prev);
+          console.log("Setting new email:", email);
+          return email;
+        });
+        
         switchToDashboard(); // Redirect to dashboard upon successful login
       } else if (response.status === 404) {
         setMessage('Account does not exist');

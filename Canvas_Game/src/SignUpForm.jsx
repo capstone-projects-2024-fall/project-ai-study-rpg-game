@@ -8,12 +8,29 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
   const [formData, setFormData] = useState({
     name: '',
     lastName: '',
+    nickname: '',
     email: '',
     password: '',
     confirmPassword: '',
+    canvasKey: '',
+    selectedMotto: '',
+    
   });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+
+  const mottos = [
+    'Knowledge is Power',
+    'Master Your Quest',
+    'Learn, Grow, Conquer',
+    'Wisdom Through Effort',
+    'Study. Focus. Triumph.',
+    'Challenge Accepted',
+    'Level Up Your Mind',
+    'Progress, Not Perfection',
+    'Strength in Learning',
+    'Rise to the Challenge',
+  ];
 
   useEffect(() => {
     // Load saved form data from localStorage on component mount
@@ -31,6 +48,12 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
     localStorage.setItem('signupFormData', JSON.stringify(updatedFormData));
   };
 
+  const handleDropdownChange = (e) => {
+    const updatedFormData = { ...formData, selectedMotto: e.target.value };
+    setFormData(updatedFormData);
+    localStorage.setItem('signupFormData', JSON.stringify(updatedFormData));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
@@ -42,6 +65,13 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
     }
 
     try {
+      
+
+      // const validateData = await validateResponse.json();
+      // console.log('Success:', validateData);
+      // setSuccess(true);
+      // setCanvasKey(''); // Clear the input field after successful submission
+
       const response = await fetch('http://localhost:5000/signup', {
         method: 'POST',
         headers: {
@@ -50,8 +80,12 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
         body: JSON.stringify({
           name: formData.name,
           lastName: formData.lastName,
+          nickname: formData.nickname,
           email: formData.email,
           password: formData.password,
+          canvasKey: formData.canvasKey,
+          selectedMotto: formData.selectedMotto,
+          
         }),
       });
 
@@ -60,6 +94,31 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
       if (!response.ok) {
         throw new Error(data.message || `HTTP error! status: ${response.status}`);
       }
+
+
+      console.log('Payload sent to backend:', {
+        canvasKey: formData.canvasKey,
+        email: formData.email,
+      });
+      const validateResponse = await fetch('http://localhost:5000/canvasKey', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          canvasKey: formData.canvasKey,
+          email: formData.email,
+          }),
+      });
+
+      if (!validateResponse.ok) {
+        // Extract error message from the backend response
+        const errorData = await validateResponse.json();
+
+        throw new Error(errorData.message || 'An unknown error occurred.');
+      }
+
+
       const data = await response.json();
 
       setMessage(data.message);
@@ -67,9 +126,13 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
       setFormData({
         name: '',
         lastName: '',
+        nickname: '',
         email: '',
         password: '',
         confirmPassword: '',
+        canvasKey: '',
+        selectedMotto: '',
+        
       });
       //localStorage.removeItem('signupFormData');
       switchToLogin(); // Switch to Login page after successful signup
@@ -86,9 +149,11 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
   const formFields = [
     { label: 'Name', type: 'text', id: 'name', placeholder: 'Enter your name' },
     { label: 'Last Name', type: 'text', id: 'lastName', placeholder: 'Enter your last name' },
+    { label: 'Nickname', type: 'text', id: 'nickname', placeholder: 'Enter your nickname' },
     { label: 'Email', type: 'email', id: 'email', placeholder: 'Enter your email' },
     { label: 'Password', type: 'password', id: 'password', placeholder: 'Enter your password' },
     { label: 'Confirm Password', type: 'password', id: 'confirmPassword', placeholder: 'Confirm your password' },
+    { label: 'Canvas Key', type: 'text', id: 'canvasKey', placeholder: 'Enter your Canvas access key' },
   ];
 
   return (
@@ -107,6 +172,30 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
               onChange={handleInputChange}
             />
           ))}
+
+          {/* dropdown motto menu */}
+
+          <div style={{ margin: '16px 0' }}></div>
+
+          <label htmlFor="selectedMotto" className={styles.dropdownLabel}>
+            Choose Your Motto:
+          </label>
+          <select
+            id="selectedMotto"
+            value={formData.selectedMotto}
+            onChange={handleDropdownChange}
+            className={styles.dropdown}
+          >
+            <option value="" disabled>
+              Select a motto
+            </option>
+            {mottos.map((motto, index) => (
+              <option key={index} value={motto}>
+                {motto}
+              </option>
+            ))}
+          </select>
+
           <div className={styles.buttonWrapper}>
             <button type="submit" className={styles.submitButton}>Submit</button>
             <button type="button" onClick={switchToLogin} className={styles.submitButton}>Already have an account?</button>
