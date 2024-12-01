@@ -1,3 +1,4 @@
+
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 const dpr = window.devicePixelRatio || 1
@@ -144,6 +145,7 @@ const player = new Player({
   size: 15,
 })
 
+
 const monsterSprites = {
   walkDown: {
     x: 0,
@@ -174,6 +176,31 @@ const monsterSprites = {
     frameCount: 4,
   },
 }
+
+// NPC setup 
+const npc2 = [
+  new NPC2({
+    x: 370,
+    y: 150,
+    size: 15,
+    imageSrc: './images/OldWoman/SpriteSheet.png', // purple old lady 
+    sprites: monsterSprites,
+    }),
+  new NPC2({
+    x: 85,
+    y: 90,
+    size: 15,
+    imageSrc: './images/Princess/SpriteSheet.png', //princess near spawn
+    sprites: monsterSprites,
+    }),
+    new NPC2({
+      x: 300,
+      y: 320,
+      size: 15,
+      imageSrc: './images/Samurai/SpriteSheet.png',
+      sprites: monsterSprites,
+      })
+]
 
 const monsters = [
   new Monster({
@@ -338,7 +365,7 @@ function animate(backgroundCanvas) {
       player.y <= monster.y + monster.height &&
       !player.isInvincible
     ) {
-      player.receiveHit()
+      player.receiveHit(showDialogueBox('Ouch!'))
 
       const filledHearts = hearts.filter((heart) => heart.currentFrame === 4)
 
@@ -347,10 +374,27 @@ function animate(backgroundCanvas) {
       }
 
       if (filledHearts.length <= 1) {
-        console.log('game over')
+        showDialogueBox('You have died buy a health potion to continue');
       }
     }
   }
+
+  
+  // render out our npc
+  for (let i = npc2.length - 1; i >= 0; i--) {
+    const npc = npc2[i];
+    npc.update(deltaTime, player, (npc) => {
+      if (npc === npc2[0]) { // Specific dialogue for the first NPC (princess)
+        showDialogueBox('Hello, traveler! Welcome to our village.');
+      }if (npc === npc2[1]) {// Specific dialogue for the second NPC (purple old lady )
+        showDialogueBox('The forest is dangerous. Be cautious!');
+      } else if (npc === npc2[2]) {
+        showDialogueBox('I am the samurai of the village. You look weak buy something from the shop to get stronger.');
+      }
+    });
+    npc.draw(c);
+  }
+  
 
   c.drawImage(frontRendersCanvas, 0, 0)
 
@@ -375,6 +419,23 @@ function animate(backgroundCanvas) {
   c.restore()
 
   requestAnimationFrame(() => animate(backgroundCanvas))
+}
+
+//Dialogue Box
+function showDialogueBox(message) {
+  const dialogueBox = document.getElementById('dialogueBox');
+  dialogueBox.innerText = message;
+  dialogueBox.style.display = 'block';
+  dialogueBox.style.width = '940px'; 
+  dialogueBox.style.height = '380px'; 
+
+  setTimeout(hideDialogueBox, 3000); // Auto-hide after 3 seconds
+}
+
+
+function hideDialogueBox() {
+  const dialogueBox = document.getElementById('dialogueBox');
+  dialogueBox.style.display = 'none';
 }
 
 const startRendering = async () => {
