@@ -413,7 +413,12 @@ function animate(backgroundCanvas) {
     const npc = npc2[i];
     npc.update(deltaTime, player, (npc) => {
       if (npc === npc2[0]) { // Specific dialogue for the first NPC (princess)
-        showDialogueBox('Hello, traveler! Welcome to our village.');
+        if(player.worldState == 0){
+          showDialogueBox('Hello, traveler! Welcome to our village.');
+        }else if(player.worldState == 1){
+          showDialogueBox('Thank you for your much needed aid, traveler. The villiage samurai and blacksmith are grateful for your help.')
+        }
+        
       }if (npc === npc2[1]) {// Specific dialogue for the second NPC (purple old lady )
         showDialogueBox('The forest is dangerous. Be cautious!');
       } else if (npc === npc2[2]) {
