@@ -33,7 +33,7 @@ def init_db():
             assignment_description TEXT,
             due_at TEXT, 
             course_id INTEGER,
-            group_category_id INTEGER
+            group_category_id INTEGER,
             points_possible INTEGER,
             published TEXT
         )
@@ -217,7 +217,7 @@ def getAllAssignments():
                 response = requests.get(newcanvasURL, headers=newheaders)
                 if response.status_code == 200:		#check if its good
                     getAssignmentList = response.json()  #get assignment list
-                    print(getAssignmentList[0])
+                    #print(getAssignmentList[0])
                     print('\n')
                     
                     for assignment in getAssignmentList: 
