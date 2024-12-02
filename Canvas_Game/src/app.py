@@ -25,6 +25,7 @@ def init_db():
             selectedMotto TEXT NOT NULL,
             picture_url TEXT DEFAULT '',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
         )
     ''')
     

@@ -47,6 +47,9 @@ const JiraBoard = () => {
   // Function to handle the "Next Step" action
   const handleNextStep = (taskId, currentColumn) => {
     const currentIndex = columns.indexOf(currentColumn);
+    if(currentIndex == 2){
+      localStorage.setItem("worldState", 1)
+    }
     if (currentIndex < columns.length - 1) {
       const nextColumn = columns[currentIndex + 1];
 
