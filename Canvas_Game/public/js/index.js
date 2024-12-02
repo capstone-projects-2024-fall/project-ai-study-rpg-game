@@ -23,6 +23,8 @@ const VIEWPORT_CENTER_Y = VIEWPORT_HEIGHT / 2
 const MAX_SCROLL_X = MAP_WIDTH - VIEWPORT_WIDTH
 const MAX_SCROLL_Y = MAP_HEIGHT - VIEWPORT_HEIGHT
 
+
+
 const layersData = {
   l_Terrain: l_Terrain,
   l_Trees_1: l_Trees_1,
@@ -37,10 +39,28 @@ const layersData = {
   l_Collisions: l_Collisions,
 }
 
+const layersData_WS1 = {
+  l_Terrain: l_Terrain,
+  l_Trees_1: l_Trees_1,
+  l_Trees_2: l_Trees_2,
+  l_Trees_3: l_Trees_3,
+  l_Trees_4: l_Trees_4,
+  l_Landscape_Decorations: l_Landscape_Decorations,
+  l_Landscape_Decorations_2: l_Landscape_Decorations_2,
+  l_Houses: l_Houses_WS1,
+  l_House_Decorations: l_House_Decorations_WS1,
+  l_Characters: l_Characters,
+  l_Collisions: l_Collisions,
+}
+
 const frontRendersLayersData = {
   l_Front_Renders: l_Front_Renders,
   l_Front_Renders_2: l_Front_Renders_2,
   l_Front_Renders_3: l_Front_Renders_3,
+}
+
+const frontRendersLayersData_WS1 = {
+  l_front_Renders: l_Front_Renders_WS1
 }
 
 const tilesets = {
@@ -199,7 +219,15 @@ const npc2 = [
       size: 15,
       imageSrc: './images/Samurai/SpriteSheet.png',
       sprites: monsterSprites,
-      })
+      }),
+      new NPC2({
+        x: 80,
+        y: 320,
+        size: 15,
+        imageSrc: './images/OldMan3/SpriteSheet.png',
+        sprites: monsterSprites,
+        })
+
 ]
 
 const monsters = [
@@ -389,7 +417,17 @@ function animate(backgroundCanvas) {
       }if (npc === npc2[1]) {// Specific dialogue for the second NPC (purple old lady )
         showDialogueBox('The forest is dangerous. Be cautious!');
       } else if (npc === npc2[2]) {
-        showDialogueBox('I am the samurai of the village. You look weak buy something from the shop to get stronger.');
+        if(player.worldState == 0){
+          showDialogueBox('I am the samurai of the village. Help me build my dojo and I can make you stonger. :::: Complete an assignment to advance the world state');
+        }else if (player.worldState == 1){
+          showDialogueBox('Thank you for helping build my dojo. Come by and I can train you to get stronger.')
+        }
+      } else if (npc === npc2[3]){
+        if(player.worldState == 0){
+          showDialogueBox('Please help me build my weapon forge, I can upgrade your weapon :::: Complete an assignment to advance the world state')
+        }else if(player.worldState == 1){
+          showDialogueBox('Thank you for helping me build my weapon forge, as a reward you can pick a weapon of your choosing and I can make it for you')
+        }
       }
     });
     npc.draw(c);
@@ -440,9 +478,18 @@ function hideDialogueBox() {
 
 const startRendering = async () => {
   try {
-    const backgroundCanvas = await renderStaticLayers(layersData)
-    frontRendersCanvas = await renderStaticLayers(frontRendersLayersData)
-    if (!backgroundCanvas) {
+    /*const backgroundCanvas  = await renderStaticLayers(layersData)
+    frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)*/
+    let backgroundCanvas
+    if(player.worldState == 0){
+      backgroundCanvas = await renderStaticLayers(layersData_WS1)
+      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
+    }else if(player.worldState == 1){
+      backgroundCanvas = await renderStaticLayers(layersData)
+      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData)
+    }
+    
+    if (backgroundCanvas== null) {
       console.error('Failed to create the background canvas')
       return
     }

@@ -21,7 +21,8 @@ def init_db():
             canvas_key TEXT,
             score INTEGER DEFAULT 0,
             selectedMotto TEXT NOT NULL,
-            picture_url TEXT DEFAULT ''
+            picture_url TEXT DEFAULT '',
+            worldState INTEGER DEFAULT 0
         )
     ''')
     
