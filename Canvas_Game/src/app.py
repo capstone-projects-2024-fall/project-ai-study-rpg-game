@@ -254,7 +254,7 @@ def getAllAssignments():
                     
                     for assignment in getAssignmentList: 
 
-                        #ASSIGNMENTS: id, name, ?description?, due_at, course_id, due_date_required, group_category_id, points_possible, published
+                        #ASSIGNMENTS: id, name, description, due_at, course_id, due_date_required, group_category_id, points_possible, published
                         assignment_id = assignment['id']
                         assignment_name = assignment['name']
                         assignment_description = assignment['description']
