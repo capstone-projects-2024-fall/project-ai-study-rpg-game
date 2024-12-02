@@ -29,11 +29,24 @@ def init_db():
         CREATE TABLE IF NOT EXISTS assignments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             assignment_id INTEGER,
+            assignment_name TEXT,
+            assignment_description TEXT,
+            due_at TEXT, 
             course_id INTEGER,
             group_category_id INTEGER
-            name TEXT,
-            description TEXT,
-            due_at TEXT
+            points_possible INTEGER,
+            published TEXT
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS courses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            course_id INTEGER,
+            course_name TEXT,
+            course_code TEXT,
+            workflow_state TEXT, 
+            enrollment_term_id TEXT
         )
     ''')
 
@@ -159,27 +172,128 @@ def get_user_by_email():
 def getAllAssignments(): 
     #function to grab assignments from frontend then put sort them into db
     data = request.json	#gets data from fetch call in react comp
-    print('recieved payload: ', data)	#testing
+    #print('recieved payload: ', data)	#testing
 	
     canvasKey = data.get('canvasKey')
-    print(f'Canvas Key: {canvasKey}, FLAG 1')	#testing
+    #print(f'Canvas Key: {canvasKey}, FLAG 1')	#testing
 	
+    
+
     canvasURL = "https://templeu.instructure.com/api/v1/courses"
     headers = {"Authorization": f"Bearer {canvasKey}"}
 
+                    # Save the token in the database
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+
     response = requests.get(canvasURL, headers=headers)
-    print('FLAG 2')
     if response.status_code == 200:		#check if its good
-        print('FLAG 2 BITCH')
         getCourseList = response.json()  #get course list
-        print(getCourseList[0])
-        print(getCourseList[1])
-        print(getCourseList[2])
-        return jsonify({"message": "courses pulled from canvas api"}), 200
+        
+        #print(course[0])
+        #print('\n')
+        
+        for course in getCourseList: 
+            length = len(course)
+            if(length> 3):
+                print(course)
+                print('\n')
+            
+            #COURSE: id, name, course_code, workflow_state (status), enrollment_term_id
+                course_id = course['id']
+                course_name = course['name']
+                course_code = course['course_code']
+                workflow_state = course['workflow_state']
+                enrollment_term_id = course['enrollment_term_id']
+
+                cursor.execute('INSERT INTO courses (course_id, course_name, course_code, workflow_state, enrollment_term_id) VALUES (?, ?, ?, ?, ?)', 
+                (course_id, course_name, course_code, workflow_state, enrollment_term_id))
+
+
+                ####FROM OTHER FUNCTION LOLL  JUStT trying somm 
+                newcanvasURL = f"https://templeu.instructure.com/api/v1/courses/{course_id}/assignments"  #might have to change bc courseid var
+                newheaders = {"Authorization": f"Bearer {canvasKey}"}
+
+                response = requests.get(newcanvasURL, headers=newheaders)
+                if response.status_code == 200:		#check if its good
+                    getAssignmentList = response.json()  #get assignment list
+                    print(getAssignmentList[0])
+                    print('\n')
+                    
+                    for assignment in getAssignmentList: 
+
+                        #ASSIGNMENTS: id, name, ?description?, due_at, course_id, due_date_required, group_category_id, points_possible, published
+                        assignment_id = assignment['id']
+                        assignment_name = assignment['name']
+                        assignment_description = assignment['description']
+                        due_at = assignment['due_at']
+                        course_id = assignment['course_id']
+                        group_category_id = assignment['group_category_id']
+                        points_possible = assignment['points_possible']
+                        published = assignment['published']
+
+                        cursor.execute('INSERT INTO assignments (assignment_id, assignment_name, assignment_description, due_at, course_id, group_category_id, points_possible, published) VALUES (?,?,?,?,?,?,?,?)', 
+                        (assignment_id, assignment_name, assignment_description, due_at, course_id, group_category_id, points_possible, published))
+
+                else:
+                    return jsonify({"message": "NOT OK 400 THE ONE U ADDED"}), 400
+
+
+        conn.commit()
+        conn.close()
+        return jsonify({"message": "courses pulled successfully"}), 201
+
     else: 
-        print('FLAG 3')
         return jsonify({"message": "NOT OK 400"}), 400
+
+
+
+
+    conn.commit()
+        #put these into catgory table - HAVE TO MOVE/ADJUST for loop also the errors are fucked 
+        #try:
+            #
+        #    return jsonify({"message": "courses pulled successfully"}), 201
+        #except sqlite3.IntegrityError:
+        #    return jsonify({"message": "User already exists"}), 400 #IDK 
+        #finally:
+        #conn.close()
+
+        #return jsonify({"message": "courses pulled from canvas api"}), 200
     
+    #else: 
+    #    return jsonify({"message": "NOT OK 400"}), 400
+
+
+def getAssignmentsByCourse(course_id, canvasKey): 
+    canvasURL = "https://templeu.instructure.com/api/v1/course_id/assignments"  #might have to change bc courseid var
+    headers = {"Authorization": f"Bearer {canvasKey}"}
+
+    response = requests.get(canvasURL, headers=headers)
+    if response.status_code == 200:		#check if its good
+        getAssignmentList = response.json()  #get course list
+        #print(getAssignmentList)
+        #print('\n')
+        
+        for assignment in getAssignmentList: 
+
+            #ASSIGNMENTS: id, name, ?description?, due_at, course_id, due_date_required, group_category_id, points_possible, published
+            assignment_id = assignment['id']
+            assignment_name = assignment['name']
+            assignment_description = assignment['description']
+            due_at = assignment['due_at']
+            course_id = assignment['course_id']
+            group_category_id = assignment['group_category_id']
+            points_possible = assignment['points_possible']
+            published = assignment['published']
+
+
+        return jsonify({"message": "courses pulled successfully"}), 201
+
+    else: 
+        return jsonify({"message": "NOT OK 400"}), 400
+
+
 
 
 
