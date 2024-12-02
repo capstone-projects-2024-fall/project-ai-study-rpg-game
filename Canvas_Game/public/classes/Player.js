@@ -8,6 +8,7 @@ class Player {
     this.width = size
     this.height = size
     this.velocity = velocity
+    this.inventory = [];
     this.center = {
       x: this.x + this.width / 2,
       y: this.y + this.height / 2,
@@ -180,18 +181,7 @@ class Player {
   draw(c) {
     if (!this.loaded || !this.weaponSpriteHasLoaded) return
 
-    // Red square debug code
-    // c.fillStyle = 'rgba(0, 0, 255, 0.5)'
-    // c.fillRect(this.x, this.y, this.width, this.height)
 
-    // Attack box debug code
-    // c.fillStyle = 'rgba(0, 0, 255, 0.5)'
-    // c.fillRect(
-    //   this.attackBox.x,
-    //   this.attackBox.y,
-    //   this.attackBox.width,
-    //   this.attackBox.height
-    // )
 
     let alpha = 1
     if (this.isInvincible) alpha = 0.5

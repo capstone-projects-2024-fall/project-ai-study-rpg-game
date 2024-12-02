@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 import sqlite3
 import requests
 from flask_cors import CORS
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 app = Flask(__name__)
 CORS(app,  resources={r"/*": {"origins": "http://localhost:5173"}})  # To allow cross-origin requests from your React frontend
@@ -21,7 +23,8 @@ def init_db():
             canvas_key TEXT,
             score INTEGER DEFAULT 0,
             selectedMotto TEXT NOT NULL,
-            picture_url TEXT DEFAULT ''
+            picture_url TEXT DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
     
@@ -144,6 +147,34 @@ def login():
     else:
         return jsonify({"message": "Invalid password"}), 401
     
+#account age
+@app.route('/account-age', methods=['GET'])
+def account_age():
+    email = request.args.get('email')  # Get the email from query parameters
+
+    if not email:
+        return jsonify({"message": "Email is required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.execute('SELECT created_at FROM users WHERE email = ?', (email,))
+    user = cursor.fetchone()
+    conn.close()
+
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    # Parse the creation date and calculate the account age
+    created_at = datetime.strptime(user['created_at'], '%Y-%m-%d %H:%M:%S')
+    current_date = datetime.now()
+    difference = relativedelta(current_date, created_at)
+
+    # difference provides years, months, days, etc.
+    return jsonify({
+        "years": difference.years,
+        "months": difference.months,
+        "days": difference.days
+    })
+
 
 # Getting user data from the database    
 @app.route('/api/user', methods=['GET'])
