@@ -13,7 +13,11 @@ class Player {
       x: this.x + this.width / 2,
       y: this.y + this.height / 2,
     }
+    this.health = 3
+    
+    
 
+    this.worldState = localStorage.getItem("worldState")
     this.loaded = false
     this.image = new Image()
     this.image.onload = () => {
@@ -137,8 +141,8 @@ class Player {
 
   receiveHit() {
     if (this.isInvincible) return
-
-    this.isInvincible = true
+    this.health--;
+    //this.isInvincible = true
   }
 
   switchBackToIdleState() {
@@ -307,38 +311,40 @@ class Player {
   }
 
   handleInput(keys) {
-    this.velocity.x = 0
-    this.velocity.y = 0
+    if(this.health >= 0){
+      this.velocity.x = 0
+      this.velocity.y = 0
 
-    if (this.isAttacking) return
+      if (this.isAttacking) return
 
-    if (keys.d.pressed) {
-      this.velocity.x = X_VELOCITY
+      if (keys.d.pressed) {
+        this.velocity.x = X_VELOCITY
 
-      this.currentSprite = this.sprites.walkRight
-      this.currentSprite.frameCount = 4
-      this.facing = 'right'
-    } else if (keys.a.pressed) {
-      this.velocity.x = -X_VELOCITY
+        this.currentSprite = this.sprites.walkRight
+        this.currentSprite.frameCount = 4
+        this.facing = 'right'
+      } else if (keys.a.pressed) {
+        this.velocity.x = -X_VELOCITY
 
-      this.currentSprite = this.sprites.walkLeft
-      this.currentSprite.frameCount = 4
-      this.facing = 'left'
-    } else if (keys.w.pressed) {
-      this.velocity.y = -Y_VELOCITY
+        this.currentSprite = this.sprites.walkLeft
+        this.currentSprite.frameCount = 4
+        this.facing = 'left'
+      } else if (keys.w.pressed) {
+        this.velocity.y = -Y_VELOCITY
 
-      this.currentSprite = this.sprites.walkUp
-      this.currentSprite.frameCount = 4
-      this.facing = 'up'
-    } else if (keys.s.pressed) {
-      this.velocity.y = Y_VELOCITY
+        this.currentSprite = this.sprites.walkUp
+        this.currentSprite.frameCount = 4
+        this.facing = 'up'
+      } else if (keys.s.pressed) {
+        this.velocity.y = Y_VELOCITY
 
-      this.currentSprite = this.sprites.walkDown
-      this.currentSprite.frameCount = 4
-      this.facing = 'down'
-    } else {
-      this.currentSprite.frameCount = 1
-    }
+        this.currentSprite = this.sprites.walkDown
+        this.currentSprite.frameCount = 4
+        this.facing = 'down'
+      } else {
+        this.currentSprite.frameCount = 1
+      }
+    }  
   }
 
   checkForHorizontalCollisions(collisionBlocks) {
