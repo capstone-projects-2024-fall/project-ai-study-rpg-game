@@ -151,6 +151,40 @@ def get_user_by_email():
         return jsonify({"message": "User not found"}), 404
 
 
+
+
+
+#fetches assignments from canvasAPI and puts them in the database
+@app.route('/getAssignments', methods=['POST'])
+def getAllAssignments(): 
+    #function to grab assignments from frontend then put sort them into db
+    data = request.json	#gets data from fetch call in react comp
+    print('recieved payload: ', data)	#testing
+	
+    canvasKey = data.get('canvasKey')
+    print(f'Canvas Key: {canvasKey}, FLAG 1')	#testing
+	
+    canvasURL = "https://templeu.instructure.com/api/v1/courses"
+    headers = {"Authorization": f"Bearer {canvasKey}"}
+
+    response = requests.get(canvasURL, headers=headers)
+    print('FLAG 2')
+    if response.status_code == 200:		#check if its good
+        print('FLAG 2 BITCH')
+        getCourseList = response.json()  #get course list
+        print(getCourseList[0])
+        print(getCourseList[1])
+        print(getCourseList[2])
+        return jsonify({"message": "courses pulled from canvas api"}), 200
+    else: 
+        print('FLAG 3')
+        return jsonify({"message": "NOT OK 400"}), 400
+    
+
+
+
+
+
 def get_db_connection():
     conn = sqlite3.connect('users.db')
     conn.row_factory = sqlite3.Row  # Makes fetching rows easier with named columns

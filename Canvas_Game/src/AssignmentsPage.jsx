@@ -38,12 +38,53 @@ const AssignmentsPage = () => {
     }
 
 
+
+    //THIS WILL GO ON SIGNUP FORM IN ACTUAL GAME
+    //invoke getAssignments function in py after canvas token is input !!
+    //get assignments from canvas and send them to app.py
+    const [message,setMessage] = useState(''); 
+    const TEMPCanvasKey = '9957~QLWQPz7QEXtPfuWYRrQMyZFrHTthM2r9RUDGNEXMLAHBArmB729ycM66fhYBy4xu' //this is going to be formData.canvasKey in signup page
+    const getAssignmentsFromCanvas = async(e) => {
+        e.preventDefault();
+
+        try {
+
+            //idk just copy api assignment
+            //const fetchData = async () => {
+                //const result = await fetch(URL, {method: 'POST', headers:{}}); 
+                //const jsonResult = await result.json(); 
+                //console.log(result)
+                //setAssignments(jsonResult); 
+
+            //}
+
+            //then u use assignments to send data to backend
+            //this is for putting data into app.py
+
+            //invokes getAssignments function in app.py: 
+            const getAssignmentResponse = await fetch('http://localhost:5000/getAssignments', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    canvasKey: TEMPCanvasKey,
+                }),
+            });
+
+        } catch (error) {
+            setMessage('Failed to connect to the server. Please try again later.');
+        }
+    }
+
+
     return (
         <>
             <Box m="20px">
                 <div className="AssignmentList">
                     <CourseDropdownMenu courseValueSelected = {onCourseSelectedFromCDM}></CourseDropdownMenu>
                     <CourseAssignmentsList courseValueSelected = {courseValue}></CourseAssignmentsList>
+                    <button onClick={getAssignmentsFromCanvas}>Import Assignments from Canvas</button>
                 </div>
 
                 {/*<div>
