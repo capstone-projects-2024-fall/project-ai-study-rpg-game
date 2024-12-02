@@ -47,7 +47,16 @@ const UserProfile = ({ email }) => {
         }
         
         const data = await response.json();
-        setUser(data);
+         // Fetch account age
+        const ageResponse = await fetch(`http://localhost:5000/account-age?email=${email}`);
+        if (!ageResponse.ok) {
+          throw new Error(`HTTP error! status: ${ageResponse.status} ${ageResponse.statusText}`);
+        }
+        const ageData = await ageResponse.json();
+
+        setUser({ ...data, accountAge: ageData });
+
+        //setUser(data);
       } catch (err) {
         console.error('Error fetching user data:', err);
         setError(err.message);
@@ -101,7 +110,7 @@ const UserProfile = ({ email }) => {
             <Typography variant="h4" sx={{ fontWeight:'bold' , fontSize: '30px' }} >{user.name.toUpperCase() + " "+ user.last_name.toUpperCase()}</Typography>
             <Typography variant="h5" sx={{ fontSize: '30px' }} >{user.nickname}</Typography>
             <Typography sx={{ fontSize: '30px' }} >{`Score: ${user.score}`}</Typography>
-            <Typography sx={{ fontSize: '30px' }} >{`Age: ${user.canvas_key}`}</Typography>
+            <Typography sx={{ fontSize: '30px' }} >{`Age:  ${user.accountAge?.months} months`}</Typography>
             <Typography sx={{ fontSize: '30px' }} >{`Major: ${user.name}`}</Typography>
             <Typography  style={{ marginBottom: 50 }} sx={{ fontSize: '30px' }} >
               {`Motto: "${user.selectedMotto}"`}
