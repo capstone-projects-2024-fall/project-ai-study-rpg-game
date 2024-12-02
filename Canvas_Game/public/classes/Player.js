@@ -14,6 +14,9 @@ class Player {
       y: this.y + this.height / 2,
     }
     this.health = 3
+    
+    
+
     this.worldState = localStorage.getItem("worldState")
     this.loaded = false
     this.image = new Image()

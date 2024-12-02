@@ -23,7 +23,9 @@ const VIEWPORT_CENTER_Y = VIEWPORT_HEIGHT / 2
 const MAX_SCROLL_X = MAP_WIDTH - VIEWPORT_WIDTH
 const MAX_SCROLL_Y = MAP_HEIGHT - VIEWPORT_HEIGHT
 
-
+if(localStorage.getItem("worldState")=== null){
+  localStorage.setItem("worldState", 0)
+}
 
 const layersData = {
   l_Terrain: l_Terrain,
