@@ -3,6 +3,8 @@ import styles from './SignUpForm.module.css';
 import InputField from './InputField';
 import wizardLogo from './assets/WizardLogo.png';
 import CanvasPage from './ConnectCanvas';
+import { Tooltip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +20,10 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
   });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [isHelpOpen, setHelpOpen] = useState(false);
+
+  const toggleHelpDialog = () => setHelpOpen(!isHelpOpen);
+
 
   const mottos = [
     'Knowledge is Power',
@@ -171,7 +177,18 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
               value={formData[field.id]}
               onChange={handleInputChange}
             />
+            
           ))}
+
+          <Tooltip title="Click for help with Canvas Key" arrow>
+
+          <IconButton onClick={toggleHelpDialog} aria-label="Help with Canvas Key">
+
+            <HelpOutlineIcon />
+
+          </IconButton>
+
+          </Tooltip>
 
           {/* dropdown motto menu */}
 
@@ -201,6 +218,47 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
             <button type="button" onClick={switchToLogin} className={styles.submitButton}>Already have an account?</button>
           </div>
         </form>
+        {/* Dialog for Canvas Key instructions */}
+
+        <Dialog open={isHelpOpen} onClose={toggleHelpDialog}>
+
+          <DialogTitle>What is a Canvas Key?</DialogTitle>
+
+          <DialogContent>
+
+            <p>
+
+              A Canvas Key is a personal access token that you can generate in your Canvas account settings. 
+
+              Use this key to connect your account securely to Canvas Quest.
+
+            </p>
+
+            <ol>
+
+              <li>Log in to your Canvas account.</li>
+
+              <li>Go to Account Settings.</li>
+
+              <li>Select 'Access Tokens' and generate a new token.</li>
+
+              <li>Copy the token and paste it here.</li>
+
+            </ol>
+
+          </DialogContent>
+
+          <DialogActions>
+
+            <Button onClick={toggleHelpDialog} color="primary">
+
+              Close
+
+            </Button>
+
+          </DialogActions>
+
+        </Dialog>
         {message && <p className={styles.successMessage}>{message}</p>}
         {error && <p className={styles.errorMessage}>{error}</p>}
       </div>
