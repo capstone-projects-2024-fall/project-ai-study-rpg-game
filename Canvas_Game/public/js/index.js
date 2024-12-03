@@ -477,41 +477,6 @@ function showDialogueBox(message) {
   setTimeout(hideDialogueBox, 5000); // Auto-hide after 5 seconds
 }
 
-let isInventoryVisible = false; // Tracks inventory visibility
-
-function toggleInventoryBox() {
-  const inventoryBox = document.getElementById("inventoryBox");
-  const inventoryList = document.getElementById("inventoryList");
-
-  if (isInventoryVisible) {
-    // Hide the inventory box
-    inventoryBox.style.display = "none";
-    isInventoryVisible = false;
-  } else {
-    // Show the inventory box and populate it
-    inventoryList.innerHTML = ""; // Clear existing inventory items
-
-    player.inventory.forEach(item => {
-      const listItem = document.createElement("li");
-      listItem.textContent = `${item.name} (${item.type})`;
-      inventoryList.appendChild(listItem);
-    });
-
-    inventoryBox.style.display = "block";
-    isInventoryVisible = true;
-  }
-}
-
-// Add event listener for toggling the inventory
-document.addEventListener("keydown", (event) => {
-  if (event.key.toLowerCase() === "i") { // Press 'I' to toggle inventory
-    toggleInventoryBox();
-  }
-});
-
-
-
-
 function hideDialogueBox() {
   const dialogueBox = document.getElementById('dialogueBox');
   dialogueBox.style.display = 'none';
