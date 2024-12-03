@@ -23,7 +23,7 @@ class Player {
     this.image.onload = () => {
       this.loaded = true
     }
-    this.image.src = './images/player.png'
+    this.image.src = '../images/player.png'
 
     // Player weapon
     this.weaponSpriteHasLoaded = false
@@ -31,7 +31,7 @@ class Player {
     this.weaponSprite.onload = () => {
       this.weaponSpriteHasLoaded = true
     }
-    this.weaponSprite.src = './images/lance.png'
+    this.weaponSprite.src = '../images/lance.png'
 
     this.currentFrame = 0
     this.elapsedTime = 0
