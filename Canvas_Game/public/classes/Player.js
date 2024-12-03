@@ -8,7 +8,8 @@ class Player {
     this.width = size
     this.height = size
     this.velocity = velocity
-    this.inventory = [];
+    this.inventory = [{ name: "Lance", type: "Weapon" }];
+    this.inventoryCapacity = 10; // Set capacity limit for inventory
     this.center = {
       x: this.x + this.width / 2,
       y: this.y + this.height / 2,
@@ -142,7 +143,7 @@ class Player {
   receiveHit() {
     if (this.isInvincible) return
     this.health--;
-    //this.isInvincible = true
+    this.isInvincible = true
   }
 
   switchBackToIdleState() {
