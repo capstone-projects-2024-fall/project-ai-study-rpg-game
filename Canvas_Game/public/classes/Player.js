@@ -411,22 +411,40 @@ function toggleInventoryBox() {
   const inventoryList = document.getElementById("inventoryList");
 
   if (isInventoryVisible) {
-    // Hide the inventory box
     inventoryBox.style.display = "none";
     isInventoryVisible = false;
   } else {
-    // Show the inventory box and populate it
     inventoryList.innerHTML = ""; // Clear existing inventory items
 
     player.inventory.forEach(item => {
       const listItem = document.createElement("li");
       listItem.textContent = `${item.name} (${item.type})`;
+      listItem.addEventListener("click", () => {
+        inspectItem(item);
+      });
       inventoryList.appendChild(listItem);
     });
 
     inventoryBox.style.display = "block";
     isInventoryVisible = true;
   }
+}
+
+function inspectItem(item) {
+  const itemDetailBox = document.getElementById("itemDetailBox");
+  itemDetailBox.innerHTML = `
+    <h3>${item.name}</h3>
+    <p>Type: ${item.type}</p>
+    <p>Description: ${item.description}</p>
+  `;
+  itemDetailBox.style.display = "block";
+  setTimeout(hideInspectBox, 2000);
+}
+
+
+function hideInspectBox() {
+  const itemDetailBox = document.getElementById('itemDetailBox');
+  itemDetailBox.style.display = 'none';
 }
 
 // Add event listener for toggling the inventory

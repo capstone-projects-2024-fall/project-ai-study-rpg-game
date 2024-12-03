@@ -477,6 +477,7 @@ function showDialogueBox(message) {
   setTimeout(hideDialogueBox, 5000); // Auto-hide after 5 seconds
 }
 
+
 function hideDialogueBox() {
   const dialogueBox = document.getElementById('dialogueBox');
   dialogueBox.style.display = 'none';
