@@ -51,7 +51,7 @@ def init_db():
             course_name TEXT,
             course_code TEXT,
             workflow_state TEXT, 
-            enrollment_term_id TEXT
+            enrollment_term_id INTEGER
         )
     ''')
 
@@ -209,7 +209,7 @@ def getAllAssignments():
     canvasKey = data.get('canvasKey')   #gets canvasKey from react comp
     #print(f'Canvas Key: {canvasKey}, FLAG 1')	#testing
 	
-    canvasURL = "https://templeu.instructure.com/api/v1/courses"
+    canvasURL = "https://templeu.instructure.com/api/v1/courses/?per_page=100"
     headers = {"Authorization": f"Bearer {canvasKey}"}
 
 
@@ -221,25 +221,27 @@ def getAllAssignments():
         
         for course in getCourseList: 
             length = len(course)
+            #print(course,'\n\n')   #testing
             if(length> 3):  #filters out courses with 'access_restricted_by_date' key 
-                #print(course, '\n') #testing
-            
-                ##parses through course data and puts it into vars
-                course_id = course['id']
-                course_name = course['name']
-                course_code = course['course_code']
-                workflow_state = course['workflow_state']
-                enrollment_term_id = course['enrollment_term_id']
+                if(course['enrollment_term_id'] == 142):    #only grab classes for the current semester, check if u can grab current enrollment_term_id from profile page instead
+                    print(course, '\n\n') #testing
+                
+                    ##parses through course data and puts it into vars
+                    course_id = course['id']
+                    course_name = course['name']
+                    course_code = course['course_code']
+                    workflow_state = course['workflow_state']
+                    enrollment_term_id = course['enrollment_term_id']
 
-                #puts data into courses table in user database
-                conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT
-                cursor = conn.cursor()
-                cursor.execute('INSERT INTO courses (course_id, course_name, course_code, workflow_state, enrollment_term_id) VALUES (?, ?, ?, ?, ?)', 
-                (course_id, course_name, course_code, workflow_state, enrollment_term_id))
-                conn.commit()
-                conn.close()
+                    #puts data into courses table in user database
+                    conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT
+                    cursor = conn.cursor()
+                    cursor.execute('INSERT INTO courses (course_id, course_name, course_code, workflow_state, enrollment_term_id) VALUES (?, ?, ?, ?, ?)', 
+                    (course_id, course_name, course_code, workflow_state, enrollment_term_id))
+                    conn.commit()
+                    conn.close()
 
-                getAssignmentsByCourse(course_id, canvasKey)    #gets assignment info and puts into users db
+                    getAssignmentsByCourse(course_id, canvasKey)    #gets assignment info and puts into users db
         return jsonify({"message": "Success! Course info stored in database"}), 200
     
     
@@ -265,8 +267,8 @@ def getAssignmentsByCourse(course_id, canvasKey):
         count = 0
         #for every assignment in getAssignmentList, insert data into assignments table in user database
         for assignment in getAssignmentList: 
-            if(count == 0):
-                print(assignment, '\n')
+            #if(count == 0): #testing
+                #print(assignment, '\n')
 
             #parses through assignment data and puts it into vars
             assignment_id = assignment['id']

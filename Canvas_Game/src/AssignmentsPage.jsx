@@ -42,7 +42,7 @@ const AssignmentsPage = () => {
     //THIS WILL GO ON SIGNUP FORM IN ACTUAL GAME
     //invoke getAssignments function in py after canvas token is input !!
     const [message,setMessage] = useState(''); 
-    const TEMPCanvasKey = '9957~QLWQPz7QEXtPfuWYRrQMyZFrHTthM2r9RUDGNEXMLAHBArmB729ycM66fhYBy4xu' //this is going to be formData.canvasKey in signup page
+    const TEMPCanvasKey = '9957~2ZmBuBTKHZraBA3hywvU3HMZz3B8CNRFAfeBkDMCk4B9uLJk7vLEu3nekFMPKhaT' //this is going to be formData.canvasKey in signup page
     const getAssignmentsFromCanvas = async(e) => {
         e.preventDefault();
 
