@@ -43,7 +43,7 @@ const AppRouter = () => {
     <AuthContext.Provider value={{ isSignedIn, setIsSignIn, userEmail, setUserEmail  }}>
     <Router>
       <Routes>
-      <Route path="/" element={isSignedIn? <App /> : <AuthPage/>}>
+      <Route path="/" element={isSignedIn? <App email={userEmail}/> : <AuthPage/>}>
         {/* <Route path="/" element={<App />}> */}
           <Route path="/" element={<Dashboard />} />
           <Route path="/LoginPage" element={<LoginPage />} />

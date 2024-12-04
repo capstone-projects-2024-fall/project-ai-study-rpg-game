@@ -125,6 +125,22 @@ const SignUpForm = ({ switchToLogin, switchToCanvas }) => {
       }
 
 
+      
+      //invokes getCourseAndAssignmentsInfoFromCanvas function in app.py: stores canvas course and assignment info into 
+      const getAssignmentResponse = await fetch('http://localhost:5000/getCourseAndAssignmentsInfoFromCanvas', {
+          method: 'POST',
+          headers: {
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              canvasKey: formData.canvasKey,
+          }),
+      });
+      if (!getAssignmentResponse.ok) {
+        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+      }
+
+
       const data = await response.json();
 
       setMessage(data.message);
