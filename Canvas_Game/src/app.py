@@ -33,11 +33,25 @@ def init_db():
         CREATE TABLE IF NOT EXISTS assignments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             assignment_id INTEGER,
+            assignment_name TEXT,
+            assignment_description TEXT,
+            due_at TEXT, 
             course_id INTEGER,
-            group_category_id INTEGER
-            name TEXT,
-            description TEXT,
-            due_at TEXT
+            submission_types TEXT,
+            points_possible INTEGER,
+            published TEXT,
+            in_game_status TEXT
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS courses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            course_id INTEGER,
+            course_name TEXT,
+            course_code TEXT,
+            workflow_state TEXT, 
+            enrollment_term_id INTEGER
         )
     ''')
 
@@ -181,6 +195,119 @@ def get_user_by_email():
         return jsonify(dict(user))  # Convert the row to a dictionary and return as JSON
     else:
         return jsonify({"message": "User not found"}), 404
+
+
+
+
+
+#fetches course and assignment info from canvasAPI and puts them in the user database
+@app.route('/getCourseAndAssignmentsInfoFromCanvas', methods=['POST'])
+def getAllAssignments(): 
+    data = request.json	#gets data from fetch call in react comp (signup/assignmentpage rn)
+    #print('recieved payload: ', data)	#testing
+	
+    canvasKey = data.get('canvasKey')   #gets canvasKey from react comp
+	
+    canvasURL = "https://templeu.instructure.com/api/v1/courses/?per_page=100"
+    headers = {"Authorization": f"Bearer {canvasKey}"}
+
+
+    response = requests.get(canvasURL, headers=headers) #fetch course list  //#MAYBE ADD TRY CATCH
+    if response.status_code == 200:		#check if its good, TROUBLESHOOT BETTER lol
+        getCourseList = response.json()  #gets course list: array of course objects
+        
+        #print(getCourseList, '\n') #testing 
+        
+        for course in getCourseList: 
+            length = len(course)
+            #print(course,'\n\n')   #testing
+            if(length> 3):  #filters out courses with 'access_restricted_by_date' key 
+                if(course['enrollment_term_id'] == 142):    #only grab classes for the current semester, check if u can grab current enrollment_term_id from profile page instead
+                    print(course, '\n\n') #testing
+                
+                    ##parses through course data and puts it into vars
+                    course_id = course['id']
+                    course_name = course['name']
+                    course_code = course['course_code']
+                    workflow_state = course['workflow_state']
+                    enrollment_term_id = course['enrollment_term_id']
+
+                    #puts data into courses table in user database
+                    conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT
+                    cursor = conn.cursor()
+                    cursor.execute('INSERT INTO courses (course_id, course_name, course_code, workflow_state, enrollment_term_id) VALUES (?, ?, ?, ?, ?)', 
+                    (course_id, course_name, course_code, workflow_state, enrollment_term_id))
+                    conn.commit()
+                    conn.close()
+
+                    getAssignmentsByCourse(course_id, canvasKey)    #gets assignment info and puts into users db
+        return jsonify({"message": "Success! Course info stored in database"}), 200
+    
+    
+    else:
+        return jsonify({"message": "SOMETHING WENT WRONG IN getAssignments"}), 400
+                
+
+
+#gets assignments data from canvas API, parses through it, puts data we want into assignments 
+def getAssignmentsByCourse(course_id, canvasKey): 
+
+    newcanvasURL = f"https://templeu.instructure.com/api/v1/courses/{course_id}/assignments"
+    newheaders = {"Authorization": f"Bearer {canvasKey}"}
+
+    response = requests.get(newcanvasURL, headers=newheaders)   #MAYBE ADD TRY CATCH
+    if response.status_code == 200:		#check if its good, TROUBLESHOOT BETTER lol
+        getAssignmentList = response.json()  #get assignments list(array of assignment objects) from canvas
+        #print(getAssignmentList[1], '\n') #testing
+
+        conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT, maybe do it differently idk
+        cursor = conn.cursor()
+
+        count = 0
+        #for every assignment in getAssignmentList, insert data into assignments table in user database
+        for assignment in getAssignmentList: 
+            #if(count == 0): #testing
+                #print(assignment, '\n')
+
+            #parses through assignment data and puts it into vars
+            assignment_id = assignment['id']
+            assignment_name = assignment['name']
+            assignment_description = assignment['description']
+            due_at = assignment['due_at']
+            assignments_course_id = assignment['course_id'] ##THIS WAS WEIRD
+            
+            submission_types = assignment['submission_types']   #submission_types is an ARRAY
+            submission_types_list_toString = ''
+            for sub_type_item in submission_types: 
+                submission_types_list_toString += sub_type_item
+                submission_types_list_toString += ","
+            #if len(submission_types) > 1:  #havent tested with this 
+            #    submission_types_1 = 'MULTIPLE'
+            #else: 
+            #    submission_types_1 = submission_types[0]
+
+            points_possible = assignment['points_possible']
+            published = assignment['published']
+            in_game_status = "Undecided"    #DEFAULT
+
+            #puts it into assignments table in user db
+            cursor.execute('INSERT INTO assignments (assignment_id, assignment_name, assignment_description, due_at, course_id, submission_types, points_possible, published, in_game_status) VALUES (?,?,?,?,?,?,?,?,?)', 
+            (assignment_id, assignment_name, assignment_description, due_at, assignments_course_id, submission_types_list_toString, points_possible, published, in_game_status))
+
+            count+=1
+
+        conn.commit()
+        conn.close()
+        return jsonify({"message": "Success! Assignments info stored in database"}), 200
+
+    else:
+        return jsonify({"message": "SOMETHING WENT WRONG IN getAssignmentsByCourse()"}), 400
+
+
+
+
+
+
 
 
 def get_db_connection():
