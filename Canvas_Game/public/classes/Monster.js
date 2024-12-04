@@ -71,7 +71,7 @@ class Monster {
     )
     c.restore()
   }
-
+  
   update(deltaTime, collisionBlocks) {
     if (!deltaTime) return
 
@@ -85,6 +85,7 @@ class Monster {
         this.elapsedInvincibilityTime = 0
       }
     }
+  
 
     // 0 - 3
     const intervalToGoToNextFrame = 0.15

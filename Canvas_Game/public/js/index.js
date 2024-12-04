@@ -477,28 +477,49 @@ function showDialogueBox(message) {
 }
 
 let isInventoryVisible = false; // Tracks inventory visibility
+let currentInspectItem = null; // Tracks the currently inspected item
 
 function toggleInventoryBox() {
   const inventoryBox = document.getElementById("inventoryBox");
   const inventoryList = document.getElementById("inventoryList");
+  const inspectBox = document.getElementById("inspectBox");
 
   if (isInventoryVisible) {
     // Hide the inventory box
     inventoryBox.style.display = "none";
+    inspectBox.style.display = "none";
     isInventoryVisible = false;
   } else {
     // Show the inventory box and populate it
     inventoryList.innerHTML = ""; // Clear existing inventory items
 
-    player.inventory.forEach(item => {
+    player.inventory.forEach((item, index) => {
       const listItem = document.createElement("li");
       listItem.textContent = `${item.name} (${item.type})`;
+      listItem.dataset.index = index; // Store index for reference
+
+      // Add click event to inspect the item
+      listItem.addEventListener("click", () => {
+        currentInspectItem = item;
+        showInspectBox(item);
+      });
+
       inventoryList.appendChild(listItem);
     });
 
     inventoryBox.style.display = "block";
     isInventoryVisible = true;
   }
+}
+
+function showInspectBox(item) {
+  const inspectBox = document.getElementById("inspectBox");
+  inspectBox.style.display = "block";
+  inspectBox.innerHTML = `
+    <h3>${item.name}</h3>
+    <p><strong>Type:</strong> ${item.type}</p>
+    <p><strong>Description:</strong> ${item.description}</p>
+  `;
 }
 
 // Add event listener for toggling the inventory
