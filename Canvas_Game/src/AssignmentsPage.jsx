@@ -60,8 +60,8 @@ const AssignmentsPage = () => {
             //then u use assignments to send data to backend
             //this is for putting data into app.py
 
-            //invokes getAssignments function in app.py: 
-            const getAssignmentResponse = await fetch('http://localhost:5000/getAssignments', {
+            //invokes getCourseAndAssignmentsInfoFromCanvas function in app.py: 
+            const getAssignmentResponse = await fetch('http://localhost:5000/getCourseAndAssignmentsInfoFromCanvas', {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',
