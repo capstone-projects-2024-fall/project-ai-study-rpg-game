@@ -35,6 +35,7 @@ def init_db():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS assignments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER REFERENCES users(id),
             assignment_id INTEGER,
             assignment_name TEXT,
             assignment_description TEXT,
@@ -50,6 +51,7 @@ def init_db():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS courses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER REFERENCES users(id),
             course_id INTEGER,
             course_name TEXT,
             course_code TEXT,
@@ -202,7 +204,6 @@ def get_user_by_email():
 
 
 
-
 #fetches course and assignment info from canvasAPI and puts them in the user database
 @app.route('/getCourseAndAssignmentsInfoFromCanvas', methods=['POST'])
 def getAllAssignments(): 
@@ -238,8 +239,16 @@ def getAllAssignments():
                     #puts data into courses table in user database
                     conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT
                     cursor = conn.cursor()
-                    cursor.execute('INSERT INTO courses (course_id, course_name, course_code, workflow_state, enrollment_term_id) VALUES (?, ?, ?, ?, ?)', 
-                    (course_id, course_name, course_code, workflow_state, enrollment_term_id))
+                    cursor.execute("SELECT id FROM users WHERE canvas_key = ?", (canvasKey,))
+                    user_row = cursor.fetchone()
+                        
+                    if user_row is None:
+                        conn.close()
+                        return jsonify({"message": "User not found in database"}), 404
+                        
+                    user_id = user_row[0] 
+                    cursor.execute('INSERT INTO courses (course_id,user_id, course_name, course_code, workflow_state, enrollment_term_id) VALUES (?, ?, ?, ?, ?, ?)', 
+                    (course_id,user_id, course_name, course_code, workflow_state, enrollment_term_id))
                     conn.commit()
                     conn.close()
 
@@ -265,6 +274,14 @@ def getAssignmentsByCourse(course_id, canvasKey):
 
         conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT, maybe do it differently idk
         cursor = conn.cursor()
+        cursor.execute("SELECT id FROM users WHERE canvas_key = ?", (canvasKey,))
+        user_row = cursor.fetchone()
+                        
+        if user_row is None:
+            conn.close()
+            return jsonify({"message": "User not found in database"}), 404
+                        
+        user_id = user_row[0]
 
         count = 0
         #for every assignment in getAssignmentList, insert data into assignments table in user database
@@ -294,8 +311,8 @@ def getAssignmentsByCourse(course_id, canvasKey):
             in_game_status = "Undecided"    #DEFAULT
 
             #puts it into assignments table in user db
-            cursor.execute('INSERT INTO assignments (assignment_id, assignment_name, assignment_description, due_at, course_id, submission_types, points_possible, published, in_game_status) VALUES (?,?,?,?,?,?,?,?,?)', 
-            (assignment_id, assignment_name, assignment_description, due_at, assignments_course_id, submission_types_list_toString, points_possible, published, in_game_status))
+            cursor.execute('INSERT INTO assignments (assignment_id,user_id, assignment_name, assignment_description, due_at, course_id, submission_types, points_possible, published, in_game_status) VALUES (?,?,?,?,?,?,?,?,?,?)', 
+            (assignment_id, user_id, assignment_name, assignment_description, due_at, assignments_course_id, submission_types_list_toString, points_possible, published, in_game_status))
 
             count+=1
 
