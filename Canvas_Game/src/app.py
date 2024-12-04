@@ -207,7 +207,6 @@ def getAllAssignments():
     #print('recieved payload: ', data)	#testing
 	
     canvasKey = data.get('canvasKey')   #gets canvasKey from react comp
-    #print(f'Canvas Key: {canvasKey}, FLAG 1')	#testing
 	
     canvasURL = "https://templeu.instructure.com/api/v1/courses/?per_page=100"
     headers = {"Authorization": f"Bearer {canvasKey}"}
@@ -303,6 +302,8 @@ def getAssignmentsByCourse(course_id, canvasKey):
 
     else:
         return jsonify({"message": "SOMETHING WENT WRONG IN getAssignmentsByCourse()"}), 400
+
+
 
 
 

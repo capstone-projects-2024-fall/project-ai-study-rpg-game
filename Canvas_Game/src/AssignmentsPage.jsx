@@ -38,45 +38,6 @@ const AssignmentsPage = () => {
     }
 
 
-
-    //THIS WILL GO ON SIGNUP FORM IN ACTUAL GAME
-    //invoke getAssignments function in py after canvas token is input !!
-    const [message,setMessage] = useState(''); 
-    const TEMPCanvasKey = '9957~2ZmBuBTKHZraBA3hywvU3HMZz3B8CNRFAfeBkDMCk4B9uLJk7vLEu3nekFMPKhaT' //this is going to be formData.canvasKey in signup page
-    const getAssignmentsFromCanvas = async(e) => {
-        e.preventDefault();
-
-        try {
-
-            //idk just copy api assignment
-            //const fetchData = async () => {
-                //const result = await fetch(URL, {method: 'POST', headers:{}}); 
-                //const jsonResult = await result.json(); 
-                //console.log(result)
-                //setAssignments(jsonResult); 
-
-            //}
-
-            //then u use assignments to send data to backend
-            //this is for putting data into app.py
-
-            //invokes getCourseAndAssignmentsInfoFromCanvas function in app.py: 
-            const getAssignmentResponse = await fetch('http://localhost:5000/getCourseAndAssignmentsInfoFromCanvas', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    canvasKey: TEMPCanvasKey,
-                }),
-            });
-
-        } catch (error) {
-            setMessage('Failed to connect to the server. Please try again later.');
-        }
-    }
-
-
     return (
         <>
             <Box m="20px">
