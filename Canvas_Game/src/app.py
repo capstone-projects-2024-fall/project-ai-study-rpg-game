@@ -259,6 +259,9 @@ def getAssignmentsByCourse(course_id, canvasKey):
         getAssignmentList = response.json()  #get assignments list(array of assignment objects) from canvas
         #print(getAssignmentList[1], '\n') #testing
 
+        conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT, maybe do it differently idk
+        cursor = conn.cursor()
+
         count = 0
         #for every assignment in getAssignmentList, insert data into assignments table in user database
         for assignment in getAssignmentList: 
@@ -287,15 +290,13 @@ def getAssignmentsByCourse(course_id, canvasKey):
             in_game_status = "Undecided"    #DEFAULT
 
             #puts it into assignments table in user db
-            conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT
-            cursor = conn.cursor()
             cursor.execute('INSERT INTO assignments (assignment_id, assignment_name, assignment_description, due_at, course_id, submission_types, points_possible, published, in_game_status) VALUES (?,?,?,?,?,?,?,?,?)', 
             (assignment_id, assignment_name, assignment_description, due_at, assignments_course_id, submission_types_list_toString, points_possible, published, in_game_status))
-            conn.commit()
-            conn.close()
 
             count+=1
 
+        conn.commit()
+        conn.close()
         return jsonify({"message": "Success! Assignments info stored in database"}), 200
 
     else:
