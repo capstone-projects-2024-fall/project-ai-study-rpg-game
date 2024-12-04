@@ -43,6 +43,20 @@
 <script src="./classes/Sprite.js"></script>
 <script src="./classes/NPC2.js"></script>
 <script src="./data/l_houses_WS1.js"></script>
-<div id="dialogueBox" style="display: none; position: absolute; bottom: 10px; left: 10px; background: white; padding: 10px; border: 1px solid black;"></div>
+<div id="dialogueBox" 
+     style="display: none; position: absolute; bottom: 10px; left: 10px; 
+            width: 100; height: auto; background: url('./images/scroll.png') no-repeat center center;">
+  <p id="dialogueText" style="position: relative; top: 10px; left: 20px;">Default text</p>
+</div>
+<div id="inventoryBox" style="display: none; position: fixed; top: 10%; left: 10%; width: 80%; height: 80%; background: rgba(0, 0, 0, 0.9); color: white; border: 2px solid white; border-radius: 8px; overflow-y: auto; padding: 20px;">
+  <h1 style="text-align: center;">Inventory</h1>
+  <ul id="inventoryList"></ul>
+</div>
+
+<div id="inspectBox" style="display: none; position: absolute; top: 10%; left: 10%; background-color: white; padding: 10px; border: 1px solid rgb(255, 255, 255);">
+  <!-- Item details will be displayed here -->
+</div>
+<script src="./classes/item.js"></script>
 <script src="./js/index.js"></script>
 <script src="./js/eventListeners.js"></script>
+

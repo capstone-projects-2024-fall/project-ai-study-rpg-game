@@ -2,20 +2,23 @@ const X_VELOCITY = 150
 const Y_VELOCITY = 150
 
 class Player {
-  constructor({ x, y, size, velocity = { x: 0, y: 0 } }) {
+  constructor({ x, y, size, velocity = { x: 0, y: 0 }, initialItems = [] }) {
     this.x = x
     this.y = y
     this.width = size
     this.height = size
     this.velocity = velocity
-    this.inventory = [];
+    this.inventory = initialItems;
+    this.inventory = initialItems.length > 0 ? initialItems : [
+      new Item({ name: "Health Potion", type: "Potion", description: "A strange liquid that gives you 1 heart" }),
+      new Item({ name: "Lance of Destiny", type: "Weapon", description: "A powerful lance with a legendary history.." })
+    ];
+    this.inventoryCapacity = 10; // Set capacity limit for inventory
     this.center = {
       x: this.x + this.width / 2,
       y: this.y + this.height / 2,
     }
     this.health = 3
-    
-    
 
     this.worldState = localStorage.getItem("worldState")
     this.loaded = false
@@ -138,11 +141,30 @@ class Player {
     this.elapsedInvincibilityTime = 0
     this.invincibilityInterval = 0.8
   }
+  addItem(item) {
+    if (this.inventory.length >= this.inventoryCapacity) {
+      console.warn("Inventory is full! Cannot add item:", item.name);
+      return false;
+    }
+    this.inventory.push(item);
+    inspectBox(`Added item: ${item.name}`);
+    return true;
+  }
+  removeItem(itemName) {
+    const index = this.inventory.findIndex(item => item.name === itemName);
+    if (index === -1) {
+      inspectBox(`Item ${itemName} not found in inventory.`);
+      return false;
+    }
+    this.inventory.splice(index, 1);
+    inspectBox(`Removed item: ${itemName}`);
+    return true;
+  }
 
   receiveHit() {
     if (this.isInvincible) return
     this.health--;
-    //this.isInvincible = true
+    this.isInvincible = true
   }
 
   switchBackToIdleState() {
