@@ -44,7 +44,6 @@ const AssignmentsPage = () => {
                 <div className="AssignmentList">
                     <CourseDropdownMenu courseValueSelected = {onCourseSelectedFromCDM}></CourseDropdownMenu>
                     <CourseAssignmentsList courseValueSelected = {courseValue}></CourseAssignmentsList>
-                    <button onClick={getAssignmentsFromCanvas}>Import Assignments from Canvas</button>
                 </div>
 
                 {/*<div>
