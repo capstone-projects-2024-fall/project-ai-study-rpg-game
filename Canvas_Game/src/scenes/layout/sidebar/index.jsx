@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Avatar, Box, IconButton, Typography, useTheme } from "@mui/material";
 import React from 'react';
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { tokens } from "../../../theme";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import {
@@ -33,11 +33,42 @@ import logo from "../../../assets/WizardLogo.png";
 import Item from "./Item";
 import { ToggledContext } from "../../../App";
 
-const SideBar = () => {
+const SideBar = ({email}) => {
   const { toggled, setToggled } = useContext(ToggledContext) || {}; // Ensure context is not null
   const [collapsed, setCollapsed] = useState(false);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [profile, setProfile] = useState({ 
+      name: "Loading...",   
+      nickname: "", 
+      picture_url: "" 
+    });
+  
+    useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const response = await fetch(`http://localhost:5000/api/user?email=${email}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          setProfile({
+            name: data.name || "Unknown User",
+            last_name: data.last_name || "Unknown Last Name",
+            nickname: data.nickname || "No Nickname",
+            picture_url: data.picture_url || "",
+
+          });
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+        }
+      };
+  
+      if (email) {
+        fetchUserData();
+      }
+    }, [email]);
+
   return (
     <Sidebar
       backgroundColor={colors.primary[300]}
@@ -108,19 +139,20 @@ const SideBar = () => {
         >
           <Avatar
             alt="avatar"
-            src={avatar}
+            src={profile.picture_url || "/path/to/default/avatar.jpg"}
+            // src={avatar}
             sx={{ width: "100px", height: "100px" }}
           />
           <Box sx={{ textAlign: "center" }}>
             <Typography variant="h3" fontWeight="bold" color={colors.gray[700]}>
-              Iskra Llupa
+            {profile.name} {profile.last_name}
             </Typography>
             <Typography
               variant="h6"
               fontWeight="500"
               color={colors.greenAccent[900]}
             >
-              Computer Science Student
+              {profile.nickname}
             </Typography>
           </Box>
         </Box>
