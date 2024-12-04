@@ -63,5 +63,19 @@ const items = [
         description: 'Something something big shoes big feet. DEF: 2',
         image: 'src/assets/ClownShoes.png'
     },
+    {
+      id: 'Potion',
+      name: 'Potions',
+      price: 20,
+      description: 'A totally safe potion. Do not mind the color, it gives it character.',
+      image: 'src/assets/Potion.png'
+    },
+    {
+      id: 'Potion 2',
+      name: 'Potions',
+      price: 20,
+      description: 'A totally safe potion, I swear it is a different one.',
+      image: 'src/assets/Potion.png'
+  },
     ];
 export default items;

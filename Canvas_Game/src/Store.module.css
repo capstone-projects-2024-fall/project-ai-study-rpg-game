@@ -26,6 +26,7 @@
     width: 100%;
   }
 
+  /*
     .imageBoxGroup {
       display: flex;
       gap: 10px;
@@ -36,29 +37,18 @@
       flex-wrap: wrap;
       width: 100%;
     }
-
-    .imageBoxGroup2 {
+      */
+    
+      .imageBoxGroup {
         display: flex;
-        gap: 10px;
-        margin-top: 50px;
-        justify-content: flex-start;   
-        margin-right: 2%;
-        margin-left: 20px;
-        flex-wrap: wrap;
-        width: 100%;
-      }
+        flex-wrap: nowrap; /* Prevent wrapping within a group */
+        gap: 16px; /* Space between items */
+        justify-content: flex-start; /* Align items to the start */
+        width: 100%; /* Allow items to use the full container width */
+    }
+    
 
-      .imageBoxGroup3 {
-        display: flex;
-        gap: 10px;
-        margin-top: 50px;
-        justify-content: flex-start;   
-        margin-right: 2%;
-        margin-left: 20px;
-        flex-wrap: wrap;
-        width: 100%;
-      }
-  
+
     .imageBoxContainer {
       position: relative;
       display: flex;
@@ -66,7 +56,10 @@
       align-items: center;
       text-align: center;
       width: 120px;
+      margin-left: 100px;
+      margin-top: 40px;
     }
+ 
     
     .imageCheckbox {
       display: none;
@@ -110,8 +103,8 @@
         border-radius: 5px;
         position: absolute;
         bottom: 110%;
-        left: 50%;
-        transform: translateX(-50%) translateX(10px); 
+        left: 70%;
+        transform: translateX(-70%) translateX(10px); 
         white-space: nowrap;
         z-index: 10;
         opacity: 0;
@@ -127,8 +120,8 @@
         border-radius: 5px;
         position: absolute;
         bottom: 110%;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 20%;
+        transform: translateX(-20%);
         white-space: nowrap;
         z-index: 10;
         opacity: 0;
@@ -212,7 +205,12 @@
       .itemSetsWrapper {
         display: flex; /* Use flexbox to align the groups side-by-side */
         gap: 30px; /* Space between the two sets */
+
+        flex-wrap: wrap; /* Enable wrapping for rows */
+        justify-content: flex-start;
+        width: 100%;
       }
+
       
       .itemGroup {
         display: flex;
@@ -220,3 +218,11 @@
         gap: 10px; /* Space between items in a group */
         max-width: 300px; /* Adjust width to control how items flow within a group */
       }
+
+      .thirdSetContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        width: 100%; /* Ensure it starts a new row */
+        margin-top: 20px; /* Optional spacing */
+    }
