@@ -1,28 +1,77 @@
 /* eslint-disable react/prop-types */
-import React, { useState }  from 'react';
+import React, { useState, useEffect }  from 'react';
 import { Grid, Card, CardContent, Typography, CardActions, Button, useTheme } from '@mui/material';
 import { tokens } from '../theme'; // assuming the same theme tokens are used here
-import { jiraBoardTasks as initialTasks } from '../data/mockAssignmentCard';
+//import { jiraBoardTasks as initialTasks } from '../data/mockAssignmentCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 
-const JiraBoard = () => {
+const JiraBoard = ({email}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode); // Using custom tokens based on theme mode
   const columns = ['Undecided', 'To Do', 'In Progress','Done'];
 
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, setTasks] = useState({});
   const [draggedTask, setDraggedTask] = useState(null);
+
+  const formatDateTime = (dateTimeString) => {
+    const dateObj = new Date(dateTimeString);
+    const formattedDate = dateObj.toLocaleDateString(); // Formats to "MM/DD/YYYY"
+    const formattedTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Formats to "HH:MM AM/PM"
+    return `${formattedDate} at ${formattedTime}`;
+  };
+  
+
+  // Fetch tasks from the backend
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/assignmentFromDb?email=${email}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch tasks');
+        }
+
+        const data = await response.json();
+
+        // Organize tasks into columns
+        const tasksByColumn = {
+          Undecided: [],
+          'To Do': [],
+          'In Progress': [],
+          Done: [],
+        };
+
+        data.assignments.forEach((task) => {
+          // Default all tasks to 'Undecided' if there's no clear status
+          tasksByColumn[task.in_game_status || 'Undecided'].push({
+            id: task.id, // You might need to include this in your backend response
+            title: task.assignment_name,
+            description: task.assignment_description,
+            course: task.course_name,
+            due_at: task.due_at,
+          });
+        });
+
+        setTasks(tasksByColumn);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    };
+
+    fetchTasks();
+  }, [email]);
 
   // Handle drag start
   const handleDragStart = (task, currentColumn) => {
     setDraggedTask({ task, currentColumn });
+    //console.log("drag started:");
   };
 
   // Handle drag over (allows dropping)
   const handleDragOver = (event) => {
     event.preventDefault();
+    //console.log("handle drag over:");
   };
 
   // Handle drop
@@ -41,6 +90,16 @@ const JiraBoard = () => {
     // Update the state
     setTasks(updatedTasks);
     setDraggedTask(null);
+    //console.log("Drag drop, tasks:"+ JSON.stringify(tasks));
+
+    // Optionally, update the task's status in the backend
+    fetch(`http://localhost:5000/api/updateTaskStatus`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ taskId: task.id, status: targetColumn }),
+    }).catch((error) => console.error('Error updating task status:', error));
   };
 
 
@@ -129,7 +188,8 @@ const JiraBoard = () => {
             >
               <CardContent>
                 <Typography variant="h5">{task.title}</Typography>
-                <Typography color="textSecondary">{task.description}</Typography>
+                <Typography color="textSecondary">{task.course}</Typography>
+                <Typography color="textSecondary"><strong>Due by:</strong> {formatDateTime(task.due_at)}</Typography>
               </CardContent>
               <CardActions>
               <Button

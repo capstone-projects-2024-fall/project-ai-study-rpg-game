@@ -45,7 +45,7 @@ const AppRouter = () => {
       <Routes>
       <Route path="/" element={isSignedIn? <App email={userEmail}/> : <AuthPage/>}>
         {/* <Route path="/" element={<App />}> */}
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<Dashboard email={userEmail}/>} />
           <Route path="/LoginPage" element={<LoginPage />} />
           <Route path="/userProfile" element={<UserProfile email={userEmail} />} />
           <Route path="/game" element={<GamePage/>}/>
