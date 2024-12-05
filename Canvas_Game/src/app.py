@@ -239,6 +239,8 @@ def getAllAssignments():
                     #puts data into courses table in user database
                     conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT
                     cursor = conn.cursor()
+
+                    #gets user_id from users table
                     cursor.execute("SELECT id FROM users WHERE canvas_key = ?", (canvasKey,))
                     user_row = cursor.fetchone()
                         
@@ -247,8 +249,10 @@ def getAllAssignments():
                         return jsonify({"message": "User not found in database"}), 404
                         
                     user_id = user_row[0] 
+
+                    #puts it into assignments table in user db
                     cursor.execute('INSERT INTO courses (course_id,user_id, course_name, course_code, workflow_state, enrollment_term_id) VALUES (?, ?, ?, ?, ?, ?)', 
-                    (course_id,user_id, course_name, course_code, workflow_state, enrollment_term_id))
+                    (course_id, user_id, course_name, course_code, workflow_state, enrollment_term_id))
                     conn.commit()
                     conn.close()
 
@@ -274,6 +278,8 @@ def getAssignmentsByCourse(course_id, canvasKey):
 
         conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT, maybe do it differently idk
         cursor = conn.cursor()
+        
+        #gets user_id from users table
         cursor.execute("SELECT id FROM users WHERE canvas_key = ?", (canvasKey,))
         user_row = cursor.fetchone()
                         
