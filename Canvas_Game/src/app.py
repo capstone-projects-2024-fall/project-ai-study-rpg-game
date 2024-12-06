@@ -286,13 +286,12 @@ def get_courselist_from_database():
     # Fetch assignments for the users db
     cursor.execute('''
         SELECT 
-            courses.id,
             courses.course_id,
             courses.course_name,
             courses.course_code,
             courses.enrollment_term_id   
         FROM courses
-        WHERE course.user_id = ?
+        WHERE courses.user_id = ?
     ''', (user_id,))
     
     courses = cursor.fetchall()
@@ -304,11 +303,10 @@ def get_courselist_from_database():
     # makes dictionary for every row(course) in courses
     course_list = [
         {
-            "id": row["courses.id"],
             "course_id": row["courses.course_id"],
             "course_name": row["courses.course_name"],
             "course_code": row["courses.course_name"],
-            "enrollment_term_id": row[courses.enrollment_term_id] 
+            "enrollment_term_id": row["courses.enrollment_term_id"] 
         } for row in courses
     ]
 
