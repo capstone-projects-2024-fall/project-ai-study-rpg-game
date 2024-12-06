@@ -303,10 +303,10 @@ def get_courselist_from_database():
     # makes dictionary for every row(course) in courses
     course_list = [
         {
-            "course_id": row["courses.course_id"],
-            "course_name": row["courses.course_name"],
-            "course_code": row["courses.course_name"],
-            "enrollment_term_id": row["courses.enrollment_term_id"] 
+            "course_id": row["course_id"],
+            "course_name": row["course_name"],
+            "course_code": row["course_name"],
+            "enrollment_term_id": row["enrollment_term_id"] 
         } for row in courses
     ]
 
