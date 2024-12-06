@@ -201,6 +201,7 @@ def get_user_by_email():
     else:
         return jsonify({"message": "User not found"}), 404
 
+
 #Getting assignment data from the database
 @app.route('/assignmentFromDb', methods=['GET'])
 def get_assignments_for_dashboard():
@@ -221,7 +222,7 @@ def get_assignments_for_dashboard():
         conn.close()
         return jsonify({"message": "User not found"}), 404
 
-    user_id = user_row['id']
+    user_id = user_row['id']    #sets user_id for this user
 
     # Fetch assignments for the user
     cursor.execute('''
@@ -256,6 +257,84 @@ def get_assignments_for_dashboard():
     ]
 
     return jsonify({"assignments": assignment_list}), 200
+
+
+
+
+#get Courses from db
+@app.route('/coursesFromDb', methods=['GET'])
+def get_courselist_from_database():
+    email = request.args.get('email')  # Email is provided as a query parameter
+
+    if not email:
+        return jsonify({"message": "Email is required"}), 400
+
+    # Connect to the database and fetch the user's assignments
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Get the user ID based on the email
+    cursor.execute('SELECT id FROM users WHERE email = ?', (email,))
+    user_row = cursor.fetchone()
+
+    if not user_row:
+        conn.close()
+        return jsonify({"message": "User not found"}), 404
+
+    user_id = user_row['id']    #sets user_id for this user
+
+    # Fetch assignments for the users db
+    cursor.execute('''
+        SELECT 
+            courses.id,
+            courses.course_id,
+            courses.course_name,
+            courses.course_code,
+            courses.enrollment_term_id   
+        FROM courses
+        WHERE course.user_id = ?
+    ''', (user_id,))
+    
+    courses = cursor.fetchall()
+    conn.close()
+
+    if not courses:
+        return jsonify({"message": "No courses found for the user"}), 404
+
+    # makes dictionary for every row(course) in courses
+    course_list = [
+        {
+            "id": row["courses.id"],
+            "course_id": row["courses.course_id"],
+            "course_name": row["courses.course_name"],
+            "course_code": row["courses.course_name"],
+            "enrollment_term_id": row[courses.enrollment_term_id] 
+        } for row in courses
+    ]
+
+    return jsonify({"assignments": course_list}), 200   #returns list of course dictionaries 
+
+
+#update assignment status of the Jira Board               
+@app.route('/api/updateTaskStatus', methods=['POST'])
+def update_task_status():
+    data = request.json
+    task_id = data.get('taskId')
+    new_status = data.get('status')
+
+    if not task_id or not new_status:
+        return jsonify({"message": "Task ID and new status are required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE assignments SET in_game_status = ? WHERE id = ?', (new_status, task_id))
+    conn.commit()
+    conn.close()
+
+    print('Received task ID:', task_id)
+    print('Received new status:', new_status)
+
+    return jsonify({"message": "Task status updated successfully"}), 200
 
 
 
@@ -317,27 +396,6 @@ def getAllAssignments():
     
     else:
         return jsonify({"message": "SOMETHING WENT WRONG IN getAssignments"}), 400
-
-#update assignment status of the Jira Board               
-@app.route('/api/updateTaskStatus', methods=['POST'])
-def update_task_status():
-    data = request.json
-    task_id = data.get('taskId')
-    new_status = data.get('status')
-
-    if not task_id or not new_status:
-        return jsonify({"message": "Task ID and new status are required"}), 400
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('UPDATE assignments SET in_game_status = ? WHERE id = ?', (new_status, task_id))
-    conn.commit()
-    conn.close()
-
-    print('Received task ID:', task_id)
-    print('Received new status:', new_status)
-
-    return jsonify({"message": "Task status updated successfully"}), 200
 
 
 #gets assignments data from canvas API, parses through it, puts data we want into assignments 
@@ -405,6 +463,9 @@ def getAssignmentsByCourse(course_id, canvasKey):
         return jsonify({"message": "SOMETHING WENT WRONG IN getAssignmentsByCourse()"}), 400
 
 
+
+
+#get course names/ids from users db where user_id is this.user
 
 
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react"; 
+import { useState, useEffect } from "react"; 
 
 //formatting --> more options on dashboard and userprofile
 import {
@@ -19,7 +19,7 @@ import CourseAssignmentsList from './CourseAssignmentsList.jsx';
 /*pick course you want to look at, assignments are displayed in a categorised list, can adjust settings*/
     //settings:should have toggle if you dont want categories --> can do that later/ also should be able to change/add categories
 
-const AssignmentsPage = () => {
+const AssignmentsPage = ({email}) => {      //gonna get assignments from backend by email
     //sets theme 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -37,6 +37,57 @@ const AssignmentsPage = () => {
         console.log(courseValue); //testing 
     }
 
+    
+    
+    //on assignmentsPage being clicked on - call up course_name and course_id's w/ this.user_id
+        //need to GET: course_name, course_id from back end 
+
+  // Fetch all assignments from the backend
+
+    const [courseNameList, setCourseNameList] = useState([])
+    const [tempCourseName, setTempCourseName] = useState()
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/coursesFromDb?email=${email}`);  //fetches {python function} from backend and sends email as a query param
+        if (!response.ok) {
+          throw new Error('Failed to fetch tasks');
+        }
+
+        const data = await response.json(); //gets data from backend
+        //console.log(data)   //testing testing
+
+        data.courses.forEach((course) => {    //for each course in data, course is:
+            setTempCourseName(course.course_name)
+            setCourseNameList([...courseNameList, tempCourseName ])
+            
+            // Default all tasks to 'Undecided' if there's no clear status
+          /*tasksByColumn[task.in_game_status || 'Undecided'].push({  //puts tasks into columns based on task.in_game_status for each task
+            id: task.id, // You might need to include this in your backend response
+            title: task.assignment_name,
+            description: task.assignment_description,
+            course: task.course_name,
+            due_at: task.due_at,
+          });*/ 
+          
+        //  console.log(course)
+        });
+        console.log(courseNameList)   //testing testing
+
+        //setTasks(tasksByColumn);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    };
+
+    fetchCourses();
+  }, [email]);
+
+
+
+    //when course selected -> pass that into courseAssignmentsList
+    //when courseAssignmentsList is invoked -> call up assignments list in that function 
 
     return (
         <>
