@@ -59,9 +59,9 @@ const AssignmentsPage = ({email}) => {      //gonna get assignments from backend
         //console.log(data)   //testing testing
 
         data.courses.forEach((course) => {    //for each course in data, course is:
-            setTempCourseName(course.course_name)
-            setCourseNameList([...courseNameList, tempCourseName ])
-            
+            //setTempCourseName(course.course_name)
+            //setCourseNameList([...courseNameList, tempCourseName ])
+            console.log(course.course_name)
             // Default all tasks to 'Undecided' if there's no clear status
           /*tasksByColumn[task.in_game_status || 'Undecided'].push({  //puts tasks into columns based on task.in_game_status for each task
             id: task.id, // You might need to include this in your backend response
@@ -73,7 +73,7 @@ const AssignmentsPage = ({email}) => {      //gonna get assignments from backend
           
         //  console.log(course)
         });
-        console.log(courseNameList)   //testing testing
+        //console.log(courseNameList)   //testing testing
 
         //setTasks(tasksByColumn);
       } catch (error) {

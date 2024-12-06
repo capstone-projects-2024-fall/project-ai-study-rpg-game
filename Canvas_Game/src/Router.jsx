@@ -55,8 +55,8 @@ const AppRouter = () => {
 
           <Route path="/ConnectCanvas" element={<ConnectCanvas/>}/>
 
-          <Route path="/AssignmentsPage" element={<AssignmentsPage email={userEmail}></AssignmentsPage>}/>
-          {/*<Route path="/contacts" element={<Contacts />} />
+          <Route path="/AssignmentsPage" element={<AssignmentsPage email={userEmail}/>}/>
+                    {/*<Route path="/contacts" element={<Contacts />} />
           <Route path="/invoices" element={<Invoices />} />
           <Route path="/form" element={<Form />} />
           <Route path="/calendar" element={<Calendar />} />
