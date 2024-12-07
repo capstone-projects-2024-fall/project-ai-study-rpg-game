@@ -413,6 +413,34 @@ def getAssignmentsByCourse(course_id, canvasKey):
         return jsonify({"message": "SOMETHING WENT WRONG IN getAssignmentsByCourse()"}), 400
 
 
+@app.route('/api/updatePlayerGold', methods=['POST'])
+def updatePlayerGold():
+    data = request.json
+
+    email = data.get('email')
+    amount = data.get('amount')
+
+    if not email or not amount:
+        return jsonify({"message": "Email and amount are required"}), 400
+    
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+    cursor.execute('SELECT gold from users where email = ?', (email,))
+
+    queryRes = cursor.fetchone()
+    if queryRes == None:
+        return jsonify({"message": "Email does not exist"}), 400
+    
+
+    
+    usersGold = queryRes[0]
+    currentGold = amount + usersGold
+
+    cursor.execute('UPDATE users SET gold = ? WHERE email = ?', (currentGold, email))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Gold amount updated successfully"}), 200
 
 
 
