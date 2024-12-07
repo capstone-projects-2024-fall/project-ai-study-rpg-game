@@ -1,10 +1,22 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect }  from 'react';
-import { Grid, Card, CardContent, Typography, CardActions, Button, useTheme } from '@mui/material';
+import { 
+  Grid, 
+  Card, 
+  CardContent, 
+  Typography, 
+  CardActions, 
+  Button, 
+  useTheme,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions, } from '@mui/material';
 import { tokens } from '../theme'; // assuming the same theme tokens are used here
 //import { jiraBoardTasks as initialTasks } from '../data/mockAssignmentCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import parse from 'html-react-parser';
 
 
 const JiraBoard = ({email}) => {
@@ -14,12 +26,25 @@ const JiraBoard = ({email}) => {
 
   const [tasks, setTasks] = useState({});
   const [draggedTask, setDraggedTask] = useState(null);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const formatDateTime = (dateTimeString) => {
     const dateObj = new Date(dateTimeString);
     const formattedDate = dateObj.toLocaleDateString(); // Formats to "MM/DD/YYYY"
     const formattedTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Formats to "HH:MM AM/PM"
     return `${formattedDate} at ${formattedTime}`;
+  };
+
+  const openDialog = (task) => {
+    console.log("Task passed to openDialog:", task); 
+    setSelectedTask(task);
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setSelectedTask(null);
+    setIsDialogOpen(false);
   };
   
 
@@ -148,6 +173,7 @@ const JiraBoard = ({email}) => {
 
 
   return (
+    <>
     <Grid container spacing={2} style={{ padding: 20, backgroundColor: theme.palette.background.default }}>
       {columns.map((column) => (
       //{Object.keys(jiraBoardTasks).map((column) => (
@@ -198,19 +224,37 @@ const JiraBoard = ({email}) => {
                   startIcon={<ArrowBackIcon />}
                 >PREV
                 </Button>
-                <Button style={{ color: colors.primary[500] }}>VIEW</Button>
+                <Button 
+                  style={{ color: colors.primary[500] }}
+                  onClick={() => openDialog(task)}
+                >VIEW
+                </Button>
                 <Button 
                   style={{ color: colors.primary[500] }}
                   onClick={() => handleNextStep(task.id, column)}
                   endIcon={<ArrowForwardIcon />}
                   >NEXT
                   </Button>
-              </CardActions>
+              </CardActions>              
             </Card>
           ))}
         </Grid>
       ))}
     </Grid>
+
+    {/* Diaglog pop up window that shows the assignment description */}
+    <Dialog open={isDialogOpen} onClose={closeDialog}>
+    <DialogTitle>Assignment Description</DialogTitle>
+    <DialogContent>
+      <Typography variant="body1">{selectedTask?.description ? parse(selectedTask.description) : "No description available."}</Typography>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={closeDialog} color="primary">
+        Close
+      </Button>
+    </DialogActions>
+  </Dialog>
+</>
   );
 };
 

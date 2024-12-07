@@ -31,7 +31,21 @@ def init_db():
 
         )
     ''')
-    
+
+    cursor.execute ('''
+        CREATE TABLE IF NOT EXISTS Items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER REFERENCES users(id),
+        item_id INTEGER,
+        item_name TEXT,
+        item_description TEXT,
+        item_type TEXT,
+        item_price INTEGER,
+        item_quantity INTEGER,
+        item_category TEXT
+        )
+    ''')
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS assignments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
