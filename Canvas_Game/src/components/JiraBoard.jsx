@@ -52,7 +52,7 @@ const JiraBoard = ({email}) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/assignmentFromDb?email=${email}`);
+        const response = await fetch(`http://localhost:5000/getUnsubmittedAssignmentsFromDb?email=${email}`);
         if (!response.ok) {
           throw new Error('Failed to fetch tasks');
         }

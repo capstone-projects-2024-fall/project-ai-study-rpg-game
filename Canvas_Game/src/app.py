@@ -45,7 +45,7 @@ def init_db():
             points_possible INTEGER,
             published TEXT,
             in_game_status TEXT,
-            is_submitted DEFAULT 0,
+            is_submitted DEFAULT 3,
             assignment_url TEXT
         
         )
@@ -204,8 +204,8 @@ def get_user_by_email():
     else:
         return jsonify({"message": "User not found"}), 404
 
-#Getting assignment data from the database
-@app.route('/assignmentFromDb', methods=['GET'])
+#Getting unsubmitted assignment data from the user database
+@app.route('/getUnsubmittedAssignmentsFromDb', methods=['GET'])
 def get_assignments_for_dashboard():
     email = request.args.get('email')  # Email is provided as a query parameter
 
@@ -291,7 +291,7 @@ def getAllAssignments():
             #print(course,'\n\n')   #testing
             if(length> 3):  #filters out courses with 'access_restricted_by_date' key 
                 if(course['enrollment_term_id'] == 142):    #only grab classes for the current semester, check if u can grab current enrollment_term_id from profile page instead
-                    print(course, '\n\n') #testing
+                    #print(course, '\n\n') #testing
                 
                     ##parses through course data and puts it into vars
                     course_id = course['id']
@@ -396,16 +396,24 @@ def getAssignmentsByCourse(course_id, canvasKey):
             assignment_url = assignment['html_url']
             print(assignment_url)
 
-            # Check submission status
+            # Get is_submitted (and submission_status) - make a separate function?   
             submission_url = f"https://templeu.instructure.com/api/v1/courses/{course_id}/assignments/{assignment_id}/submissions/self"
             submission_response = requests.get(submission_url, headers=newheaders)
 
             if submission_response.status_code == 200:
                 submission_data = submission_response.json()
-                is_submitted = submission_data.get('workflow_state', '') == 'submitted'
+
+                submission_status = submission_data.get('workflow_state', '')  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
+                #print(submission_status)    #testing
+                if(submission_status == 'unsubmitted'):
+                    is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
+                    print("GLITCH?? is_submitted = False")  #testing
+                else:
+                    is_submitted = True #assignment has been submitted
+                    print(submission_status)    #testing
             else:
                 is_submitted = False
-
+                print("in else: is_submitted = False")  #testing
 
             #puts it into assignments table in user db
             cursor.execute('INSERT INTO assignments (assignment_id,user_id, assignment_name, assignment_description, due_at, course_id, submission_types, points_possible, published, in_game_status, is_submitted, assignment_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', 
