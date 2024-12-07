@@ -2,13 +2,14 @@ const X_VELOCITY = 150
 const Y_VELOCITY = 150
 
 class Player {
-  constructor({ x, y, size, velocity = { x: 0, y: 0 }, initialItems = [] }) {
+  constructor({ x, y, size, velocity = { x: 0, y: 0 }, initialItems = [], gold = 100  }) {
     this.x = x
     this.y = y
     this.width = size
     this.height = size
     this.velocity = velocity
     this.inventory = initialItems;
+    this.gold = gold; // Player's starting gold
     this.inventory = initialItems.length > 0 ? initialItems : [
       new Item({ name: "Health Potion", type: "Potion", description: "A strange liquid that gives you 1 heart" }),
       new Item({ name: "Lance of Destiny", type: "Weapon", description: "A powerful lance with a legendary history.." })
@@ -141,7 +142,7 @@ class Player {
     this.elapsedInvincibilityTime = 0
     this.invincibilityInterval = 0.8
   }
-  addItem(item) {
+  buyItem(item) {
     if (this.inventory.length >= this.inventoryCapacity) {
       console.warn("Inventory is full! Cannot add item:", item.name);
       return false;
