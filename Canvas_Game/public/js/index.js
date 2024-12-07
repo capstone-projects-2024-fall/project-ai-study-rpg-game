@@ -27,6 +27,20 @@ if(localStorage.getItem("worldState")=== null){
   localStorage.setItem("worldState", 0)
 }
 const worldState = localStorage.getItem("worldState")
+const email = localStorage.getItem('email')
+fetch("http://127.0.0.1:5000/api/getPlayerGold?email="+email)
+.then(response=>{
+  if (response.ok){
+    return response.json();
+  }else{
+    throw new Error("Api call failed")
+  }
+})
+.then(data=>{
+  console.log(data)
+  const goldContainer = document.getElementById("gold")
+  goldContainer.innerHTML = data.gold;
+})
 
 
 const layersData = {

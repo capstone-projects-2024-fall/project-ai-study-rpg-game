@@ -416,35 +416,55 @@ def getAssignmentsByCourse(course_id, canvasKey):
 @app.route('/api/updatePlayerGold', methods=['POST'])
 def updatePlayerGold():
     data = request.json
-
+    #gets email and amount from request
     email = data.get('email')
     amount = data.get('amount')
-
+    #throws error if email or amount is not supplied in payload
     if not email or not amount:
         return jsonify({"message": "Email and amount are required"}), 400
-    
+    #connects to db
     conn = get_db_connection()
-
+    #executes query to get user's current gold
     cursor = conn.cursor()
     cursor.execute('SELECT gold from users where email = ?', (email,))
-
+    #makes sure user's gold was returned
     queryRes = cursor.fetchone()
     if queryRes == None:
         return jsonify({"message": "Email does not exist"}), 400
     
 
-    
+    #sums user's gold and amount to be added
     usersGold = queryRes[0]
     currentGold = amount + usersGold
 
+    #updates user's gold in db to currentGold
     cursor.execute('UPDATE users SET gold = ? WHERE email = ?', (currentGold, email))
     conn.commit()
     conn.close()
     return jsonify({"message": "Gold amount updated successfully"}), 200
+    
 
+@app.route('/api/getPlayerGold', methods=['GET'])
+def getPlayerGold():
+    #gets user's email from request URL
+    email = request.args.get('email')
+    
+    if not email:
+         return jsonify({"message": "Email is required"}), 400
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT gold from users where email = ?', (email,))
+    #makes sure user's gold was returned
+    queryRes = cursor.fetchone()
+    if queryRes == None:
+        return jsonify({"message": "Email does not exist"}), 400
+    
 
+    #gets users gold from query response
+    usersGold = queryRes[0]
 
-
+    return jsonify({"gold": usersGold}), 200
+    
 
 
 def get_db_connection():
