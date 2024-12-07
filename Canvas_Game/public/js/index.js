@@ -22,10 +22,11 @@ const VIEWPORT_CENTER_Y = VIEWPORT_HEIGHT / 2
 const MAX_SCROLL_X = MAP_WIDTH - VIEWPORT_WIDTH
 const MAX_SCROLL_Y = MAP_HEIGHT - VIEWPORT_HEIGHT
 
+
 if(localStorage.getItem("worldState")=== null){
   localStorage.setItem("worldState", 0)
 }
-
+const worldState = localStorage.getItem("worldState")
 const layersData = {
   l_Terrain: l_Terrain,
   l_Trees_1: l_Trees_1,
@@ -395,6 +396,27 @@ function animate(backgroundCanvas) {
 
       if (monster.health <= 0) {
         monsters.splice(i, 1)
+        const data = {
+          email: localStorage.getItem('email'),
+          amount: 10
+        }
+        const requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        }
+        fetch("http://127.0.0.1:5000/api/updatePlayerGold", requestOptions)
+          .then(response=>{
+            if(!response.ok){
+              throw new Error('Bad Response');
+            }
+            return response.json();
+          })
+          .catch(error=>{
+            console.log(error)
+          })
       }
     }
 
