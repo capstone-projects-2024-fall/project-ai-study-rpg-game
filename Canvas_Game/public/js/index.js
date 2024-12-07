@@ -531,6 +531,7 @@ function updateGoldAmount(){
   console.log(data)
   const goldContainer = document.getElementById("gold")
   goldContainer.innerHTML = data.gold;
+  localStorage.setItem('gold', data.gold);
 })
 }
 
