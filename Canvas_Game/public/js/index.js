@@ -27,6 +27,8 @@ if(localStorage.getItem("worldState")=== null){
   localStorage.setItem("worldState", 0)
 }
 const worldState = localStorage.getItem("worldState")
+
+
 const layersData = {
   l_Terrain: l_Terrain,
   l_Trees_1: l_Trees_1,
@@ -396,9 +398,11 @@ function animate(backgroundCanvas) {
 
       if (monster.health <= 0) {
         monsters.splice(i, 1)
+        const amount = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+        //showDialogueBox("You've found " + amount + " gold!")
         const data = {
           email: localStorage.getItem('email'),
-          amount: 10
+          amount: amount
         }
         const requestOptions = {
           method: 'POST',
@@ -413,6 +417,9 @@ function animate(backgroundCanvas) {
               throw new Error('Bad Response');
             }
             return response.json();
+          })
+          .then(data=>{
+            
           })
           .catch(error=>{
             console.log(error)
