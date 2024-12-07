@@ -28,19 +28,7 @@ if(localStorage.getItem("worldState")=== null){
 }
 const worldState = localStorage.getItem("worldState")
 const email = localStorage.getItem('email')
-fetch("http://127.0.0.1:5000/api/getPlayerGold?email="+email)
-.then(response=>{
-  if (response.ok){
-    return response.json();
-  }else{
-    throw new Error("Api call failed")
-  }
-})
-.then(data=>{
-  console.log(data)
-  const goldContainer = document.getElementById("gold")
-  goldContainer.innerHTML = data.gold;
-})
+updateGoldAmount()
 
 
 const layersData = {
@@ -433,7 +421,7 @@ function animate(backgroundCanvas) {
             return response.json();
           })
           .then(data=>{
-            
+            updateGoldAmount()
           })
           .catch(error=>{
             console.log(error)
@@ -528,6 +516,22 @@ function showDialogueBox(message) {
   dialogueBox.style.height = '380px'; 
 
   setTimeout(hideDialogueBox, 5000); // Auto-hide after 5 seconds
+}
+
+function updateGoldAmount(){
+  fetch("http://127.0.0.1:5000/api/getPlayerGold?email="+email)
+.then(response=>{
+  if (response.ok){
+    return response.json();
+  }else{
+    throw new Error("Api call failed")
+  }
+})
+.then(data=>{
+  console.log(data)
+  const goldContainer = document.getElementById("gold")
+  goldContainer.innerHTML = data.gold;
+})
 }
 
 let isInventoryVisible = false; // Tracks inventory visibility
