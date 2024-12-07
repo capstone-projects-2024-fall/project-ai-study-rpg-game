@@ -22,9 +22,14 @@ const VIEWPORT_CENTER_Y = VIEWPORT_HEIGHT / 2
 const MAX_SCROLL_X = MAP_WIDTH - VIEWPORT_WIDTH
 const MAX_SCROLL_Y = MAP_HEIGHT - VIEWPORT_HEIGHT
 
+
 if(localStorage.getItem("worldState")=== null){
   localStorage.setItem("worldState", 0)
 }
+const worldState = localStorage.getItem("worldState")
+const email = localStorage.getItem('email')
+updateGoldAmount()
+
 
 const layersData = {
   l_Terrain: l_Terrain,
@@ -364,7 +369,7 @@ function animate(backgroundCanvas) {
   c.drawImage(backgroundCanvas, 0, 0)
   player.draw(c)
   console.log(player.y)
-  if(worldState = 1){
+  if(worldState == 1){
     if(player.x >= 85 && player.x <= 98){
       if(player.y >= 300 && player.y <= 325){
         window.location.href = 'interior-1/index.html'
@@ -395,6 +400,32 @@ function animate(backgroundCanvas) {
 
       if (monster.health <= 0) {
         monsters.splice(i, 1)
+        const amount = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+        //showDialogueBox("You've found " + amount + " gold!")
+        const data = {
+          email: localStorage.getItem('email'),
+          amount: amount
+        }
+        const requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        }
+        fetch("http://127.0.0.1:5000/api/updatePlayerGold", requestOptions)
+          .then(response=>{
+            if(!response.ok){
+              throw new Error('Bad Response');
+            }
+            return response.json();
+          })
+          .then(data=>{
+            updateGoldAmount()
+          })
+          .catch(error=>{
+            console.log(error)
+          })
       }
     }
 
@@ -485,6 +516,22 @@ function showDialogueBox(message) {
   dialogueBox.style.height = '380px'; 
 
   setTimeout(hideDialogueBox, 5000); // Auto-hide after 5 seconds
+}
+
+function updateGoldAmount(){
+  fetch("http://127.0.0.1:5000/api/getPlayerGold?email="+email)
+.then(response=>{
+  if (response.ok){
+    return response.json();
+  }else{
+    throw new Error("Api call failed")
+  }
+})
+.then(data=>{
+  console.log(data)
+  const goldContainer = document.getElementById("gold")
+  goldContainer.innerHTML = data.gold;
+})
 }
 
 let isInventoryVisible = false; // Tracks inventory visibility
