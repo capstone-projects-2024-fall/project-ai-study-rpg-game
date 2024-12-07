@@ -52,7 +52,7 @@ const JiraBoard = ({email}) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/assignmentFromDb?email=${email}`);
+        const response = await fetch(`http://localhost:5000/getUnsubmittedAssignmentsFromDb?email=${email}`);
         if (!response.ok) {
           throw new Error('Failed to fetch tasks');
         }
@@ -70,11 +70,12 @@ const JiraBoard = ({email}) => {
         data.assignments.forEach((task) => {
           // Default all tasks to 'Undecided' if there's no clear status
           tasksByColumn[task.in_game_status || 'Undecided'].push({
-            id: task.id, // You might need to include this in your backend response
+            id: task.id, // need to include this in your backend response
             title: task.assignment_name,
             description: task.assignment_description,
             course: task.course_name,
             due_at: task.due_at,
+            assignment_url: task.assignment_url,
           });
         });
 
@@ -246,7 +247,20 @@ const JiraBoard = ({email}) => {
     <Dialog open={isDialogOpen} onClose={closeDialog}>
     <DialogTitle>Assignment Description</DialogTitle>
     <DialogContent>
-      <Typography variant="body1">{selectedTask?.description ? parse(selectedTask.description) : "No description available."}</Typography>
+      <Typography variant="body1">{selectedTask?.description ? parse(selectedTask.description) : "No description available."}
+      </Typography>
+      {selectedTask?.assignment_url && (
+            <Typography variant="body2" style={{ marginTop: '1rem' }}>
+              <a 
+                href={selectedTask.assignment_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ color: 'white', textDecoration: 'underline' }}
+              >
+                View Assignment on Canvas
+              </a>
+            </Typography>
+          )}
     </DialogContent>
     <DialogActions>
       <Button onClick={closeDialog} color="primary">
