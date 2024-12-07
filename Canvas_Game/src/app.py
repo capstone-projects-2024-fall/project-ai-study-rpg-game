@@ -44,7 +44,10 @@ def init_db():
             submission_types TEXT,
             points_possible INTEGER,
             published TEXT,
-            in_game_status TEXT
+            in_game_status TEXT,
+            is_submitted DEFAULT 0,
+            assignment_url TEXT
+        
         )
     ''')
 
@@ -222,6 +225,7 @@ def get_assignments_for_dashboard():
         return jsonify({"message": "User not found"}), 404
 
     user_id = user_row['id']
+    print("User ID:", user_id)
 
     # Fetch assignments for the user
     cursor.execute('''
@@ -231,13 +235,16 @@ def get_assignments_for_dashboard():
             assignments.due_at,
             assignments.in_game_status,
             assignments.id,
+            assignments.assignment_url,
+            assignments.is_submitted,
             courses.course_name
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
-        WHERE assignments.user_id = ?
+        WHERE assignments.user_id = ? AND assignments.is_submitted = 0
     ''', (user_id,))
     
     assignments = cursor.fetchall()
+    # print("Assignments:", assignments)
     conn.close()
 
     if not assignments:
@@ -251,7 +258,9 @@ def get_assignments_for_dashboard():
             "due_at": row["due_at"],
             "in_game_status": row["in_game_status"],
             "course_name": row["course_name"],
-            "id": row["id"]
+            "id": row["id"],
+            "assignment_url": row['assignment_url'],
+            "is_submitted": row['is_submitted']
         } for row in assignments
     ]
 
@@ -384,10 +393,23 @@ def getAssignmentsByCourse(course_id, canvasKey):
             points_possible = assignment['points_possible']
             published = assignment['published']
             in_game_status = "Undecided"    #DEFAULT
+            assignment_url = assignment['html_url']
+            print(assignment_url)
+
+            # Check submission status
+            submission_url = f"https://templeu.instructure.com/api/v1/courses/{course_id}/assignments/{assignment_id}/submissions/self"
+            submission_response = requests.get(submission_url, headers=newheaders)
+
+            if submission_response.status_code == 200:
+                submission_data = submission_response.json()
+                is_submitted = submission_data.get('workflow_state', '') == 'submitted'
+            else:
+                is_submitted = False
+
 
             #puts it into assignments table in user db
-            cursor.execute('INSERT INTO assignments (assignment_id,user_id, assignment_name, assignment_description, due_at, course_id, submission_types, points_possible, published, in_game_status) VALUES (?,?,?,?,?,?,?,?,?,?)', 
-            (assignment_id, user_id, assignment_name, assignment_description, due_at, assignments_course_id, submission_types_list_toString, points_possible, published, in_game_status))
+            cursor.execute('INSERT INTO assignments (assignment_id,user_id, assignment_name, assignment_description, due_at, course_id, submission_types, points_possible, published, in_game_status, is_submitted, assignment_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', 
+            (assignment_id, user_id, assignment_name, assignment_description, due_at, assignments_course_id, submission_types_list_toString, points_possible, published, in_game_status, is_submitted, assignment_url))
 
             count+=1
 
