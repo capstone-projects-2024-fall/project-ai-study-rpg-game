@@ -56,10 +56,41 @@ export default function Store(){
             console.log('Sufficient gold. Proceeding with purchase...');
             const newGold = gold - totalPrice;  // Calculate new gold value directly
             console.log('New Gold After Purchase:', newGold);  // Log the new gold amount after deduction
-            setGold(newGold);  // Directly update gold state
-            localStorage.setItem('gold', newGold); // Update gold amount in localStorage
-            alert(`Purchase successful! You bought: ${selectedItems.join(', ')}`);
-            setSelectedItems([]); // Clear selected items
+
+            const email = localStorage.getItem('email'); // Retrieve email from localStorage
+            if (!email) {
+                alert('Email not found in localStorage');
+                return;
+            }
+
+            // Make an API call to update the gold amount in the database
+            fetch("http://127.0.0.1:5000/api/updatePlayerGold", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email, amount: -totalPrice }),// Negative for spending
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return response.json().then(error => {
+                        throw new Error(error.message);
+                    });
+                }
+            })
+            .then(data => {
+                console.log('Gold amount updated in the database:', data);
+                setGold(newGold);  // Directly update gold state
+                localStorage.setItem('gold', newGold); // Update gold amount in localStorage
+                alert(`Purchase successful! You bought: ${selectedItems.join(', ')}`);
+                setSelectedItems([]); // Clear selected items
+            })
+            .catch(error => {
+                console.error('Error updating gold amount:', error);
+                alert('Failed to update gold amount. Please try again.');
+            });
         } else {
             alert('Not enough gold to buy the selected items!');
         }

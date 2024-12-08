@@ -492,7 +492,7 @@ function animate(backgroundCanvas) {
     if (leaf.alpha <= 0) {
       leafs.splice(i, 1)
     }
-    console.log('leafs')
+    //console.log('leafs')
   }
 
   c.restore()
