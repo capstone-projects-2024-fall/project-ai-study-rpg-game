@@ -335,6 +335,7 @@ def update_task_status():
     data = request.json
     task_id = data.get('taskId')
     new_status = data.get('status')
+    email = data.get('email')
 
     if not task_id or not new_status:
         return jsonify({"message": "Task ID and new status are required"}), 400
@@ -343,6 +344,18 @@ def update_task_status():
     cursor = conn.cursor()
     cursor.execute('UPDATE assignments SET in_game_status = ? WHERE id = ?', (new_status, task_id))
     conn.commit()
+
+
+    cursor.execute('SELECT id from users where email = ?'(email,))
+    resp = cursor.fetchone()
+    if resp == None:
+        return jsonify({"message": "Email does not exist"}), 400
+    
+
+    
+    userId = resp[0]
+    
+
     conn.close()
 
     print('Received task ID:', task_id)
