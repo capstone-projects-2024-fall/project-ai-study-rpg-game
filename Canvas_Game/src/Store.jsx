@@ -1,62 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.css';
 import styles from './Store.module.css';
 import items from './data/itemData.js';
 
-
-import diamondhelmet from './assets/DiamondHelmet.png';
-import diamondchest from './assets/DiamondChestplate.png';
-import diamondleggings from './assets/DiamondLeggings.png';
-import diamondboots from './assets/DiamondBoots.png';
-
-
-
-
 export default function Store(){
-    const [gold, setGold] = useState(100)
+    const [gold, setGold] = useState(0); // Initialize with 0
+
+    useEffect(() => {
+        const storedGold = localStorage.getItem('gold');
+        if (storedGold) {
+            setGold(parseInt(storedGold, 10)); // Retrieve gold amount from localStorage
+        }
+    }, []);
 
     const [selectedItems, setSelectedItems] = useState([]);
 
-    const firstSet = items.slice(0, 4); 
-    const secondSet = items.slice(4); 
+    const firstSet = items.slice(0, 4);
+    const secondSet = items.slice(4, 8); // Ensures this set includes only items 4–7
+    const thirdSet = items.slice(8);
 
-    
-    {/*
-      // Updated item data with descriptions
-    const items = [
-    {
-      id: 'DiamondHelmet',
-      name: 'Diamond Helmet',
-      price: 50,
-      description: 'A sturdy diamond helmet to protect your head in battle. DEF: 5',
-      image: diamondhelmet
-    },
-    {
-      id: 'DiamondChest',
-      name: 'Diamond Chestplate',
-      price: 100,
-      description: 'A high quality chestplate, shiny. DEF: 10',
-      image: diamondchest
-    },
-    {
-      id: 'DiamondLeggings',
-      name: 'Diamond Leggings',
-      price: 70,
-      description: 'Great pants, 10/10, would recommend. DEF: 8',
-      image:diamondleggings
-    },
-    {
-      id: 'DiamondBoots',
-      name: 'Diamond Boots',
-      price: 40,
-      description: 'Imagine how uncomfortable these feel like. DEF: 5',
-      image: diamondboots
-    },
-    ];
-    */}
-    
-
-        // Handle item selection
+    // Handle item selection
     const handleSelection = (itemId) => {
         setSelectedItems((prev) =>
         prev.includes(itemId)
@@ -65,13 +28,12 @@ export default function Store(){
         );
     };
 
-      // Handle the "Buy" action
-      const handleBuy = () => {
+    // Handle the "Buy" action
+    const handleBuy = () => {
         console.log('handleBuy function triggered');
-        if (selectedItems.length === 0) 
-        {
-          alert('No items selected!');
-          return;
+        if (selectedItems.length === 0) {
+            alert('No items selected!');
+            return;
         }
 
         console.log('Selected Items:', selectedItems);
@@ -85,7 +47,7 @@ export default function Store(){
               return sum + item.price;
             }
             return sum; // If item doesn't exist, return the current sum
-          }, 0);
+        }, 0);
 
         console.log('Total Price:', totalPrice);
         console.log('Current Gold:', gold);
@@ -94,16 +56,45 @@ export default function Store(){
             console.log('Sufficient gold. Proceeding with purchase...');
             const newGold = gold - totalPrice;  // Calculate new gold value directly
             console.log('New Gold After Purchase:', newGold);  // Log the new gold amount after deduction
-            setGold(newGold);  // Directly update gold state
-            alert(`Purchase successful! You bought: ${selectedItems.join(', ')}`);
-            setSelectedItems([]); // Clear selected items
+
+            const email = localStorage.getItem('email'); // Retrieve email from localStorage
+            if (!email) {
+                alert('Email not found in localStorage');
+                return;
+            }
+
+            // Make an API call to update the gold amount in the database
+            fetch("http://127.0.0.1:5000/api/updatePlayerGold", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email, amount: -totalPrice }),// Negative for spending
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return response.json().then(error => {
+                        throw new Error(error.message);
+                    });
+                }
+            })
+            .then(data => {
+                console.log('Gold amount updated in the database:', data);
+                setGold(newGold);  // Directly update gold state
+                localStorage.setItem('gold', newGold); // Update gold amount in localStorage
+                alert(`Purchase successful! You bought: ${selectedItems.join(', ')}`);
+                setSelectedItems([]); // Clear selected items
+            })
+            .catch(error => {
+                console.error('Error updating gold amount:', error);
+                alert('Failed to update gold amount. Please try again.');
+            });
         } else {
             alert('Not enough gold to buy the selected items!');
         }
-
-      };
-
-
+    };
 
     return( 
         <div>
@@ -115,215 +106,86 @@ export default function Store(){
                 <span>Gold: {gold}</span>
             </div>
 
-         <div className={styles.imageBoxGroupsContainer}>
-
-            <div className={styles.imageBoxGroup}>
-                {/*First Group of items*/}
-                {/*
-                <div className={styles.imageBoxContainer}>
-                <input type="checkbox" id="DiamondHelmet" className={styles.imageCheckbox} />
-                <label htmlFor="DiamondHelmet" className={styles.imageLabel}>
-                    <img src={diamondhelmet} alt="Diamond Helmet" className={styles.image} />
-                    <span>Diamond Helmet : 50 Gold</span>
-                    <div className={styles.tooltip}>
-                        <p>A sturdy diamond helmet to protect your head in battle----- DEF: 5</p>
-                    </div>
-                </label>
-                </div>
-
-                <div className={styles.imageBoxContainer}>
-                <input type="checkbox" id="DiamondChest" className={styles.imageCheckbox} />
-                <label htmlFor="DiamondChest" className={styles.imageLabel}>
-                    <img src={diamondchest} alt="Diamond Chest" className={styles.image} />
-                    <span>Diamond Chestplate : 100 Gold</span>
-                    <div className={styles.tooltip}>
-                        <p>A high quality chestplate, shiny----- DEF: 10</p>
-                    </div>
-                </label>
-                </div>
-
-                <div className={styles.imageBoxContainer}>
-                <input type="checkbox" id="DiamondLeggings" className={styles.imageCheckbox} />
-                <label htmlFor="DiamondLeggings" className={styles.imageLabel}>
-                    <img src={diamondleggings} alt="Diamond Leggings" className={styles.image} />
-                    <span>Diamond Leggings : 70 Gold</span>
-                    <div className={styles.tooltip}>
-                        <p>Great pants, 10/10, would recommend----- DEF: 8</p>
-                    </div>
-                </label>
-                </div>
-
-                <div className={styles.imageBoxContainer}>
-                <input type="checkbox" id="DiamondBoots" className={styles.imageCheckbox} />
-                <label htmlFor="DiamondBoots" className={styles.imageLabel}>
-                    <img src={diamondboots} alt="Diamond Boots" className={styles.image} />
-                    <span>Diamond Boots : 40 Gold</span>
-                    <div className={styles.tooltip}>
-                        <p>Imagine how uncomfortable these feel like----- DEF: 5</p>
-                    </div>
-                </label>
-                </div>
-                */}
-                     <div className={styles.storeContainer}>
-                      <div className={styles.itemSetsWrapper}>
-                        {firstSet.map((item) => (
+            <div className={styles.imageBoxGroupsContainer}>
+                <div className={styles.imageBoxGroup}>
+                    <div className={styles.storeContainer}>
+                        <div className={styles.itemSetsWrapper}>
+                            {firstSet.map((item) => (
                                 <div key={item.id} className={styles.imageBoxContainer}>
                                     <input
-                                    type="checkbox"
-                                    id={item.id}
-                                    className={styles.imageCheckbox}
-                                    checked={selectedItems.includes(item.id)}
-                                    onChange={() => handleSelection(item.id)}
+                                        type="checkbox"
+                                        id={item.id}
+                                        className={styles.imageCheckbox}
+                                        checked={selectedItems.includes(item.id)}
+                                        onChange={() => handleSelection(item.id)}
                                     />
                                     <label htmlFor={item.id} className={styles.imageLabel}>
-                                    <img
-                                        src={item.image}
-                                        alt={item.name}
-                                        className={styles.image}
-                                    />
-                                    <span>{item.name} : {item.price} Gold</span>
-                                    {/* Tooltip for the description */}
-                                    <div className={styles.tooltip}>
-                                        <p>{item.description}</p>
-                                    </div>
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            className={styles.image}
+                                        />
+                                        <span>{item.name} : {item.price} Gold</span>
+                                        <div className={styles.tooltip}>
+                                            <p>{item.description}</p>
+                                        </div>
                                     </label>
                                 </div>
-
-                        ))}
-
-
-
-                        {secondSet.map((item) => (
+                            ))}
+                            {secondSet.map((item) => (
                                 <div key={item.id} className={styles.imageBoxContainer}>
                                     <input
-                                    type="checkbox"
-                                    id={item.id}
-                                    className={styles.imageCheckbox}
-                                    checked={selectedItems.includes(item.id)}
-                                    onChange={() => handleSelection(item.id)}
+                                        type="checkbox"
+                                        id={item.id}
+                                        className={styles.imageCheckbox}
+                                        checked={selectedItems.includes(item.id)}
+                                        onChange={() => handleSelection(item.id)}
                                     />
                                     <label htmlFor={item.id} className={styles.imageLabel}>
-                                    <img
-                                        src={item.image}
-                                        alt={item.name}
-                                        className={styles.image}
-                                    />
-                                    <span>{item.name} : {item.price} Gold</span>
-                                    {/* Tooltip for the description */}
-                                    <div className={styles.tooltip2}>
-                                        <p>{item.description}</p>
-                                    </div>
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            className={styles.image}
+                                        />
+                                        <span>{item.name} : {item.price} Gold</span>
+                                        <div className={styles.tooltip2}>
+                                            <p>{item.description}</p>
+                                        </div>
                                     </label>
                                 </div>
-
-                        ))}
-                      </div>
-                     </div>
-
-
-
-            </div>
-
-
-
-
-            
-            {/*Second group of items*/}
-            {/*
-            <div className={styles.imageBoxGroup2}>
-
-                <div className={styles.imageBoxContainer}>
-                <input type="checkbox" id="DiamondHelmet" className={styles.imageCheckbox} />
-                <label htmlFor="DiamondHelmet" className={styles.imageLabel}>
-                    <img src={diamondhelmet} alt="Diamond Helmet" className={styles.image} />
-                    <span>Diamond Helmet : 50 Gold</span>
-                    <div className={styles.tooltip2}>
-                        <p>A sturdy diamond helmet to protect your head in battle----- DEF: 5</p>
-                    </div>
-                </label>
-                </div>
-
-                <div className={styles.imageBoxContainer}>
-                <input type="checkbox" id="DiamondChest" className={styles.imageCheckbox} />
-                <label htmlFor="DiamondChest" className={styles.imageLabel}>
-                    <img src={diamondchest} alt="Diamond Chest" className={styles.image} />
-                    <span>Diamond Chestplate : 100 Gold</span>
-                    <div className={styles.tooltip2}>
-                        <p>A high quality chestplate, shiny----- DEF: 10</p>
-                    </div>
-                </label>
-                </div>
-
-                <div className={styles.imageBoxContainer}>
-                <input type="checkbox" id="DiamondLeggings" className={styles.imageCheckbox} />
-                <label htmlFor="DiamondLeggings" className={styles.imageLabel}>
-                    <img src={diamondleggings} alt="Diamond Leggings" className={styles.image} />
-                    <span>Diamond Leggings : 70 Gold</span>
-                    <div className={styles.tooltip2}>
-                        <p>Great pants, 10/10, would recommend----- DEF: 8</p>
-                    </div>
-                </label>
-                </div>
-
-                <div className={styles.imageBoxContainer}>
-                <input type="checkbox" id="DiamondBoots" className={styles.imageCheckbox} />
-                <label htmlFor="DiamondBoots" className={styles.imageLabel}>
-                    <img src={diamondboots} alt="Diamond Boots" className={styles.image} />
-                    <span>Diamond Boots : 40 Gold</span>
-                    <div className={styles.tooltip2}>
-                        <p>Imagine how uncomfortable these feel like----- DEF: 5</p>
-                    </div>
-                </label>
-                </div>
-
-            </div>
-
-
-         </div>
-         */}
-
-            {/*Second row of items*/}
-            {/*
-         <div className={styles.imageBoxGroupsContainer2}>
-
-            <div className={styles.imageBoxGroup3}>
-                <div className={styles.imageBoxContainer}>
-                    <input type="checkbox" id="DiamondHelmet" className={styles.imageCheckbox} />
-                    <label htmlFor="DiamondHelmet" className={styles.imageLabel}>
-                        <img src={diamondhelmet} alt="Diamond Helmet" className={styles.image} />
-                        <span>Diamond Helmet : 50 Gold</span>
-                        <div className={styles.tooltip}>
-                            <p>A sturdy diamond helmet to protect your head in battle----- DEF: 5</p>
+                            ))}
+                            <div className={styles.thirdSetContainer}>
+                                {thirdSet.map((item) => (
+                                    <div key={item.id} className={styles.imageBoxContainer}>
+                                        <input
+                                            type="checkbox"
+                                            id={item.id}
+                                            className={styles.imageCheckbox}
+                                            checked={selectedItems.includes(item.id)}
+                                            onChange={() => handleSelection(item.id)}
+                                        />
+                                        <label htmlFor={item.id} className={styles.imageLabel}>
+                                            <img
+                                                src={item.image}
+                                                alt={item.name}
+                                                className={styles.image}
+                                            />
+                                            <span>{item.name} : {item.price} Gold</span>
+                                            <div className={styles.tooltip2}>
+                                                <p>{item.description}</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </label>
-                </div>
-
-
-                <div className={styles.imageBoxContainer}>
-                    <input type="checkbox" id="DiamondChest" className={styles.imageCheckbox} />
-                    <label htmlFor="DiamondChest" className={styles.imageLabel}>
-                        <img src={diamondchest} alt="Diamond Chest" className={styles.image} />
-                        <span>Diamond Chestplate : 100 Gold</span>
-                        <div className={styles.tooltip2}>
-                            <p>A high quality chestplate, shiny----- DEF: 10</p>
-                        </div>
-                    </label>
+                    </div>
                 </div>
             </div>
-            */}
-         </div>
-         
 
-         <button className={styles.buyButton} onClick={handleBuy}>
-            Buy Selected Items
-         </button>
-
+            <button className={styles.buyButton} onClick={handleBuy}>
+                Buy Selected Items
+            </button>
         </div>
-        
-    
-        
     );
-
-
-
 }

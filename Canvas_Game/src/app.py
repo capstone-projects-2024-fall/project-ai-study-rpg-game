@@ -31,7 +31,21 @@ def init_db():
 
         )
     ''')
-    
+
+    cursor.execute ('''
+        CREATE TABLE IF NOT EXISTS Items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER REFERENCES users(id),
+        item_id INTEGER,
+        item_name TEXT,
+        item_description TEXT,
+        item_type TEXT,
+        item_price INTEGER,
+        item_quantity INTEGER,
+        item_category TEXT
+        )
+    ''')
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS assignments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -464,10 +478,57 @@ def getAssignmentsByCourse(course_id, canvasKey):
         return jsonify({"message": "SOMETHING WENT WRONG IN getAssignmentsByCourse()"}), 400
 
 
+@app.route('/api/updatePlayerGold', methods=['POST'])
+def updatePlayerGold():
+    data = request.json
+    #gets email and amount from request
+    email = data.get('email')
+    amount = data.get('amount')  # Positive for earning, negative for spending
+    #throws error if email or amount is not supplied in payload
+    if not email or amount is None:
+        return jsonify({"message": "Email and amount are required"}), 400
 
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT gold from users where email = ?', (email,))
+    queryRes = cursor.fetchone()
 
+    if queryRes is None:
+        return jsonify({"message": "Email does not exist"}), 400
 
+    usersGold = queryRes[0]
+    currentGold = usersGold + amount  # Handles both addition and subtraction
 
+    if currentGold < 0:
+        return jsonify({"message": "Not enough gold for this transaction"}), 400
+
+    cursor.execute('UPDATE users SET gold = ? WHERE email = ?', (currentGold, email))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Gold amount updated successfully"}), 200
+
+    
+
+@app.route('/api/getPlayerGold', methods=['GET'])
+def getPlayerGold():
+    #gets user's email from request URL
+    email = request.args.get('email')
+    
+    if not email:
+         return jsonify({"message": "Email is required"}), 400
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT gold from users where email = ?', (email,))
+    #makes sure user's gold was returned
+    queryRes = cursor.fetchone()
+    if queryRes == None:
+        return jsonify({"message": "Email does not exist"}), 400
+    
+
+    #gets users gold from query response
+    usersGold = queryRes[0]
+
+    return jsonify({"gold": usersGold}), 200
 
 
 def get_db_connection():
