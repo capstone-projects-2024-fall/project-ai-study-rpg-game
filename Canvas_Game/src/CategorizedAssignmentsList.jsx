@@ -17,9 +17,9 @@ const CategorizedAssignmentsList = (props) => {
             return assignmentsList; 
         }
         else if(newCat == 'Tests/Quizzes'){
-            return assignmentsList.filter(assignments=>assignments.category==='online_quiz,'); 
+            return assignmentsList.filter(assignments=>assignments.submission_types==='online_quiz,'); 
         }
-        return assignmentsList.filter(assignments=>assignments.category !== 'online_quiz,')
+        return assignmentsList.filter(assignments=>assignments.submission_types!== 'online_quiz,')
     };
 
     const filteredAssignments = filterByCat(cat); 

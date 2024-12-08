@@ -11,6 +11,7 @@ const CourseDropdownMenu = (props) => {
     const email = props.email
 
     const [courseNameList, setCourseNameList]= useState([]) 
+    const [coureNameHeader, setCourseNameHeader] = useState()
 
     useEffect(() => {
     /* fetch course names from backend */
@@ -27,10 +28,13 @@ const CourseDropdownMenu = (props) => {
             const getCourseNameList = []
 
             data.courses.forEach((course) => {    //for each course in data, course is:
-                getCourseNameList.push(course.course_name)
+                getCourseNameList.push({
+                    course_name: course.course_name,
+                    course_id: course.course_id
+                })
             });
 
-            getCourseNameList.push("All Courses");  //add an all courses category 
+            getCourseNameList.push({course_name: "All Courses", course_id: 111});  //add an all courses category - JUST MADE THE COURSE ID UP cause it doesnt matter  
             setCourseNameList(getCourseNameList); //put list into global list
 
         } catch (error) {
@@ -55,7 +59,7 @@ const CourseDropdownMenu = (props) => {
                 <div className="dropdown-content">
                     <select onChange={onCourseSelectionChanged}>
                         {courseNameList.map((courseName) => (
-                                <option key={courseName} value={courseName}>{courseName}</option> 
+                                <option key={courseName.course_id} value={courseName.course_id}>{courseName.course_name}</option>  
                         ))}  {/*value: decides which one was clicked*/}
                         <option key="All" value="All">View All</option>    
                     </select>

@@ -29,12 +29,12 @@ const AssignmentsPage = ({email}) => {      //gonna get assignments from backend
     const isXsDevices = useMediaQuery("(max-width: 436px)");
 
     //function to get course selection from dropdown menu
-    const[courseValue, setCourseValue] = useState(''); 
+    const[courseValueId, setCourseValue] = useState(); 
     
     //send to CourseDropdownMenu to change courseValue var to whatever is selected from the dropdown menu 
-    const onCourseSelectedFromCDM = (selectedCourse) =>{ 
-        setCourseValue(selectedCourse); 
-        console.log(courseValue); //testing 
+    const onCourseSelectedFromCDM = (selectedCourseId) =>{ 
+        setCourseValue(selectedCourseId); 
+        console.log(courseValueId); //testing 
     }
 
     
@@ -53,7 +53,7 @@ const AssignmentsPage = ({email}) => {      //gonna get assignments from backend
             <Box m="20px">
                 <div className="AssignmentList">
                     <CourseDropdownMenu courseValueSelected = {onCourseSelectedFromCDM} email = {email}></CourseDropdownMenu>
-                    <CourseAssignmentsList courseValueSelected = {courseValue} email = {email}></CourseAssignmentsList>
+                    <CourseAssignmentsList courseValueSelected = {courseValueId} email = {email}></CourseAssignmentsList>
                 </div>
 
                 {/*<div>
