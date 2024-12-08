@@ -251,6 +251,14 @@ def get_assignments_for_dashboard():
             assignments.id,
             assignments.assignment_url,
             assignments.is_submitted,
+                   
+            assignments.assignment_id,
+            assignments.user_id, 
+            assignments.submission_types,
+            assignments.points_possible,
+            assignments.points_possible,   
+            assignments.course_id,
+        
             courses.course_name
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
@@ -260,6 +268,7 @@ def get_assignments_for_dashboard():
     assignments = cursor.fetchall()
     # print("Assignments:", assignments)
     conn.close()
+    print(assignments)
 
     if not assignments:
         return jsonify({"message": "No assignments found for the user"}), 404
@@ -274,10 +283,15 @@ def get_assignments_for_dashboard():
             "course_name": row["course_name"],
             "id": row["id"],
             "assignment_url": row['assignment_url'],
-            "is_submitted": row['is_submitted']
+            "is_submitted": row['is_submitted'],
+
+            "assignment_id": row["assignment_id"],
+            "user_id": row["user_id"],
+            "submission_types": row["submission_types"],	
+            "points_possible": row["points_possible"],    #removed published
+            "course_id": row["course_id"]
         } for row in assignments
     ]
-
     return jsonify({"assignments": assignment_list}), 200
 
 
