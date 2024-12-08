@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import sqlite3
 import requests
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 
 app = Flask(__name__)
@@ -227,6 +227,19 @@ def get_assignments_for_dashboard():
     user_id = user_row['id']
     print("User ID:", user_id)
 
+    # Calculate the date range
+    current_date = datetime.now(timezone.utc)
+    one_week_before = current_date - timedelta(weeks=1)
+
+    # Convert dates to strings in the format compatible with the database
+    current_date_str = current_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+    one_week_before_str = one_week_before.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    print("The week before:", one_week_before_str)
+    print("Current date:", current_date_str)
+
+
+
     # Fetch assignments for the user
     cursor.execute('''
         SELECT 
@@ -240,10 +253,10 @@ def get_assignments_for_dashboard():
             courses.course_name
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
-        WHERE assignments.user_id = ? AND assignments.is_submitted = 0
-    ''', (user_id,))
+        WHERE assignments.user_id = ? AND assignments.is_submitted = 0 AND assignments.due_at >= ?
+    ''', (user_id,one_week_before_str))
     
-    assignments = cursor.fetchall()
+    assignments = cursor.fetchall() 
     # print("Assignments:", assignments)
     conn.close()
 
@@ -403,14 +416,14 @@ def getAssignmentsByCourse(course_id, canvasKey):
             if submission_response.status_code == 200:
                 submission_data = submission_response.json()
 
-                submission_status = submission_data.get('workflow_state', '')  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
+                is_submitted = submission_data.get('workflow_state', '')== 'submitted'  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
                 #print(submission_status)    #testing
-                if(submission_status == 'unsubmitted'):
-                    is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
-                    print("GLITCH?? is_submitted = False")  #testing
-                else:
-                    is_submitted = True #assignment has been submitted
-                    print(submission_status)    #testing
+                # if(submission_status == 'unsubmitted'):
+                #     is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
+                #     print("GLITCH?? is_submitted = False")  #testing
+                # else:
+                #     is_submitted = True #assignment has been submitted
+                #     print(submission_status)    #testing
             else:
                 is_submitted = False
                 print("in else: is_submitted = False")  #testing
