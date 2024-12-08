@@ -517,7 +517,7 @@ function animate(backgroundCanvas) {
   c.drawImage(backgroundCanvas, 0, 0)
   player.draw(c)
   //console.log(player.y)
-  if(worldState == 1){
+  if(worldState >= 5){
     if(player.x >= 85 && player.x <= 98){
       if(player.y >= 300 && player.y <= 325){
         window.location.href = 'interior-1/index.html'
@@ -662,8 +662,13 @@ function showDialogueBox(message) {
   dialogueBox.style.display = 'block';
   dialogueBox.style.width = '940px'; 
   dialogueBox.style.height = '380px'; 
-
-  setTimeout(hideDialogueBox, 5000); // Auto-hide after 5 seconds
+  document.onclick = function(e){
+    if(e.target.id != 'dialogueBox'){
+      dialogueBox.innerHTML = ""
+      dialogueBox.style.display = "none"
+    }
+  }
+  //setTimeout(hideDialogueBox, 5000); // Auto-hide after 5 seconds
 }
 
 //gets the amount of gold for current user from database
