@@ -606,7 +606,7 @@ function animate(backgroundCanvas) {
       if (npc === npc2[0]) { // Specific dialogue for the first NPC (princess)
         if(player.worldState == 0){
           showDialogueBox('Hello, traveler! Welcome to our village.');
-        }else if(player.worldState == 1){
+        }else if(player.worldState >= 5){
           showDialogueBox('Thank you for your much needed aid, traveler. The villiage samurai and blacksmith are grateful for your help.')
         }
         
@@ -615,13 +615,13 @@ function animate(backgroundCanvas) {
       } else if (npc === npc2[2]) {
         if(player.worldState == 0){
           showDialogueBox('I am the samurai of the village. Help me build my dojo and I can make you stonger. :::: Complete an assignment to advance the world state');
-        }else if (player.worldState == 1){
+        }else if (player.worldState >= 4){
           showDialogueBox('Thank you for helping build my dojo. Come by and I can train you to get stronger.')
         }
       } else if (npc === npc2[3]){
         if(player.worldState == 0){
           showDialogueBox('Please help me build my weapon forge, I can upgrade your weapon :::: Complete an assignment to advance the world state')
-        }else if(player.worldState == 1){
+        }else if(player.worldState >= 5){
           showDialogueBox('Thank you for helping me build my weapon forge, as a reward you can pick a weapon of your choosing and I can make it for you')
         }
       }
