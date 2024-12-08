@@ -492,7 +492,7 @@ function animate(backgroundCanvas) {
     if (leaf.alpha <= 0) {
       leafs.splice(i, 1)
     }
-    console.log('leafs')
+    //console.log('leafs')
   }
 
   c.restore()
@@ -531,6 +531,7 @@ function updateGoldAmount(){
   console.log(data)
   const goldContainer = document.getElementById("gold")
   goldContainer.innerHTML = data.gold;
+  localStorage.setItem('gold', data.gold);
 })
 }
 

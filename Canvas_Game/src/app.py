@@ -418,30 +418,30 @@ def updatePlayerGold():
     data = request.json
     #gets email and amount from request
     email = data.get('email')
-    amount = data.get('amount')
+    amount = data.get('amount')  # Positive for earning, negative for spending
     #throws error if email or amount is not supplied in payload
-    if not email or not amount:
+    if not email or amount is None:
         return jsonify({"message": "Email and amount are required"}), 400
-    #connects to db
+
     conn = get_db_connection()
-    #executes query to get user's current gold
     cursor = conn.cursor()
     cursor.execute('SELECT gold from users where email = ?', (email,))
-    #makes sure user's gold was returned
     queryRes = cursor.fetchone()
-    if queryRes == None:
+
+    if queryRes is None:
         return jsonify({"message": "Email does not exist"}), 400
-    
 
-    #sums user's gold and amount to be added
     usersGold = queryRes[0]
-    currentGold = amount + usersGold
+    currentGold = usersGold + amount  # Handles both addition and subtraction
 
-    #updates user's gold in db to currentGold
+    if currentGold < 0:
+        return jsonify({"message": "Not enough gold for this transaction"}), 400
+
     cursor.execute('UPDATE users SET gold = ? WHERE email = ?', (currentGold, email))
     conn.commit()
     conn.close()
     return jsonify({"message": "Gold amount updated successfully"}), 200
+
     
 
 @app.route('/api/getPlayerGold', methods=['GET'])
@@ -464,7 +464,6 @@ def getPlayerGold():
     usersGold = queryRes[0]
 
     return jsonify({"gold": usersGold}), 200
-    
 
 
 def get_db_connection():
