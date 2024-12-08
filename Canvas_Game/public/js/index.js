@@ -29,8 +29,10 @@ if(localStorage.getItem("worldState")=== null){
 const worldState = localStorage.getItem("worldState")
 */
 const email = localStorage.getItem('email')
+
 const worldState = localStorage.getItem('worldState')
 console.log(worldState)
+//const worldState = 4
 const goldContainer = document.getElementById('gold')
 goldContainer.innerHTML = localStorage.getItem('gold')
 const layersData = {
@@ -74,7 +76,47 @@ const layersData_WS1 = {
   l_Characters: l_Characters,
   l_Collisions: l_Collisions,
 }
+const layersData_WS2 = {
+  l_Terrain: l_Terrain,
+  l_Trees_1: l_Trees_1,
+  l_Trees_2: l_Trees_2,
+  l_Trees_3: l_Trees_3,
+  l_Trees_4: l_Trees_4,
+  l_Landscape_Decorations: l_Landscape_Decorations,
+  l_Landscape_Decorations_2: l_Landscape_Decorations_2,
+  l_Houses: l_Houses_WS2,
+  l_House_Decorations: l_House_Decorations_WS1,
+  l_Characters: l_Characters,
+  l_Collisions: l_Collisions,
+}
 
+const layersData_WS3 = {
+  l_Terrain: l_Terrain,
+  l_Trees_1: l_Trees_1,
+  l_Trees_2: l_Trees_2,
+  l_Trees_3: l_Trees_3,
+  l_Trees_4: l_Trees_4,
+  l_Landscape_Decorations: l_Landscape_Decorations,
+  l_Landscape_Decorations_2: l_Landscape_Decorations_2,
+  l_Houses: l_Houses_WS3,
+  l_House_Decorations: l_House_Decorations_WS1,
+  l_Characters: l_Characters,
+  l_Collisions: l_Collisions,
+}
+
+const layersData_WS4 = {
+  l_Terrain: l_Terrain,
+  l_Trees_1: l_Trees_1,
+  l_Trees_2: l_Trees_2,
+  l_Trees_3: l_Trees_3,
+  l_Trees_4: l_Trees_4,
+  l_Landscape_Decorations: l_Landscape_Decorations,
+  l_Landscape_Decorations_2: l_Landscape_Decorations_2,
+  l_Houses: l_Houses_WS4,
+  l_House_Decorations: l_House_Decorations_WS4,
+  l_Characters: l_Characters,
+  l_Collisions: l_Collisions,
+}
 const frontRendersLayersData = {
   l_Front_Renders: l_Front_Renders,
   l_Front_Renders_2: l_Front_Renders_2,
@@ -126,8 +168,8 @@ if(worldState == 0){
     })
   })
 }
-else{
-  collisions.forEach((row, y) => {
+else if (worldState == 1){
+  collisions_WS1.forEach((row, y) => {
     row.forEach((symbol, x) => {
       if (symbol === 1) {
         collisionBlocks.push(
@@ -141,7 +183,51 @@ else{
     })
   })
 }
-
+else if(worldState == 2){
+  collisions_WS2.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
+  })
+}
+else if(worldState == 3){
+  collisions_WS3.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
+  })
+}
+else if(worldState == 4){
+  collisions_WS4.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
+  })
+}
 const renderLayer = (tilesData, tilesetImage, tileSize, context) => {
   tilesData.forEach((row, y) => {
     row.forEach((symbol, x) => {
@@ -635,14 +721,24 @@ const startRendering = async () => {
     /*const backgroundCanvas  = await renderStaticLayers(layersData)
     frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)*/
     let backgroundCanvas
-    if(player.worldState == 0){
+    if(worldState == 0){
       backgroundCanvas = await renderStaticLayers(layersData_WS0)
       frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
-    }else if(player.worldState == 1){
+    }else if(worldState == 1){
       backgroundCanvas = await renderStaticLayers(layersData_WS1)
       frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
+    }else if(worldState == 2){
+      backgroundCanvas = await renderStaticLayers(layersData_WS2)
+      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
     }
-    
+    else if(worldState == 3){
+      backgroundCanvas = await renderStaticLayers(layersData_WS3)
+      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
+    }
+    else if(worldState == 4){
+      backgroundCanvas = await renderStaticLayers(layersData_WS4)
+      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
+    }
     if (backgroundCanvas== null) {
       console.error('Failed to create the background canvas')
       return
