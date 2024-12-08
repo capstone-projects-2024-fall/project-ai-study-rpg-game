@@ -22,14 +22,15 @@ const VIEWPORT_CENTER_Y = VIEWPORT_HEIGHT / 2
 const MAX_SCROLL_X = MAP_WIDTH - VIEWPORT_WIDTH
 const MAX_SCROLL_Y = MAP_HEIGHT - VIEWPORT_HEIGHT
 
-
+/*
 if(localStorage.getItem("worldState")=== null){
   localStorage.setItem("worldState", 0)
 }
 const worldState = localStorage.getItem("worldState")
+*/
 const email = localStorage.getItem('email')
-updateGoldAmount()
-
+const worldState = updateGoldAmount()
+console.log(worldState)
 
 const layersData = {
   l_Terrain: l_Terrain,
@@ -518,8 +519,9 @@ function showDialogueBox(message) {
   setTimeout(hideDialogueBox, 5000); // Auto-hide after 5 seconds
 }
 
+//gets the amount of gold for current user from database
 function updateGoldAmount(){
-  fetch("http://127.0.0.1:5000/api/getPlayerGold?email="+email)
+  fetch("http://127.0.0.1:5000/api/getPlayerData?email="+email)
 .then(response=>{
   if (response.ok){
     return response.json();
@@ -528,10 +530,12 @@ function updateGoldAmount(){
   }
 })
 .then(data=>{
-  console.log(data)
+  //console.log(data)
   const goldContainer = document.getElementById("gold")
-  goldContainer.innerHTML = data.gold;
+  goldContainer.innerHTML = data[0].gold
+  return data[1].world_state
 })
+
 }
 
 let isInventoryVisible = false; // Tracks inventory visibility
