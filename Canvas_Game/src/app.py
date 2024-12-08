@@ -357,6 +357,28 @@ def update_task_status():
 
     return jsonify({"message": "Task status updated successfully"}), 200
 
+#delete assignment from db
+@app.route('/api/deleteTask', methods=['POST'])
+def delete_task():
+    data = request.json
+    task_id = data.get('taskId')
+
+    if not task_id:
+        return jsonify({"message": "Task ID is required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Delete the task from the assignments table
+    cursor.execute('DELETE FROM assignments WHERE id = ?', (task_id,))
+    conn.commit()
+    conn.close()
+
+    print('Deleted task ID:', task_id)
+
+    return jsonify({"message": "Task deleted successfully"}), 200
+
+
 
 #gets assignments data from canvas API, parses through it, puts data we want into assignments 
 def getAssignmentsByCourse(course_id, canvasKey): 

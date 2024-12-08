@@ -172,6 +172,25 @@ const JiraBoard = ({email}) => {
     }
   };
 
+    // Function to handle task removal
+  const handleRemoveTask = (taskId) => {
+    const updatedTasks = { ...tasks };
+
+    // Remove the task from the Done column
+    updatedTasks['Done'] = updatedTasks['Done'].filter((task) => task.id !== taskId);
+
+    setTasks(updatedTasks);
+
+    //Delete the task from the backend
+    fetch(`http://localhost:5000/api/deleteTask`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ taskId }),
+    }).catch((error) => console.error('Error deleting task:', error));
+  };
+
 
   return (
     <>
@@ -230,12 +249,21 @@ const JiraBoard = ({email}) => {
                   onClick={() => openDialog(task)}
                 >VIEW
                 </Button>
+                {column === 'Done' ? (
+                  <Button
+                    style={{ color: colors.primary[500] }}
+                    onClick={() => handleRemoveTask(task.id)}
+                  >
+                    REMOVE
+                 </Button>
+              ) : (
                 <Button 
                   style={{ color: colors.primary[500] }}
                   onClick={() => handleNextStep(task.id, column)}
                   endIcon={<ArrowForwardIcon />}
                   >NEXT
                   </Button>
+              )}
               </CardActions>              
             </Card>
           ))}
