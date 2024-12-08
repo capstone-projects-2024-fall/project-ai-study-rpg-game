@@ -282,6 +282,77 @@ def get_assignments_for_dashboard():
 
 
 
+#Getting unsubmitted assignment data from the user database
+@app.route('/getAllAssignmentsFromDb', methods=['GET'])
+def get_all_assignments_from_user_db():
+    email = request.args.get('email')  # Email is provided as a query parameter
+
+    if not email:
+        return jsonify({"message": "Email is required"}), 400
+
+    # Connect to the database and fetch the user's assignments
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Get the user ID based on the email
+    cursor.execute('SELECT id FROM users WHERE email = ?', (email,))
+    user_row = cursor.fetchone()
+
+    if not user_row:
+        conn.close()
+        return jsonify({"message": "User not found"}), 404
+
+    user_id = user_row['id']
+    print("User ID:", user_id)
+
+    # Fetch assignments for the user
+    cursor.execute('''
+        SELECT 
+            assignments.id,
+            assignments.assignment_id,
+            assignments.user_id, 
+            assignments.assignment_name, 
+            assignments.assignment_description, 
+            assignments.due_at, 
+            assignments.course_id, 
+            assignments.submission_types,
+            assignments.points_possible, 
+            assignments.in_game_status, 
+            assignments.is_submitted, 
+            assignments.assignment_url
+        FROM assignments
+        JOIN courses ON assignments.course_id = courses.course_id
+        WHERE assignments.user_id = ?
+    ''', (user_id,))
+    
+    assignments = cursor.fetchall()
+    # print("Assignments:", assignments)
+    conn.close()
+
+    if not assignments:
+        return jsonify({"message": "No assignments found for the user"}), 404
+
+    # Convert rows to a list of dictionaries
+    assignment_list = [
+        {
+            "id": row["id"],
+            "assignment_id": row["assignment_id"],
+            "user_id": row["user_id"],
+            "assignment_name": row["assignment_name"],
+            "assignment_description": row["assignment_description"],
+            "due_at": row["due_at"],
+            "course_id": row["course_id"],
+            "submission_types": row["submission_types"],
+            "points_possible": row["points_possible"],    #removed published 
+            "in_game_status": row["in_game_status"],
+            "is_submitted": row["is_submitted"],
+            "assignment_url": row["assignment_url"]
+        } for row in assignments
+    ]
+
+    return jsonify({"assignments": assignment_list}), 200
+
+
 
 #get Courses from db
 @app.route('/coursesFromDb', methods=['GET'])
@@ -466,7 +537,7 @@ def getAssignmentsByCourse(course_id, canvasKey):
             #    submission_types_1 = submission_types[0]
 
             points_possible = assignment['points_possible']
-            published = assignment['published']
+            published = assignment['published'] #Might delete
             in_game_status = "Undecided"    #DEFAULT
             assignment_url = assignment['html_url']
             print(assignment_url)

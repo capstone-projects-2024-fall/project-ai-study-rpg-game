@@ -1,4 +1,5 @@
 import React from "react";
+import {useState, useEffect} from "react"
 
 import {assignments, categories, courses} from './data/mockAssignmentsData.js';
 import CategorizedAssignmentsList from './CategorizedAssignmentsList.jsx';
@@ -11,15 +12,68 @@ import CategorizedAssignmentsList from './CategorizedAssignmentsList.jsx';
 
 const CourseAssignmentsList= (props) => {    //could do: {courseValueSelected}
     //list with header and cards
-
+    
     const course = props.courseValueSelected; 
+    const email=props.email;
+
+    
+    const[assignmentList, setAssignmentList] = useState([])
+
+    // Fetch all assignments from the backend
+    useEffect(() => {
+        const fetchAllAssignmentsFromDB = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/getAllAssignmentsFromDb?email=${email}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch tasks');
+                }
+
+                const data = await response.json();
+                
+                const assList = []
+
+                data.assignments.forEach((task) => {
+                    assList.push({
+                        id: task.id,
+                        assignment_id: task.assignment_id, //id
+                        user_id: task.user_id,
+                        assignment_name: task.assignment_name,
+                        assignment_description: task.assignment_description,
+                        due_at: task.due_at,
+                        course_id: task.course_id, 
+                        submission_types: task.submission_types,
+                        points_possible: task.points_possible,  //took out published !! dont really need it 
+                        in_game_status: task.in_game_status,    //"Undecided", "To Do", "In Progress", "Done"
+                        is_submitted: task.is_submitted,    
+                        assignment_url: task.assignment_url,
+                    })
+                });
+                console.log(assList)
+                setAssignmentList(assList);
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+        };
+
+        fetchAllAssignmentsFromDB();
+    }, [email]);
+
+    //if subtype == online_quiz
+        //filter by quiz
+    //else if subtype == online_test
+        //filterbytest
+    //else
+        //return assignmentlist
+
+    //if sortByCat
+
 
     //filters assignments by course --> might have to change for db call (maybe use inmap filter)
     const filterByCourse = (newCourse) =>{
-        if(newCourse == 'All'){
-            return assignments; 
+        if(newCourse == 'All Courses'){
+            return assignmentList; 
         }
-        return assignments.filter(assignments=>assignments.course===newCourse); 
+        return assignmentList.filter(assignmentList=>assignmentList.course_id===newCourse); 
     };
 
     const filteredAssignments = filterByCourse(course);

@@ -53,7 +53,7 @@ const AssignmentsPage = ({email}) => {      //gonna get assignments from backend
             <Box m="20px">
                 <div className="AssignmentList">
                     <CourseDropdownMenu courseValueSelected = {onCourseSelectedFromCDM} email = {email}></CourseDropdownMenu>
-                    {/*<CourseAssignmentsList courseValueSelected = {courseValue}></CourseAssignmentsList>*/}
+                    <CourseAssignmentsList courseValueSelected = {courseValue} email = {email}></CourseAssignmentsList>
                 </div>
 
                 {/*<div>

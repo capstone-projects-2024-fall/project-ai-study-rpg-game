@@ -29,7 +29,8 @@ const CourseDropdownMenu = (props) => {
             data.courses.forEach((course) => {    //for each course in data, course is:
                 getCourseNameList.push(course.course_name)
             });
-            
+
+            getCourseNameList.push("All Courses");  //add an all courses category 
             setCourseNameList(getCourseNameList); //put list into global list
 
         } catch (error) {
