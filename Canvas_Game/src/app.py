@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import sqlite3
 import requests
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 
 app = Flask(__name__)
@@ -58,7 +58,10 @@ def init_db():
             submission_types TEXT,
             points_possible INTEGER,
             published TEXT,
-            in_game_status TEXT
+            in_game_status TEXT,
+            is_submitted DEFAULT 3,
+            assignment_url TEXT
+        
         )
     ''')
 
@@ -215,8 +218,8 @@ def get_user_by_email():
     else:
         return jsonify({"message": "User not found"}), 404
 
-#Getting assignment data from the database
-@app.route('/assignmentFromDb', methods=['GET'])
+#Getting unsubmitted assignment data from the user database
+@app.route('/getUnsubmittedAssignmentsFromDb', methods=['GET'])
 def get_assignments_for_dashboard():
     email = request.args.get('email')  # Email is provided as a query parameter
 
@@ -236,6 +239,20 @@ def get_assignments_for_dashboard():
         return jsonify({"message": "User not found"}), 404
 
     user_id = user_row['id']
+    print("User ID:", user_id)
+
+    # Calculate the date range
+    current_date = datetime.now(timezone.utc)
+    one_week_before = current_date - timedelta(weeks=1)
+
+    # Convert dates to strings in the format compatible with the database
+    current_date_str = current_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+    one_week_before_str = one_week_before.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    print("The week before:", one_week_before_str)
+    print("Current date:", current_date_str)
+
+
 
     # Fetch assignments for the user
     cursor.execute('''
@@ -245,13 +262,16 @@ def get_assignments_for_dashboard():
             assignments.due_at,
             assignments.in_game_status,
             assignments.id,
+            assignments.assignment_url,
+            assignments.is_submitted,
             courses.course_name
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
-        WHERE assignments.user_id = ?
-    ''', (user_id,))
+        WHERE assignments.user_id = ? AND assignments.is_submitted = 0 AND assignments.due_at >= ?
+    ''', (user_id,one_week_before_str))
     
-    assignments = cursor.fetchall()
+    assignments = cursor.fetchall() 
+    # print("Assignments:", assignments)
     conn.close()
 
     if not assignments:
@@ -265,7 +285,9 @@ def get_assignments_for_dashboard():
             "due_at": row["due_at"],
             "in_game_status": row["in_game_status"],
             "course_name": row["course_name"],
-            "id": row["id"]
+            "id": row["id"],
+            "assignment_url": row['assignment_url'],
+            "is_submitted": row['is_submitted']
         } for row in assignments
     ]
 
@@ -296,7 +318,7 @@ def getAllAssignments():
             #print(course,'\n\n')   #testing
             if(length> 3):  #filters out courses with 'access_restricted_by_date' key 
                 if(course['enrollment_term_id'] == 142):    #only grab classes for the current semester, check if u can grab current enrollment_term_id from profile page instead
-                    print(course, '\n\n') #testing
+                    #print(course, '\n\n') #testing
                 
                     ##parses through course data and puts it into vars
                     course_id = course['id']
@@ -349,6 +371,28 @@ def update_task_status():
 
     return jsonify({"message": "Task status updated successfully"}), 200
 
+#delete assignment from db
+@app.route('/api/deleteTask', methods=['POST'])
+def delete_task():
+    data = request.json
+    task_id = data.get('taskId')
+
+    if not task_id:
+        return jsonify({"message": "Task ID is required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Delete the task from the assignments table
+    cursor.execute('DELETE FROM assignments WHERE id = ?', (task_id,))
+    conn.commit()
+    conn.close()
+
+    print('Deleted task ID:', task_id)
+
+    return jsonify({"message": "Task deleted successfully"}), 200
+
+
 
 #gets assignments data from canvas API, parses through it, puts data we want into assignments 
 def getAssignmentsByCourse(course_id, canvasKey): 
@@ -398,10 +442,31 @@ def getAssignmentsByCourse(course_id, canvasKey):
             points_possible = assignment['points_possible']
             published = assignment['published']
             in_game_status = "Undecided"    #DEFAULT
+            assignment_url = assignment['html_url']
+            print(assignment_url)
+
+            # Get is_submitted (and submission_status) - make a separate function?   
+            submission_url = f"https://templeu.instructure.com/api/v1/courses/{course_id}/assignments/{assignment_id}/submissions/self"
+            submission_response = requests.get(submission_url, headers=newheaders)
+
+            if submission_response.status_code == 200:
+                submission_data = submission_response.json()
+
+                is_submitted = submission_data.get('workflow_state', '')== 'submitted'  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
+                #print(submission_status)    #testing
+                # if(submission_status == 'unsubmitted'):
+                #     is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
+                #     print("GLITCH?? is_submitted = False")  #testing
+                # else:
+                #     is_submitted = True #assignment has been submitted
+                #     print(submission_status)    #testing
+            else:
+                is_submitted = False
+                print("in else: is_submitted = False")  #testing
 
             #puts it into assignments table in user db
-            cursor.execute('INSERT INTO assignments (assignment_id,user_id, assignment_name, assignment_description, due_at, course_id, submission_types, points_possible, published, in_game_status) VALUES (?,?,?,?,?,?,?,?,?,?)', 
-            (assignment_id, user_id, assignment_name, assignment_description, due_at, assignments_course_id, submission_types_list_toString, points_possible, published, in_game_status))
+            cursor.execute('INSERT INTO assignments (assignment_id,user_id, assignment_name, assignment_description, due_at, course_id, submission_types, points_possible, published, in_game_status, is_submitted, assignment_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', 
+            (assignment_id, user_id, assignment_name, assignment_description, due_at, assignments_course_id, submission_types_list_toString, points_possible, published, in_game_status, is_submitted, assignment_url))
 
             count+=1
 
