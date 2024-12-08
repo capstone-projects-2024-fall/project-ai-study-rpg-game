@@ -27,7 +27,8 @@ def init_db():
             score INTEGER DEFAULT 0,
             selectedMotto TEXT NOT NULL,
             picture_url TEXT DEFAULT '',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            world_state INTEGER DEFAULT 0
 
         )
     ''')
@@ -444,7 +445,7 @@ def updatePlayerGold():
     return jsonify({"message": "Gold amount updated successfully"}), 200
     
 
-@app.route('/api/getPlayerGold', methods=['GET'])
+@app.route('/api/getPlayerData', methods=['GET'])
 def getPlayerGold():
     #gets user's email from request URL
     email = request.args.get('email')
@@ -453,18 +454,29 @@ def getPlayerGold():
          return jsonify({"message": "Email is required"}), 400
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT gold from users where email = ?', (email,))
+    res = cursor.execute('SELECT gold, world_state from users where email = ? LIMIT 1', (email,))
     #makes sure user's gold was returned
-    queryRes = cursor.fetchone()
-    if queryRes == None:
+    gold, worldState = res.fetchone()
+    if (gold == None or worldState == None):
         return jsonify({"message": "Email does not exist"}), 400
-    
 
-    #gets users gold from query response
-    usersGold = queryRes[0]
-
-    return jsonify({"gold": usersGold}), 200
+    return jsonify({"gold": gold},{"worldState": worldState}), 200
     
+@app.route('/api/updatePlayerWorldState', methods=['POST'])
+def updatePlayerWorldState():
+    data = request.json
+    #gets email from request
+    email = data.get('email')
+    ws = data.get('worldState')
+    if not email:
+         return jsonify({"message": "Email is required"}), 400
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    res = cursor.execute('UPDATE users SET world_state=? WHERE email=?', (ws,email))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "WorldState updated successfully"}), 200
+
 
 
 def get_db_connection():
