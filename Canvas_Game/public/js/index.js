@@ -117,6 +117,22 @@ const layersData_WS4 = {
   l_Characters: l_Characters,
   l_Collisions: l_Collisions,
 }
+
+const layersData_WS5 = {
+  l_Terrain: l_Terrain,
+  l_Trees_1: l_Trees_1,
+  l_Trees_2: l_Trees_2,
+  l_Trees_3: l_Trees_3,
+  l_Trees_4: l_Trees_4,
+  l_Landscape_Decorations: l_Landscape_Decorations,
+  l_Landscape_Decorations_2: l_Landscape_Decorations_2,
+  l_Houses: l_Houses_WS5,
+  l_House_Decorations: l_House_Decorations_WS5,
+  l_Characters: l_Characters,
+  l_Collisions: l_Collisions,
+}
+
+
 const frontRendersLayersData = {
   l_Front_Renders: l_Front_Renders,
   l_Front_Renders_2: l_Front_Renders_2,
@@ -215,6 +231,20 @@ else if(worldState == 3){
 }
 else if(worldState == 4){
   collisions_WS4.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
+  })
+}else if (worldState >= 5){
+  collisions_WS5.forEach((row, y) => {
     row.forEach((symbol, x) => {
       if (symbol === 1) {
         collisionBlocks.push(
@@ -738,6 +768,10 @@ const startRendering = async () => {
     else if(worldState == 4){
       backgroundCanvas = await renderStaticLayers(layersData_WS4)
       frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
+    }
+    else if(worldState == 5){
+      backgroundCanvas = await renderStaticLayers(layersData_WS5)
+      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData)
     }
     if (backgroundCanvas== null) {
       console.error('Failed to create the background canvas')

@@ -462,6 +462,22 @@ def getPlayerGold():
 
     return jsonify({"gold": gold},{"worldState": worldState}), 200
     
+@app.route('/api/updatePlayerWorldState', methods=['POST'])
+def updatePlayerWorldState():
+    data = request.json
+    #gets email from request
+    email = data.get('email')
+    ws = data.get('worldState')
+    if not email:
+         return jsonify({"message": "Email is required"}), 400
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    res = cursor.execute('UPDATE users SET world_state=? WHERE email=?', (ws,email))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "WorldState updated successfully"}), 200
+
+
 
 def get_db_connection():
     conn = sqlite3.connect('users.db')
