@@ -29,9 +29,10 @@ if(localStorage.getItem("worldState")=== null){
 const worldState = localStorage.getItem("worldState")
 */
 const email = localStorage.getItem('email')
-const worldState = updateGoldAmount()
+const worldState = localStorage.getItem('worldState')
 console.log(worldState)
-
+const goldContainer = document.getElementById('gold')
+goldContainer.innerHTML = localStorage.getItem('gold')
 const layersData = {
   l_Terrain: l_Terrain,
   l_Trees_1: l_Trees_1,
@@ -42,6 +43,20 @@ const layersData = {
   l_Landscape_Decorations_2: l_Landscape_Decorations_2,
   l_Houses: l_Houses,
   l_House_Decorations: l_House_Decorations,
+  l_Characters: l_Characters,
+  l_Collisions: l_Collisions,
+}
+
+const layersData_WS0 = {
+  l_Terrain: l_Terrain,
+  l_Trees_1: l_Trees_1,
+  l_Trees_2: l_Trees_2,
+  l_Trees_3: l_Trees_3,
+  l_Trees_4: l_Trees_4,
+  l_Landscape_Decorations: l_Landscape_Decorations,
+  l_Landscape_Decorations_2: l_Landscape_Decorations_2,
+  l_Houses: l_Houses_WS0,
+  l_House_Decorations: l_House_Decorations_WS0,
   l_Characters: l_Characters,
   l_Collisions: l_Collisions,
 }
@@ -96,20 +111,36 @@ const tilesets = {
 // Tile setup
 const collisionBlocks = []
 const blockSize = 16 // Assuming each tile is 16x16 pixels
-
-collisions.forEach((row, y) => {
-  row.forEach((symbol, x) => {
-    if (symbol === 1) {
-      collisionBlocks.push(
-        new CollisionBlock({
-          x: x * blockSize,
-          y: y * blockSize,
-          size: blockSize,
-        })
-      )
-    }
+if(worldState == 0){
+  collisions_WS0.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
   })
-})
+}
+else{
+  collisions.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
+  })
+}
 
 const renderLayer = (tilesData, tilesetImage, tileSize, context) => {
   tilesData.forEach((row, y) => {
@@ -369,7 +400,7 @@ function animate(backgroundCanvas) {
   c.clearRect(0, 0, canvas.width, canvas.height)
   c.drawImage(backgroundCanvas, 0, 0)
   player.draw(c)
-  console.log(player.y)
+  //console.log(player.y)
   if(worldState == 1){
     if(player.x >= 85 && player.x <= 98){
       if(player.y >= 300 && player.y <= 325){
@@ -493,7 +524,7 @@ function animate(backgroundCanvas) {
     if (leaf.alpha <= 0) {
       leafs.splice(i, 1)
     }
-    console.log('leafs')
+    //console.log('leafs')
   }
 
   c.restore()
@@ -605,11 +636,11 @@ const startRendering = async () => {
     frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)*/
     let backgroundCanvas
     if(player.worldState == 0){
-      backgroundCanvas = await renderStaticLayers(layersData_WS1)
+      backgroundCanvas = await renderStaticLayers(layersData_WS0)
       frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
     }else if(player.worldState == 1){
-      backgroundCanvas = await renderStaticLayers(layersData)
-      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData)
+      backgroundCanvas = await renderStaticLayers(layersData_WS1)
+      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
     }
     
     if (backgroundCanvas== null) {
