@@ -29,9 +29,9 @@ const GenerateAssignmentCard = (props) => {
             >
 
                 <CardContent>
-                    <Typography variant="h5">{assignment.title}</Typography>
-                    <Typography color="textSecondary">{assignment.due_date}</Typography>
-                    <Typography color="textSecondary">{assignment.status}</Typography>
+                    <Typography variant="h5">{assignment.assignment_name}</Typography>
+                    <Typography color="textSecondary">{assignment.due_at}</Typography>
+                    <Typography color="textSecondary">{assignment.in_game_status}</Typography>
                 </CardContent>
 
             </Card>
@@ -39,3 +39,5 @@ const GenerateAssignmentCard = (props) => {
     );
 }
 export default GenerateAssignmentCard
+
+//is_submitted? more info, points_possible?

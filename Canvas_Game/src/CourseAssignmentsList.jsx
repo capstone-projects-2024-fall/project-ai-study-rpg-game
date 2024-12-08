@@ -58,6 +58,11 @@ const CourseAssignmentsList= (props) => {    //could do: {courseValueSelected}
         fetchAllAssignmentsFromDB();
     }, [email]);
 
+
+    //automatically sort into quizzes/tests if has that tag, let user change if
+        //if user changes it -> can change several and submit -> onChange -> update data in db &rerender page
+            //if user clicks change settings, small dropdown menu will be on assignment card to change category of every assignment
+    const  categoryNames = ['Assignments', 'Tests/Quizzes']
     //if subtype == online_quiz
         //filter by quiz
     //else if subtype == online_test
@@ -83,11 +88,11 @@ const CourseAssignmentsList= (props) => {    //could do: {courseValueSelected}
         <>
                 <h1>{props.courseValueSelected}</h1>
                 <ul className="AssignmentsList1">
-                    {categories.map((category) => (  //for all categories in categories array, category = cat[i]
+                    {categoryNames.map((categoryName) => (  //for all categories in categories array, category = cat[i]
 
-                        <li className='category-list' key ={category}>
-                            <h2>{category}</h2>    
-                            <CategorizedAssignmentsList cat={category} assList = {filteredAssignments}></CategorizedAssignmentsList>  {/*creates a categorized assignmment list*/} 
+                        <li className='category-list' key ={categoryName}>
+                            <h2>{categoryName}</h2>    
+                            <CategorizedAssignmentsList cat={categoryName} assList = {filteredAssignments}></CategorizedAssignmentsList>  {/*creates a categorized assignmment list*/} 
                         
                         </li>
 
