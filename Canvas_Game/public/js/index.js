@@ -1,3 +1,4 @@
+window.onload = loadInAssignments()
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 const dpr = window.devicePixelRatio || 1
@@ -658,14 +659,15 @@ function animate(backgroundCanvas) {
 //Dialogue Box
 function showDialogueBox(message) {
   const dialogueBox = document.getElementById('dialogueBox');
-  dialogueBox.innerText = message;
+  const dialogueText = document.getElementById('dialogueText')
+  dialogueText.innerText = message;
   dialogueBox.style.display = 'block';
   dialogueBox.style.width = '940px'; 
   dialogueBox.style.height = '380px'; 
   document.onclick = function(e){
-    if(e.target.id != 'dialogueBox'){
-      dialogueBox.innerHTML = ""
-      dialogueBox.style.display = "none"
+    if(e.target.id != 'dialogueBox' || e.target.id != 'dialogueText' || e.target.id != 'assignmentsList' || e.target.class != 'container'){
+      dialogueText.innerHTML = ""
+      //dialogueBox.style.display = "none"
     }
   }
   //setTimeout(hideDialogueBox, 5000); // Auto-hide after 5 seconds
