@@ -218,14 +218,8 @@ def get_user_by_email():
     else:
         return jsonify({"message": "User not found"}), 404
 
-<<<<<<< HEAD
-
-#Getting assignment data from the database
-@app.route('/assignmentFromDb', methods=['GET'])
-=======
 #Getting unsubmitted assignment data from the user database
 @app.route('/getUnsubmittedAssignmentsFromDb', methods=['GET'])
->>>>>>> dbe6efb797eaf603287231df6b146b98a3524752
 def get_assignments_for_dashboard():
     email = request.args.get('email')  # Email is provided as a query parameter
 
@@ -244,12 +238,8 @@ def get_assignments_for_dashboard():
         conn.close()
         return jsonify({"message": "User not found"}), 404
 
-<<<<<<< HEAD
-    user_id = user_row['id']    #sets user_id for this user
-=======
     user_id = user_row['id']
     print("User ID:", user_id)
->>>>>>> dbe6efb797eaf603287231df6b146b98a3524752
 
     # Fetch assignments for the user
     cursor.execute('''
@@ -342,7 +332,7 @@ def get_courselist_from_database():
         } for row in courses
     ]
 
-    return jsonify({"assignments": course_list}), 200   #returns list of course dictionaries 
+    return jsonify({"courses": course_list}), 200   #returns list of course dictionaries 
 
 
 #update assignment status of the Jira Board               
@@ -428,7 +418,7 @@ def getAllAssignments():
         return jsonify({"message": "SOMETHING WENT WRONG IN getAssignments"}), 400
 
 
-#gets assignments data from canvas API, parses through it, puts data we want into assignments 
+#gets assignments data from canvas API, parses through it, puts data we want into assignments table in user database
 def getAssignmentsByCourse(course_id, canvasKey): 
 
     newcanvasURL = f"https://templeu.instructure.com/api/v1/courses/{course_id}/assignments"
@@ -514,9 +504,6 @@ def getAssignmentsByCourse(course_id, canvasKey):
         return jsonify({"message": "SOMETHING WENT WRONG IN getAssignmentsByCourse()"}), 400
 
 
-
-
-#get course names/ids from users db where user_id is this.user
 
 
 
