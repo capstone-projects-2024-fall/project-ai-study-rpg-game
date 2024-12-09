@@ -60,7 +60,8 @@ def init_db():
             published TEXT,
             in_game_status TEXT,
             is_submitted DEFAULT 3,
-            assignment_url TEXT
+            assignment_url TEXT,
+            assignment_hint TEXT
         
         )
     ''')
@@ -264,6 +265,7 @@ def get_assignments_for_dashboard():
             assignments.id,
             assignments.assignment_url,
             assignments.is_submitted,
+            assignments.assignment_hint,
             courses.course_name
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
@@ -287,7 +289,8 @@ def get_assignments_for_dashboard():
             "course_name": row["course_name"],
             "id": row["id"],
             "assignment_url": row['assignment_url'],
-            "is_submitted": row['is_submitted']
+            "is_submitted": row['is_submitted'],
+            "assignment_hint": row['assignment_hint']
         } for row in assignments
     ]
 
