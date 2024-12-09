@@ -144,6 +144,34 @@ class Player {
   }
 
 
+  usePotion() {
+ // Find the index of a Health Potion in the inventory
+ const potionIndex = this.inventory.findIndex(item => item.name === "Health Potion");
+
+ if (potionIndex === -1) {
+   console.warn("No potion available in inventory!");
+   showDialogueBox("You don't have any health potions!");
+   return false;
+ }
+
+ if (this.health >= this.maxHealth) { // Assuming max health is defined
+   console.warn("Health is already full!");
+   showDialogueBox("Your health is already full!");
+   return false;
+ }
+
+ // Remove the potion from the inventory
+ this.inventory.splice(potionIndex, 1);
+
+ // Restore health
+ this.health = Math.min(this.health + 1, 3); // Ensure health doesn't exceed max
+ updateHealthUI(this.health); // Update the UI to reflect new health
+ toggleInventoryBox(); // Refresh inventory UI if it's open
+
+ showDialogueBox("You used a Health Potion and restored 1 health!");
+ return true;
+  }
+  
   // Function to add items
   addItem(item) {
     if (this.inventory.length >= this.inventoryCapacity) {
