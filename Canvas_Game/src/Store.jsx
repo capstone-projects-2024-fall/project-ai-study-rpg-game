@@ -5,96 +5,147 @@ import items from './data/itemData.js';
 
 export default function Store(){
     const [gold, setGold] = useState(0); // Initialize with 0
-
-    useEffect(() => {
-        const storedGold = localStorage.getItem('gold');
-        if (storedGold) {
-            setGold(parseInt(storedGold, 10)); // Retrieve gold amount from localStorage
-        }
-    }, []);
-
     const [selectedItems, setSelectedItems] = useState([]);
+    
+        // Fetch gold from localStorage when component mounts
+    useEffect(() => {
+      const storedGold = localStorage.getItem('gold');
+      if (storedGold) {
+          setGold(parseInt(storedGold, 10)); // Parse and set gold
+      }
+  }, []);
 
-    const firstSet = items.slice(0, 4);
-    const secondSet = items.slice(4, 8); // Ensures this set includes only items 4–7
-    const thirdSet = items.slice(8);
+  const email = localStorage.getItem('email'); // Retrieve email from localStorage
 
-    // Handle item selection
-    const handleSelection = (itemId) => {
-        setSelectedItems((prev) =>
-        prev.includes(itemId)
-            ? prev.filter((id) => id !== itemId) // Deselect if already selected
-            : [...prev, itemId] // Add to selection
-        );
+  const firstSet = items.slice(0, 4);
+  const secondSet = items.slice(4, 8);
+  const thirdSet = items.slice(8);
+
+  // Handle item selection
+  const handleSelection = (itemId) => {
+      setSelectedItems((prev) =>
+          prev.includes(itemId)
+              ? prev.filter((id) => id !== itemId) // Deselect if already selected
+              : [...prev, itemId] // Add to selection
+      );
+  };
+
+  // Handle Buying
+  const handleBuy = async () => {
+      console.log('handleBuy function triggered');
+      if (selectedItems.length === 0) {
+          alert('No items selected!');
+          return;
+      }
+
+      if (!email) {
+          alert('Email not found in localStorage');
+          return;
+      }
+
+      // Get item details
+      const selectedItemsDetails = selectedItems.map((itemId) => {
+          const item = items.find((item) => item.id === itemId);
+          return {
+              id: item.id,
+              name: item.name,
+              description: item.description,
+              price: item.price,
+          };
+      });
+
+      const totalPrice = selectedItemsDetails.reduce((sum, item) => sum + item.price, 0);
+
+      // Check if the user has enough gold
+      if (gold < totalPrice) {
+          alert('Not enough gold to buy the selected items!');
+          return;
+      }
+
+      try {
+          // Send selected items to the buyItems endpoint
+          const buyResponse = await fetch('http://127.0.0.1:5000/api/buyItems', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, items: selectedItemsDetails }),
+          });
+
+          if (!buyResponse.ok) {
+              const error = await buyResponse.json();
+              throw new Error(error.message || 'Failed to buy items');
+          }
+
+          console.log('Items successfully added to the database.');
+
+          // Update gold after purchase
+          const goldResponse = await fetch('http://127.0.0.1:5000/api/updatePlayerGold', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, amount: -totalPrice }),
+          });
+
+          if (!goldResponse.ok) {
+              const error = await goldResponse.json();
+              throw new Error(error.message || 'Failed to update gold');
+          }
+
+          console.log('Gold successfully updated.');
+
+
+          selectedItemsDetails.forEach((item) => {
+            // Add item's purchased from store to inventory
+            if (typeof player !== 'undefined') {
+                player.addItem(new Item({
+                    name: item.name,
+                    type: "Bought Item", 
+                    description: item.description,
+                }));
+            } else {
+                console.warn("Player object is not defined. Unable to sync inventory.");
+            }
+        });
+
+        await fetchUserItems(email);
+
+          // Update local state and notify the user
+          const newGold = gold - totalPrice;
+          setGold(newGold);
+          localStorage.setItem('gold', newGold);
+          alert(`Purchase successful! You bought: ${selectedItems.map((id) => items.find((i) => i.id === id)?.name).join(', ')}`);
+          setSelectedItems([]);
+      } catch (error) {
+          console.error('Error during purchase:', error);
+          alert('An error occurred while processing your purchase. Please try again.');
+      }
     };
 
-    // Handle the "Buy" action
-    const handleBuy = () => {
-        console.log('handleBuy function triggered');
-        if (selectedItems.length === 0) {
-            alert('No items selected!');
-            return;
+    async function fetchUserItems(email) {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/api/getUserItems?email=${email}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch user items");
         }
-
-        console.log('Selected Items:', selectedItems);
-
-        const totalPrice = selectedItems.reduce((sum, itemId) => {
-            const item = items.find((item) => item.id === itemId);
-        
-            // If item exists, add its price to the sum
-            if (item) {
-              console.log('Processing Item:', item.name, 'Price:', item.price);
-              return sum + item.price;
-            }
-            return sum; // If item doesn't exist, return the current sum
-        }, 0);
-
-        console.log('Total Price:', totalPrice);
-        console.log('Current Gold:', gold);
-
-        if (gold >= totalPrice) {
-            console.log('Sufficient gold. Proceeding with purchase...');
-            const newGold = gold - totalPrice;  // Calculate new gold value directly
-            console.log('New Gold After Purchase:', newGold);  // Log the new gold amount after deduction
-
-            const email = localStorage.getItem('email'); // Retrieve email from localStorage
-            if (!email) {
-                alert('Email not found in localStorage');
-                return;
-            }
-
-            // Make an API call to update the gold amount in the database
-            fetch("http://127.0.0.1:5000/api/updatePlayerGold", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: email, amount: -totalPrice }),// Negative for spending
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    return response.json().then(error => {
-                        throw new Error(error.message);
-                    });
-                }
-            })
-            .then(data => {
-                console.log('Gold amount updated in the database:', data);
-                setGold(newGold);  // Directly update gold state
-                localStorage.setItem('gold', newGold); // Update gold amount in localStorage
-                alert(`Purchase successful! You bought: ${selectedItems.join(', ')}`);
-                setSelectedItems([]); // Clear selected items
-            })
-            .catch(error => {
-                console.error('Error updating gold amount:', error);
-                alert('Failed to update gold amount. Please try again.');
-            });
+        const items = await response.json();
+        console.log("Fetched Items:", items);
+    
+        // Add the items to in-game inventory
+        if (typeof window.player !== 'undefined' && typeof window.player.addItem === 'function') {
+          // Clear the inventory if it's required
+          window.player.inventory = [];
+          items.forEach((item) => {
+            window.player.addItem(new Item({
+              name: item.name,
+              type: item.type || "Bought Item",
+              description: item.description,
+            }));
+          });
         } else {
-            alert('Not enough gold to buy the selected items!');
+          console.warn("player.addItem is not a function or player is not defined.");
         }
-    };
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    }
 
     return( 
         <div>

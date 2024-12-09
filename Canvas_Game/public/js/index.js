@@ -319,7 +319,13 @@ const player = new Player({
   y: 100,
   size: 15,
 })
+window.player=player;// Making player global
 
+if (email) {
+    fetchUserItems(email);
+} else {
+    console.error("Email not found in localStorage.");
+}
 
 const monsterSprites = {
   walkDown: {
@@ -696,6 +702,7 @@ let isInventoryVisible = false; // Tracks inventory visibility
 let currentInspectItem = null; // Tracks the currently inspected item
 
 function toggleInventoryBox() {
+  /*
   const inventoryBox = document.getElementById("inventoryBox");
   const inventoryList = document.getElementById("inventoryList");
   const inspectBox = document.getElementById("inspectBox");
@@ -726,15 +733,46 @@ function toggleInventoryBox() {
     inventoryBox.style.display = "block";
     isInventoryVisible = true;
   }
+    */
+
+  const inventoryBox = document.getElementById("inventoryBox");
+    const inventoryList = document.getElementById("inventoryList");
+    const inspectBox = document.getElementById("inspectBox");
+
+    if (isInventoryVisible) {
+        inventoryBox.style.display = "none";
+        inspectBox.style.display = "none";
+        isInventoryVisible = false;
+    } else {
+        inventoryList.innerHTML = ""; // Clear existing inventory of its items
+
+        // Populate inventory items
+        player.inventory.forEach((item, index) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${item.name}`;
+            listItem.dataset.index = index; // Store index for reference
+
+            // Add click event to show description
+            listItem.addEventListener("click", () => {
+                showInspectBox(item);
+            });
+
+            inventoryList.appendChild(listItem);
+        });
+
+        inventoryBox.style.display = "block";
+        isInventoryVisible = true;
+    }
 }
 
 function showInspectBox(item) {
+
   const inspectBox = document.getElementById("inspectBox");
   inspectBox.style.display = "block";
   inspectBox.innerHTML = `
-    <h3>${item.name}</h3>
-    <p><strong>Type:</strong> ${item.type}</p>
-    <p><strong>Description:</strong> ${item.description}</p>
+      <h3>${item.name}</h3>
+      <p><strong>Type:</strong> ${item.type}</p>
+      <p><strong>Description:</strong> ${item.description}</p>
   `;
 }
 
@@ -751,6 +789,28 @@ document.addEventListener("keydown", (event) => {
 function hideDialogueBox() {
   const dialogueBox = document.getElementById('dialogueBox');
   dialogueBox.style.display = 'none';
+}
+
+async function fetchUserItems(email) {
+  try {
+      const response = await fetch(`http://127.0.0.1:5000/api/getUserItems?email=${email}`);
+      if (!response.ok) {
+          throw new Error("Failed to fetch user items");
+      }
+      const items = await response.json();
+      console.log("Fetched Items:", items);
+
+      // Add the fetched items to the player's inventory
+      items.forEach((item) => {
+          player.addItem(new Item({
+              name: item.name,
+              type: "Bought Item",
+              description: item.description
+          }));
+      });
+  } catch (error) {
+      console.error("Error fetching items:", error);
+  }
 }
 
 const startRendering = async () => {
