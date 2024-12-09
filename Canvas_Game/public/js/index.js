@@ -505,9 +505,16 @@ function animate(backgroundCanvas) {
 
   c.save()
   c.scale(MAP_SCALE, MAP_SCALE)
+  /*
   hearts.forEach((heart) => {
     heart.draw(c)
   })
+    */
+
+  hearts.forEach((heart, index) => {
+    heart.currentFrame = index < player.health ? 4 : 0; // Full or empty frame
+    heart.draw(c); // Redraw the heart
+  });
   c.restore()
 
   requestAnimationFrame(() => animate(backgroundCanvas))
@@ -578,6 +585,7 @@ function toggleInventoryBox() {
   }
     */
 
+  /*
   const inventoryBox = document.getElementById("inventoryBox");
     const inventoryList = document.getElementById("inventoryList");
     const inspectBox = document.getElementById("inspectBox");
@@ -606,6 +614,36 @@ function toggleInventoryBox() {
         inventoryBox.style.display = "block";
         isInventoryVisible = true;
     }
+        */
+
+    const inventoryBox = document.getElementById("inventoryBox");
+    const inventoryList = document.getElementById("inventoryList");
+  
+    if (!inventoryBox || !inventoryList) {
+      console.error("Inventory box or list not found.");
+      return;
+    }
+  
+    if (isInventoryVisible) {
+      inventoryBox.style.display = "none";
+      isInventoryVisible = false;
+    } else {
+      inventoryList.innerHTML = ""; // Clear the existing inventory items
+  
+      player.inventory.forEach((item, index) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${item.name}`;
+        listItem.dataset.index = index; // Store the item's index
+  
+        // Add click event to show item details
+        listItem.addEventListener("click", () => showInspectBox(item));
+  
+        inventoryList.appendChild(listItem);
+      });
+  
+      inventoryBox.style.display = "block";
+      isInventoryVisible = true;
+    }
 }
 
 function showInspectBox(item) {
@@ -626,7 +664,18 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-
+document.addEventListener("keydown", (event) => {
+  if (event.key.toLowerCase() === "p") { // Press 'P' to use a potion
+    if (window.player) {
+      const success = window.player.usePotion();
+      if (!success) {
+        console.log("Potion use failed.");
+      }
+    } else {
+      console.warn("Player object not found.");
+    }
+  }
+});
 
 
 function hideDialogueBox() {
@@ -654,6 +703,27 @@ async function fetchUserItems(email) {
   } catch (error) {
       console.error("Error fetching items:", error);
   }
+}
+
+function updateHealthUI(health) {
+  /*
+  const hearts = document.querySelectorAll(".heart");
+  hearts.forEach((heart, index) => {
+    const heartObject = heartsArray[index]; // Assuming heartsArray contains Heart instances
+    if (index < health) {
+      heartObject.currentFrame = 4; // Full heart frame
+    } else {
+      heartObject.currentFrame = 0; // Empty heart frame
+    }
+  });
+  */
+
+  const hearts = document.querySelectorAll(".heart");
+  hearts.forEach((heart, index) => {
+    heart.classList.toggle("filled", index < health);
+  });
+
+  console.log(`Health: ${health}/${maxHealth}`)
 }
 
 const startRendering = async () => {
