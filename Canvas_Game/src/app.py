@@ -266,15 +266,23 @@ def get_assignments_for_dashboard():
             assignments.assignment_url,
             assignments.is_submitted,
             assignments.assignment_hint,
+                   
+            assignments.assignment_id,
+            assignments.user_id, 
+            assignments.submission_types,
+            assignments.points_possible,
+            assignments.points_possible,   
+            assignments.course_id,
             courses.course_name
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
         WHERE assignments.user_id = ? AND assignments.is_submitted = 0 AND assignments.due_at >= ?
     ''', (user_id,one_week_before_str))
     
-    assignments = cursor.fetchall() 
-    # print("Assignments:", assignments)
+    assignments = cursor.fetchall()
+    # print("Assignments:", assignments)    #testing
     conn.close()
+    #print(assignments) #testing
 
     if not assignments:
         return jsonify({"message": "No assignments found for the user"}), 404
@@ -290,12 +298,140 @@ def get_assignments_for_dashboard():
             "id": row["id"],
             "assignment_url": row['assignment_url'],
             "is_submitted": row['is_submitted'],
-            "assignment_hint": row['assignment_hint']
+            "assignment_hint": row['assignment_hint'],
+            "assignment_id": row["assignment_id"],
+            "user_id": row["user_id"],
+            "submission_types": row["submission_types"],	
+            "points_possible": row["points_possible"],    #removed published
+            "course_id": row["course_id"]
+        } for row in assignments
+    ]
+    return jsonify({"assignments": assignment_list}), 200
+
+
+
+#Getting unsubmitted assignment data from the user database
+@app.route('/getAllAssignmentsFromDb', methods=['GET'])
+def get_all_assignments_from_user_db():
+    email = request.args.get('email')  # Email is provided as a query parameter
+
+    if not email:
+        return jsonify({"message": "Email is required"}), 400
+
+    # Connect to the database and fetch the user's assignments
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Get the user ID based on the email
+    cursor.execute('SELECT id FROM users WHERE email = ?', (email,))
+    user_row = cursor.fetchone()
+
+    if not user_row:
+        conn.close()
+        return jsonify({"message": "User not found"}), 404
+
+    user_id = user_row['id']
+    print("User ID:", user_id)
+
+    # Fetch assignments for the user
+    cursor.execute('''
+        SELECT 
+            assignments.id,
+            assignments.assignment_id,
+            assignments.user_id, 
+            assignments.assignment_name, 
+            assignments.assignment_description, 
+            assignments.due_at, 
+            assignments.course_id, 
+            assignments.submission_types,
+            assignments.points_possible, 
+            assignments.in_game_status, 
+            assignments.is_submitted, 
+            assignments.assignment_url
+        FROM assignments
+        JOIN courses ON assignments.course_id = courses.course_id
+        WHERE assignments.user_id = ?
+    ''', (user_id,))
+    
+    assignments = cursor.fetchall()
+    # print("Assignments:", assignments)
+    conn.close()
+
+    if not assignments:
+        return jsonify({"message": "No assignments found for the user"}), 404
+
+    # Convert rows to a list of dictionaries
+    assignment_list = [
+        {
+            "id": row["id"],
+            "assignment_id": row["assignment_id"],
+            "user_id": row["user_id"],
+            "assignment_name": row["assignment_name"],
+            "assignment_description": row["assignment_description"],
+            "due_at": row["due_at"],
+            "course_id": row["course_id"],
+            "submission_types": row["submission_types"],
+            "points_possible": row["points_possible"],    #removed published 
+            "in_game_status": row["in_game_status"],
+            "is_submitted": row["is_submitted"],
+            "assignment_url": row["assignment_url"]
         } for row in assignments
     ]
 
     return jsonify({"assignments": assignment_list}), 200
 
+
+
+#get Courses from db
+@app.route('/coursesFromDb', methods=['GET'])
+def get_courselist_from_database():
+    email = request.args.get('email')  # Email is provided as a query parameter
+
+    if not email:
+        return jsonify({"message": "Email is required"}), 400
+
+    # Connect to the database and fetch the user's assignments
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Get the user ID based on the email
+    cursor.execute('SELECT id FROM users WHERE email = ?', (email,))
+    user_row = cursor.fetchone()
+
+    if not user_row:
+        conn.close()
+        return jsonify({"message": "User not found"}), 404
+
+    user_id = user_row['id']    #sets user_id for this user
+
+    # Fetch assignments for the users db
+    cursor.execute('''
+        SELECT 
+            courses.course_id,
+            courses.course_name,
+            courses.course_code,
+            courses.enrollment_term_id   
+        FROM courses
+        WHERE courses.user_id = ?
+    ''', (user_id,))
+    
+    courses = cursor.fetchall()
+    conn.close()
+
+    if not courses:
+        return jsonify({"message": "No courses found for the user"}), 404
+
+    # makes dictionary for every row(course) in courses
+    course_list = [
+        {
+            "course_id": row["course_id"],
+            "course_name": row["course_name"],
+            "course_code": row["course_name"],
+            "enrollment_term_id": row["enrollment_term_id"] 
+        } for row in courses
+    ]
+
+    return jsonify({"courses": course_list}), 200   #returns list of course dictionaries 
 
 
 #fetches course and assignment info from canvasAPI and puts them in the user database
@@ -318,10 +454,9 @@ def getAllAssignments():
         
         for course in getCourseList: 
             length = len(course)
-            #print(course,'\n\n')   #testing
             if(length> 3):  #filters out courses with 'access_restricted_by_date' key 
                 if(course['enrollment_term_id'] == 142):    #only grab classes for the current semester, check if u can grab current enrollment_term_id from profile page instead
-                    #print(course, '\n\n') #testing
+                    #print(course['end_at'], '\n\n') #testing
                 
                     ##parses through course data and puts it into vars
                     course_id = course['id']
@@ -333,6 +468,8 @@ def getAllAssignments():
                     #puts data into courses table in user database
                     conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT
                     cursor = conn.cursor()
+
+                    #gets user_id from users table
                     cursor.execute("SELECT id FROM users WHERE canvas_key = ?", (canvasKey,))
                     user_row = cursor.fetchone()
                         
@@ -341,8 +478,10 @@ def getAllAssignments():
                         return jsonify({"message": "User not found in database"}), 404
                         
                     user_id = user_row[0] 
+
+                    #puts it into assignments table in user db
                     cursor.execute('INSERT INTO courses (course_id,user_id, course_name, course_code, workflow_state, enrollment_term_id) VALUES (?, ?, ?, ?, ?, ?)', 
-                    (course_id,user_id, course_name, course_code, workflow_state, enrollment_term_id))
+                    (course_id, user_id, course_name, course_code, workflow_state, enrollment_term_id))
                     conn.commit()
                     conn.close()
 
@@ -397,7 +536,7 @@ def delete_task():
 
 
 
-#gets assignments data from canvas API, parses through it, puts data we want into assignments 
+#gets assignments data from canvas API, parses through it, puts data we want into assignments table in user database
 def getAssignmentsByCourse(course_id, canvasKey): 
 
     newcanvasURL = f"https://templeu.instructure.com/api/v1/courses/{course_id}/assignments"
@@ -410,6 +549,8 @@ def getAssignmentsByCourse(course_id, canvasKey):
 
         conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT, maybe do it differently idk
         cursor = conn.cursor()
+        
+        #gets user_id from users table
         cursor.execute("SELECT id FROM users WHERE canvas_key = ?", (canvasKey,))
         user_row = cursor.fetchone()
                         
@@ -424,7 +565,7 @@ def getAssignmentsByCourse(course_id, canvasKey):
         for assignment in getAssignmentList: 
             #if(count == 0): #testing
                 #print(assignment, '\n')
-
+            #print(assignment, '\n')
             #parses through assignment data and puts it into vars
             assignment_id = assignment['id']
             assignment_name = assignment['name']
@@ -443,7 +584,7 @@ def getAssignmentsByCourse(course_id, canvasKey):
             #    submission_types_1 = submission_types[0]
 
             points_possible = assignment['points_possible']
-            published = assignment['published']
+            published = assignment['published'] #Might delete
             in_game_status = "Undecided"    #DEFAULT
             assignment_url = assignment['html_url']
             print(assignment_url)
@@ -455,14 +596,14 @@ def getAssignmentsByCourse(course_id, canvasKey):
             if submission_response.status_code == 200:
                 submission_data = submission_response.json()
 
-                is_submitted = submission_data.get('workflow_state', '')== 'submitted'  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
+                submission_status = submission_data.get('workflow_state', '')  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
                 #print(submission_status)    #testing
-                # if(submission_status == 'unsubmitted'):
-                #     is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
-                #     print("GLITCH?? is_submitted = False")  #testing
-                # else:
-                #     is_submitted = True #assignment has been submitted
-                #     print(submission_status)    #testing
+                if(submission_status == 'unsubmitted'):
+                    is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
+                    print("GLITCH?? is_submitted = False")  #testing
+                else:
+                    is_submitted = True #assignment has been submitted
+                    #print(submission_status)    #testing
             else:
                 is_submitted = False
                 print("in else: is_submitted = False")  #testing
