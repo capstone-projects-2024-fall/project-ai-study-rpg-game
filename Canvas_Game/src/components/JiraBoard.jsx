@@ -52,7 +52,7 @@ const JiraBoard = ({email}) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/assignmentFromDb?email=${email}`);
+        const response = await fetch(`http://localhost:5000/getUnsubmittedAssignmentsFromDb?email=${email}`);
         if (!response.ok) {
           throw new Error('Failed to fetch tasks');
         }
@@ -70,11 +70,12 @@ const JiraBoard = ({email}) => {
         data.assignments.forEach((task) => {
           // Default all tasks to 'Undecided' if there's no clear status
           tasksByColumn[task.in_game_status || 'Undecided'].push({
-            id: task.id, // You might need to include this in your backend response
+            id: task.id, // need to include this in your backend response
             title: task.assignment_name,
             description: task.assignment_description,
             course: task.course_name,
             due_at: task.due_at,
+            assignment_url: task.assignment_url,
           });
         });
 
@@ -171,6 +172,25 @@ const JiraBoard = ({email}) => {
     }
   };
 
+    // Function to handle task removal
+  const handleRemoveTask = (taskId) => {
+    const updatedTasks = { ...tasks };
+
+    // Remove the task from the Done column
+    updatedTasks['Done'] = updatedTasks['Done'].filter((task) => task.id !== taskId);
+
+    setTasks(updatedTasks);
+
+    //Delete the task from the backend
+    fetch(`http://localhost:5000/api/deleteTask`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ taskId }),
+    }).catch((error) => console.error('Error deleting task:', error));
+  };
+
 
   return (
     <>
@@ -229,12 +249,21 @@ const JiraBoard = ({email}) => {
                   onClick={() => openDialog(task)}
                 >VIEW
                 </Button>
+                {column === 'Done' ? (
+                  <Button
+                    style={{ color: colors.primary[500] }}
+                    onClick={() => handleRemoveTask(task.id)}
+                  >
+                    REMOVE
+                 </Button>
+              ) : (
                 <Button 
                   style={{ color: colors.primary[500] }}
                   onClick={() => handleNextStep(task.id, column)}
                   endIcon={<ArrowForwardIcon />}
                   >NEXT
                   </Button>
+              )}
               </CardActions>              
             </Card>
           ))}
@@ -246,9 +275,25 @@ const JiraBoard = ({email}) => {
     <Dialog open={isDialogOpen} onClose={closeDialog}>
     <DialogTitle>Assignment Description</DialogTitle>
     <DialogContent>
-      <Typography variant="body1">{selectedTask?.description ? parse(selectedTask.description) : "No description available."}</Typography>
+      <Typography variant="body1">{selectedTask?.description ? parse(selectedTask.description) : "No description available."}
+      </Typography>
+      {selectedTask?.assignment_url && (
+            <Typography variant="body2" style={{ marginTop: '1rem' }}>
+              <a 
+                href={selectedTask.assignment_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ color: 'white', textDecoration: 'underline' }}
+              >
+                View Assignment on Canvas
+              </a>
+            </Typography>
+          )}
     </DialogContent>
     <DialogActions>
+    <Button color="primary">
+        Get AI Help
+      </Button>
       <Button onClick={closeDialog} color="primary">
         Close
       </Button>
