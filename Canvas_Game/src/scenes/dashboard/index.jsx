@@ -2,7 +2,7 @@ import {
   Box,
   // Button,
   // IconButton,
-  // Typography,
+  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -23,7 +23,7 @@ import {
 //   Traffic,
 // } from "@mui/icons-material";
 import { tokens } from "../../theme";
-import React from 'react';
+import React,  { useState, useEffect } from 'react';
 //import { mockTransactions } from "../../data/mockData";
 
 function Dashboard({email}) {
@@ -32,12 +32,41 @@ function Dashboard({email}) {
   const isXlDevices = useMediaQuery("(min-width: 1260px)");
   const isMdDevices = useMediaQuery("(min-width: 724px)");
   const isXsDevices = useMediaQuery("(max-width: 436px)");
+
+  const [gold, setGold] = useState(0);
+
+  // Fetch gold from the backend
+  useEffect(() => {
+    const fetchGold = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/getPlayerGold?email=${email}`
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setGold(data.gold);
+        } else {
+          console.error("Failed to fetch gold:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching gold:", error);
+      }
+    };
+
+    fetchGold();
+  }, [email]);
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between">
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Typography
+          variant="h3"
+          color={colors.greenAccent[500]}
+          sx={{ fontWeight: "bold"}}
+        >
+          Gold: {gold}
+        </Typography>
         </Box>
-
         <Box
         display="grid"
         gridTemplateColumns={
