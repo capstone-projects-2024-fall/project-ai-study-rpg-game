@@ -4,9 +4,11 @@ import requests
 from flask_cors import CORS
 from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
-
+import openai  # Import OpenAI Python SDK
+import json
 app = Flask(__name__)
 CORS(app,  resources={r"/*": {"origins": "http://localhost:5173"}})  # To allow cross-origin requests from your React frontend
+openai.api_key = ' '  # Add your OpenAI API key here
 
 # Will Create SQLite database and table if not exists
 def init_db():
@@ -58,8 +60,7 @@ def init_db():
             published TEXT,
             in_game_status TEXT,
             is_submitted DEFAULT 3,
-            assignment_url TEXT,
-            assignment_hint TEXT
+            assignment_url TEXT
         
         )
     ''')
@@ -263,7 +264,6 @@ def get_assignments_for_dashboard():
             assignments.id,
             assignments.assignment_url,
             assignments.is_submitted,
-            assignments.assignment_hint,
                    
             assignments.assignment_id,
             assignments.user_id, 
@@ -271,6 +271,7 @@ def get_assignments_for_dashboard():
             assignments.points_possible,
             assignments.points_possible,   
             assignments.course_id,
+        
             courses.course_name
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
@@ -297,7 +298,7 @@ def get_assignments_for_dashboard():
             "id": row["id"],
             "assignment_url": row['assignment_url'],
             "is_submitted": row['is_submitted'],
-            "assignment_hint": row['assignment_hint'],
+
             "assignment_id": row["assignment_id"],
             "user_id": row["user_id"],
             "submission_types": row["submission_types"],	
@@ -837,6 +838,50 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row  # Makes fetching rows easier with named columns
     return conn
 
+
+@app.route('/generate_steps', methods=['POST'])
+def generate_steps():
+    try:
+        data = request.json
+        assignment_id = data.get('assignment_id')
+
+        # Connect to the database and fetch assignment description
+        conn = sqlite3.connect('users.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT assignment_description FROM assignments WHERE id = ?', (assignment_id,))
+        result = cursor.fetchone()
+        conn.close()
+
+        if not result:
+            return jsonify({'error': 'Assignment not found'}), 404
+
+        assignment_description = result[0]
+
+        # Prepare the prompt for the AI model
+        prompt = (
+            f"Based on the following assignment description, provide 5 clear steps to complete it:\n"
+            f"Assignment Description: {assignment_description}"
+        )
+
+        if not prompt or not isinstance(prompt, str):
+            return jsonify({"error": "Invalid prompt provided."}), 400
+
+        # Updated OpenAI API call
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        # Extract the generated steps
+        steps = response['choices'][0]['message']['content'].strip()
+        return jsonify({'steps': steps})
+
+    except Exception as e:
+        app.logger.error(f"Error processing request: {e}")
+        return jsonify({"error": "Internal Server Error."}), 500
 
 if __name__ == '__main__':
     init_db()  # Initialize the database

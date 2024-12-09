@@ -17,6 +17,7 @@ import { tokens } from '../theme'; // assuming the same theme tokens are used he
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import parse from 'html-react-parser';
+import axios from 'axios';
 
 
 const JiraBoard = ({email}) => {
@@ -32,6 +33,8 @@ const JiraBoard = ({email}) => {
   const [isHintDialogOpen, setIsHintDialogOpen] = useState(false);
   const [assignmentHint, setAssignmentHint] = useState('');
 
+  const [aiHint, setAiHint] = useState('');
+
   const formatDateTime = (dateTimeString) => {
     const dateObj = new Date(dateTimeString);
     const formattedDate = dateObj.toLocaleDateString(); // Formats to "MM/DD/YYYY"
@@ -45,12 +48,29 @@ const JiraBoard = ({email}) => {
     setIsDialogOpen(true);
   };
 
-  const openHintDialog = (task) => {
-    console.log("Task passed to openHintDialog:", task); 
+  const openHintDialog = async (task) => {
     setSelectedTask(task);
     setIsHintDialogOpen(true);
 
-  }
+    try {
+        const response = await axios.post('http://localhost:5000/generate_steps', {
+            assignment_id: task.id,
+        });
+        setAiHint(response.data.steps || "No hint available for this assignment.");
+    } catch (error) {
+        console.error("Error fetching AI hint:", error);
+        if (error.response) {
+            console.error("Backend response error:", error.response.data);
+        } else if (error.request) {
+            console.error("No response received from the backend:", error.request);
+        } else {
+            console.error("Error setting up the request:", error.message);
+        }
+        setAiHint("No hint available for this assignment.");
+    }
+};
+
+
 
   const closeDialog = () => {
     setSelectedTask(null);
@@ -337,8 +357,12 @@ const JiraBoard = ({email}) => {
     open={isHintDialogOpen} onClose={closeHintDialog}>
         <DialogTitle sx={{ color: "white", fontWeight: "bold" }} >Assignment Hint</DialogTitle>
         <DialogContent>
+          <Typography variant="body1">
+            {aiHint}
+
           <Typography  style={{ color: "white" }} variant="body1">
               {selectedTask?.assignment_hint || "No hint available for this assignment."}
+
           </Typography>
         </DialogContent>
         <DialogActions>
