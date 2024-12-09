@@ -352,6 +352,7 @@ def get_all_assignments_from_user_db():
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
         WHERE assignments.user_id = ?
+        ORDER BY assignments.due_at           
     ''', (user_id,))
     
     assignments = cursor.fetchall()
