@@ -65,7 +65,10 @@ function loadInAssignments(){
                       .then(data=>{
                         $("#dialogueText").html("Congratulations, you finished an assignment! Your reward will be: ")
                         doneBtn.prop("disabled", true)
-                        console.log(data)
+                        if(data.worldStateUpdated){
+                          localStorage.setItem("worldStateUpdated", true)
+                          window.location.href = window.location.href
+                        }
                       })
                       .catch(error=>{
                         console.log(error)

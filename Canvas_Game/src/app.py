@@ -374,7 +374,8 @@ def update_task_status():
         worldState = 5
 
     cursor.execute("SELECT world_state from Users where id=?",(userId,))
-    db_worldState = cursor.fetchone()
+    db_worldState_res = cursor.fetchone()
+    db_worldState = db_worldState_res[0]
     worldStateUpdated = False
 
     if(worldState != db_worldState):
