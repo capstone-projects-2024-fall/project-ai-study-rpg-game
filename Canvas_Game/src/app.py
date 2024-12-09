@@ -266,9 +266,9 @@ def get_assignments_for_dashboard():
     ''', (user_id,))
     
     assignments = cursor.fetchall()
-    # print("Assignments:", assignments)
+    # print("Assignments:", assignments)    #testing
     conn.close()
-    print(assignments)
+    #print(assignments) #testing
 
     if not assignments:
         return jsonify({"message": "No assignments found for the user"}), 404
@@ -463,10 +463,9 @@ def getAllAssignments():
         
         for course in getCourseList: 
             length = len(course)
-            #print(course,'\n\n')   #testing
             if(length> 3):  #filters out courses with 'access_restricted_by_date' key 
                 if(course['enrollment_term_id'] == 142):    #only grab classes for the current semester, check if u can grab current enrollment_term_id from profile page instead
-                    #print(course, '\n\n') #testing
+                    #print(course['end_at'], '\n\n') #testing
                 
                     ##parses through course data and puts it into vars
                     course_id = course['id']
@@ -532,7 +531,7 @@ def getAssignmentsByCourse(course_id, canvasKey):
         for assignment in getAssignmentList: 
             #if(count == 0): #testing
                 #print(assignment, '\n')
-
+            #print(assignment, '\n')
             #parses through assignment data and puts it into vars
             assignment_id = assignment['id']
             assignment_name = assignment['name']
