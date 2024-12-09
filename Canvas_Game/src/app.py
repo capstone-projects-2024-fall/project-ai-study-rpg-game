@@ -602,7 +602,7 @@ def getAssignmentsByCourse(course_id, canvasKey):
                     print("GLITCH?? is_submitted = False")  #testing
                 else:
                     is_submitted = True #assignment has been submitted
-                    print(submission_status)    #testing
+                    #print(submission_status)    #testing
             else:
                 is_submitted = False
                 print("in else: is_submitted = False")  #testing
