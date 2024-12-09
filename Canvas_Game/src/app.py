@@ -595,14 +595,14 @@ def getAssignmentsByCourse(course_id, canvasKey):
             if submission_response.status_code == 200:
                 submission_data = submission_response.json()
 
-                is_submitted = submission_data.get('workflow_state', '')== 'submitted'  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
+                submission_status = submission_data.get('workflow_state', '')  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
                 #print(submission_status)    #testing
-                # if(submission_status == 'unsubmitted'):
-                #     is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
-                #     print("GLITCH?? is_submitted = False")  #testing
-                # else:
-                #     is_submitted = True #assignment has been submitted
-                #     print(submission_status)    #testing
+                if(submission_status == 'unsubmitted'):
+                    is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
+                    print("GLITCH?? is_submitted = False")  #testing
+                else:
+                    is_submitted = True #assignment has been submitted
+                    #print(submission_status)    #testing
             else:
                 is_submitted = False
                 print("in else: is_submitted = False")  #testing
