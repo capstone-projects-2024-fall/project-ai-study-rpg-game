@@ -840,6 +840,30 @@ function hideDialogueBox() {
   dialogueBox.style.display = 'none';
 }
 
+
+let isPopupVisible = false;
+function togglePopupBox() {
+	const popupBox = document.getElementById('popupBox');	//gets html container from index.html
+	const popupBoxText = document.getElementById('popupBoxText')
+  if (isPopupVisible) {
+    // Hide the inventory box
+    popupBox.style.display = "none";
+    isPopupVisible = false;
+  } else {
+    popupBoxText.innerText = "Lo! Upon you quest to complete all the assignments and become the best student, it appears you've fallen into a strange portal where down is up and up is down etc. etc. Upon further inspection you discover an evil wizard has stolen all of your assignments and evenly distributed them amongst the townsfolk. oh no! You will simply have to steal them back. sorry townfolk! Upon further inspection you discover the town you've found yourself in is very sparsely decorated. Upon further inspection you discover the evil wizard wil ONLY give these people their homes back if you complete your assignments!"
+    //"will you help the villagers build back their village?""
+    popupBox.style.display = "block";
+    isPopupVisible = true;
+  }
+}
+// Add event listener for toggling the inventory
+document.addEventListener("keydown", (event) => {
+  if (event.key.toLowerCase() === "q") { // Press 'Q' to get quest mission
+    toggleInventoryBox();
+  }
+});
+
+
 async function fetchUserItems(email) {
   try {
       const response = await fetch(`http://127.0.0.1:5000/api/getUserItems?email=${email}`);
