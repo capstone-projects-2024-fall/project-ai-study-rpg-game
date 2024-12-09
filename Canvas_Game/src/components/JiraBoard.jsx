@@ -291,6 +291,9 @@ const JiraBoard = ({email}) => {
           )}
     </DialogContent>
     <DialogActions>
+    <Button color="primary">
+        Get AI Help
+      </Button>
       <Button onClick={closeDialog} color="primary">
         Close
       </Button>
