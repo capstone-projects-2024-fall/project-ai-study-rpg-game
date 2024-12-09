@@ -700,7 +700,7 @@ function toggleInventoryBox() {
   const inventoryList = document.getElementById("inventoryList");
   const inspectBox = document.getElementById("inspectBox");
 
-  if (isInventoryVisible) {
+  if (isInventoryVisible) { //shouldnt this be !isInventoryVisible  ??
     // Hide the inventory box
     inventoryBox.style.display = "none";
     inspectBox.style.display = "none";
