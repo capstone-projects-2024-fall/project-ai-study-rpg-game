@@ -71,7 +71,7 @@ const SideBar = ({email}) => {
 
   return (
     <Sidebar
-      backgroundColor={colors.primary[300]}
+      backgroundColor={colors.greenAccent[600]}
       rootStyles={{
         border: 0,
         height: "100%",
@@ -89,7 +89,7 @@ const SideBar = ({email}) => {
         <MenuItem
           rootStyles={{
             margin: "10px 0 20px 0",
-            color: colors.gray[900],
+            color: colors.primary[100],
           }}
         >
           <Box
@@ -115,7 +115,7 @@ const SideBar = ({email}) => {
                   variant="h4"
                   fontWeight="bold"
                   textTransform="capitalize"
-                  color={colors.gray[700]}
+                  color={colors.primary[100]}
                 >
                   Canvas Quest
                 </Typography>
@@ -144,13 +144,13 @@ const SideBar = ({email}) => {
             sx={{ width: "100px", height: "100px" }}
           />
           <Box sx={{ textAlign: "center" }}>
-            <Typography variant="h3" fontWeight="bold" color={colors.gray[700]}>
+            <Typography variant="h3" fontWeight="bold" color={colors.primary[100]}>
             {profile.name} {profile.last_name}
             </Typography>
             <Typography
               variant="h6"
               fontWeight="500"
-              color={colors.greenAccent[900]}
+              color={colors.primary[100]}
             >
               {profile.nickname}
             </Typography>
@@ -173,7 +173,7 @@ const SideBar = ({email}) => {
           <Item
             title="Dashboard"
             path="/"
-            colors={colors}
+            colors={colors.primary[100]}
             icon={<DashboardOutlined />}
           />
         </Menu>
@@ -198,31 +198,31 @@ const SideBar = ({email}) => {
           <Item
             title="Game"
             path="/game"
-            colors={colors}
+            colors={colors.primary[100]}
             icon={<GamepadTwoTone />}
           />
           <Item
             title="Profile"
             path="/userProfile"
-            colors={colors}
+            colors={colors.primary[100]}
             icon={<PersonOutlined />}
           />
           <Item
             title="Assignment"
             path="/AssignmentsPage"
-            colors={colors}
+            colors={colors.primary[100]}
             icon={<AssignmentOutlined />}
           />
           <Item
             title="Store"
             path="/store"
-            colors={colors}
+            colors={colors.primary[100]}
             icon={<StoreOutlined />}
           />
           <Item
             title="Help"
             path="/help"
-            colors={colors}
+            colors={colors.primary[100]}
             icon={<HelpOutlineOutlined />}
           />
         </Menu>

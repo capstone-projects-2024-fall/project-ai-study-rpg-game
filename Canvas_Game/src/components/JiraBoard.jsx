@@ -309,10 +309,19 @@ const JiraBoard = ({email}) => {
     </Grid>
 
     {/* Diaglog pop up window that shows the assignment description */}
-    <Dialog open={isDialogOpen} onClose={closeDialog}>
-    <DialogTitle>Assignment Description</DialogTitle>
+    <Dialog 
+      PaperProps={{
+        sx: {
+          backgroundColor: "#2e2e2e",
+          color: "white",
+        },
+      }}
+      
+      open={isDialogOpen} onClose={closeDialog}
+    >
+    <DialogTitle sx={{ color: "white", fontWeight: "bold" }} >Assignment Description</DialogTitle>
     <DialogContent>
-      <Typography variant="body1">{selectedTask?.description ? parse(selectedTask.description) : "No description available."}
+      <Typography style={ {color: "white"}} variant="body1">{selectedTask?.description ? parse(selectedTask.description) : "No description available."}
       </Typography>
       {selectedTask?.assignment_url && (
             <Typography variant="body2" style={{ marginTop: '1rem' }}>
@@ -328,25 +337,38 @@ const JiraBoard = ({email}) => {
           )}
     </DialogContent>
     <DialogActions>
-    <Button  onClick={() => openHintDialog(selectedTask)} color="primary">
+    <Button  sx={{ color: "white", fontWeight: "bold" }} onClick={() => openHintDialog(selectedTask)} >
         Get AI Help
       </Button>
-      <Button onClick={closeDialog} color="primary">
+      <Button sx={{ color: "white", fontWeight: "bold" }} onClick={closeDialog}>
         Close
       </Button>
     </DialogActions>
   </Dialog>
 
   {/* AI Help Dialog */}
-  <Dialog open={isHintDialogOpen} onClose={closeHintDialog}>
-        <DialogTitle>Assignment Hint</DialogTitle>
+  <Dialog 
+    PaperProps={{
+      sx: {
+        backgroundColor: colors.gray[800],
+        color: "white",
+      },
+    }}
+    open={isHintDialogOpen} onClose={closeHintDialog}>
+        <DialogTitle sx={{ color: "white", fontWeight: "bold" }} >Assignment Hint</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
             {aiHint}
+
+          <Typography  style={{ color: "white" }} variant="body1">
+              {selectedTask?.assignment_hint || "No hint available for this assignment."}
+
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeHintDialog} color="primary">
+          <Button 
+            sx={{ color: "white", fontWeight: "bold" }}
+            onClick={closeHintDialog}>
             Close
           </Button>
         </DialogActions>

@@ -142,6 +142,17 @@ class Player {
     this.elapsedInvincibilityTime = 0
     this.invincibilityInterval = 0.8
   }
+
+
+  // Function to add items
+  addItem(item) {
+    if (this.inventory.length >= this.inventoryCapacity) {
+      console.warn("Inventory is full! Cannot add item:", item.name);
+      return false;
+    }
+    this.inventory.push(item); // Push item to inventory
+    return true;
+  }
   
   buyItem(item) {
     if (this.inventory.length >= this.inventoryCapacity) {

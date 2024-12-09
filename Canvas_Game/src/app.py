@@ -38,14 +38,11 @@ def init_db():
     cursor.execute ('''
         CREATE TABLE IF NOT EXISTS Items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER REFERENCES users(id),
-        item_id INTEGER,
+        email TEXT NOT NULL,
+        item_id TEXT,
         item_name TEXT,
         item_description TEXT,
-        item_type TEXT,
-        item_price INTEGER,
-        item_quantity INTEGER,
-        item_category TEXT
+        item_price INTEGER
         )
     ''')
 
@@ -56,7 +53,7 @@ def init_db():
             assignment_id INTEGER,
             assignment_name TEXT,
             assignment_description TEXT,
-            due_at TEXT, 
+            due_at DATETIME, 
             course_id INTEGER,
             submission_types TEXT,
             points_possible INTEGER,
@@ -278,8 +275,9 @@ def get_assignments_for_dashboard():
             courses.course_name
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
-        WHERE assignments.user_id = ? AND assignments.is_submitted = 0 AND assignments.due_at >= ?
-    ''', (user_id,one_week_before_str))
+        WHERE assignments.user_id = ? AND assignments.is_submitted = 0
+        ORDER BY datetime(assignments.due_at) ASC
+    ''', (user_id,))
     
     assignments = cursor.fetchall()
     # print("Assignments:", assignments)    #testing
@@ -353,7 +351,7 @@ def get_all_assignments_from_user_db():
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
         WHERE assignments.user_id = ?
-        ORDER BY assignments.due_at           
+        ORDER BY assignments.due_at ASC
     ''', (user_id,))
     
     assignments = cursor.fetchall()
@@ -639,14 +637,16 @@ def getAssignmentsByCourse(course_id, canvasKey):
             if submission_response.status_code == 200:
                 submission_data = submission_response.json()
 
-                submission_status = submission_data.get('workflow_state', '')  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
+                is_submitted = submission_data.get('workflow_state', '')== 'submitted'  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
+
+                #submission_status = submission_data.get('workflow_state', '')  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
                 #print(submission_status)    #testing
-                if(submission_status == 'unsubmitted'):
-                    is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
-                    print("GLITCH?? is_submitted = False")  #testing
-                else:
-                    is_submitted = True #assignment has been submitted
-                    #print(submission_status)    #testing
+                # if(submission_status == 'unsubmitted'):
+                #     is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
+                #     print("GLITCH?? is_submitted = False")  #testing
+                # else:
+                #     is_submitted = True #assignment has been submitted
+                #     #print(submission_status)    #testing
             else:
                 is_submitted = False
                 print("in else: is_submitted = False")  #testing
@@ -783,6 +783,55 @@ def get_assignments():
 
     return jsonify({"assignments": assignment_list}), 200
 
+
+@app.route('/api/buyItems', methods=['POST'])
+def buyItems():
+    data = request.json
+
+    # Validate payload
+    email = data.get('email')
+    items = data.get('items')  # Expecting an array of items
+
+    if not email or not items:
+        return jsonify({"message": "Email and items are required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Insert each item into the database
+        for item in items:
+            cursor.execute('''
+                INSERT INTO Items (email, item_id, item_name, item_description, item_price)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (email, item['id'], item['name'], item['description'], item['price']))
+
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"message": f"Error inserting items into database: {str(e)}"}), 500
+    finally:
+        conn.close()
+
+    return jsonify({"message": "Items successfully purchased and added to inventory"}), 200
+
+@app.route('/api/getUserItems', methods=['GET'])
+def getUserItems():
+    email = request.args.get('email')
+    if not email:
+        return jsonify({"message": "Email is required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT item_id, item_name, item_description, item_price FROM Items WHERE email = ?', (email,))
+    items = cursor.fetchall()
+    conn.close()
+
+    items_list = [
+        {"id": item[0], "name": item[1], "description": item[2], "price": item[3]}
+        for item in items
+    ]
+    return jsonify(items_list), 200
 
 def get_db_connection():
     conn = sqlite3.connect('users.db')

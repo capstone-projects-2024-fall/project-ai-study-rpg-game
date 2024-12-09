@@ -64,16 +64,16 @@ const Navbar = () => {
             <DarkModeOutlined />
           )}
         </IconButton>
-        <IconButton>
+        {/* <IconButton>
           <NotificationsOutlined />
         {/* Connect to Canvas button (the gear icon) */}
-        </IconButton>
-        <IconButton onClick={() => navigate('/ConnectCanvas')}> 
+        {/* </IconButton>  */}
+        {/* <IconButton onClick={() => navigate('/ConnectCanvas')}> 
           <SettingsOutlined />
         </IconButton>
         <IconButton onClick={() => navigate('/LoginPage')}>
           <PersonOutlined />
-        </IconButton>
+        </IconButton> */}
       </Box>
     </Box>
   );
