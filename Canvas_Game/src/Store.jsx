@@ -91,6 +91,22 @@ export default function Store(){
 
           console.log('Gold successfully updated.');
 
+
+          selectedItemsDetails.forEach((item) => {
+            // Add item's purchased from store to inventory
+            if (typeof player !== 'undefined') {
+                player.addItem(new Item({
+                    name: item.name,
+                    type: "Bought Item", 
+                    description: item.description,
+                }));
+            } else {
+                console.warn("Player object is not defined. Unable to sync inventory.");
+            }
+        });
+
+        await fetchUserItems(email);
+
           // Update local state and notify the user
           const newGold = gold - totalPrice;
           setGold(newGold);
@@ -102,6 +118,34 @@ export default function Store(){
           alert('An error occurred while processing your purchase. Please try again.');
       }
     };
+
+    async function fetchUserItems(email) {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/api/getUserItems?email=${email}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch user items");
+        }
+        const items = await response.json();
+        console.log("Fetched Items:", items);
+    
+        // Add the items to in-game inventory
+        if (typeof window.player !== 'undefined' && typeof window.player.addItem === 'function') {
+          // Clear the inventory if it's required
+          window.player.inventory = [];
+          items.forEach((item) => {
+            window.player.addItem(new Item({
+              name: item.name,
+              type: item.type || "Bought Item",
+              description: item.description,
+            }));
+          });
+        } else {
+          console.warn("player.addItem is not a function or player is not defined.");
+        }
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    }
 
     return( 
         <div>
