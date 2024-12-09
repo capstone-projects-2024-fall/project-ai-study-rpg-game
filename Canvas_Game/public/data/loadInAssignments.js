@@ -13,10 +13,11 @@ function loadInAssignments(){
         let assignmentList = $("<table><tr><th>Assignment Name</th><th>Due Date</th><th></th><th>Begin</th></tr></table>").prop('id', 'assignmentTable')
         for(let assignment of data.assignments){
             if(assignment.in_game_status == "Undecided" || assignment.in_game_statue == "To Do"){
-                const btn = $("<button type='button'>Start Assignment</button>").on('click', function(){
+                const btn = $("<button type='button' class='btn'>Start Assignment</button>").on('click', function(){
                     const data = {
                         taskId: assignment.id,
-                        status: "In Progress"
+                        status: "In Progress",
+                        email: email
                       }
                       const requestOptions = {
                         method: 'POST',

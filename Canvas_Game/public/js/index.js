@@ -32,7 +32,7 @@ const worldState = localStorage.getItem("worldState")
 const email = localStorage.getItem('email')
 
 const worldState = localStorage.getItem('worldState')
-console.log(worldState)
+//console.log(worldState)
 //const worldState = 4
 const goldContainer = document.getElementById('gold')
 goldContainer.innerHTML = localStorage.getItem('gold')
@@ -664,12 +664,12 @@ function showDialogueBox(message) {
   dialogueBox.style.display = 'block';
   dialogueBox.style.width = '940px'; 
   dialogueBox.style.height = '380px'; 
-  document.onclick = function(e){
+  /*document.onclick = function(e){
     if(e.target.id != 'dialogueBox' || e.target.id != 'dialogueText' || e.target.id != 'assignmentsList' || e.target.class != 'container'){
       dialogueText.innerHTML = ""
       //dialogueBox.style.display = "none"
     }
-  }
+  }*/
   //setTimeout(hideDialogueBox, 5000); // Auto-hide after 5 seconds
 }
 

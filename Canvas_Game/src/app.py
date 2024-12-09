@@ -345,23 +345,50 @@ def update_task_status():
     cursor.execute('UPDATE assignments SET in_game_status = ? WHERE id = ?', (new_status, task_id))
     conn.commit()
 
-
-    cursor.execute('SELECT id from users where email = ?'(email,))
+    cursor.execute('SELECT id from users where email = ?',(email,))
     resp = cursor.fetchone()
     if resp == None:
         return jsonify({"message": "Email does not exist"}), 400
-    
+    userId = resp[0]
 
     
-    userId = resp[0]
-    
+    cursor.execute("SELECT count(1) FROM assignments WHERE user_id = ? AND in_game_status = 'Done'", (userId,))
+    countResp = cursor.fetchone()
+    doneCount = countResp[0]
+    cursor.execute("SELECT count(1) FROM assignments WHERE user_id = ?", (userId,))
+    countResp = cursor.fetchone()
+    otherCount = countResp[0]
+    ratio = doneCount / otherCount
+    print(ratio)
+    if(ratio <= 0.20):
+        worldState = 0
+    elif(ratio >= 0.20 and ratio <= 0.40):
+        worldState = 1
+    elif(ratio >= 0.40 and ratio <= 0.60):
+        worldState = 2
+    elif(ratio >= 0.60 and ratio <= 0.80):
+        worldState = 3
+    elif(ratio >= 0.80 and ratio <= 0.90):
+        worldState = 4
+    elif(ratio >= 0.90):
+        worldState = 5
+
+    cursor.execute("SELECT world_state from Users where id=?",(userId,))
+    db_worldState = cursor.fetchone()
+    worldStateUpdated = False
+
+    if(worldState != db_worldState):
+        cursor.execute("UPDATE users SET world_state = ? where id = ?",(worldState, userId))
+        conn.commit()
+        worldStateUpdated = True
 
     conn.close()
 
     print('Received task ID:', task_id)
     print('Received new status:', new_status)
+    print('World State', worldState)
 
-    return jsonify({"message": "Task status updated successfully"}), 200
+    return jsonify({"worldStateUpdated": worldStateUpdated}), 200
 
 
 #gets assignments data from canvas API, parses through it, puts data we want into assignments 
