@@ -67,6 +67,7 @@ function loadInAssignments(){
                         doneBtn.prop("disabled", true)
                         if(data.worldStateUpdated){
                           localStorage.setItem("worldStateUpdated", true)
+                          localStorage.setItem("worldState", parseInt(localStorage.getItem("worldState"))+1)
                           window.location.href = window.location.href
                         }
                       })
