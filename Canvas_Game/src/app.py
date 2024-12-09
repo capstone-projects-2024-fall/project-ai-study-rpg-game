@@ -35,14 +35,11 @@ def init_db():
     cursor.execute ('''
         CREATE TABLE IF NOT EXISTS Items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER REFERENCES users(id),
-        item_id INTEGER,
+        email TEXT NOT NULL,
+        item_id TEXT,
         item_name TEXT,
         item_description TEXT,
-        item_type TEXT,
-        item_price INTEGER,
-        item_quantity INTEGER,
-        item_category TEXT
+        item_price INTEGER
         )
     ''')
 
@@ -674,6 +671,37 @@ def getPlayerGold():
 
     return jsonify({"gold": usersGold}), 200
 
+
+@app.route('/api/buyItems', methods=['POST'])
+def buyItems():
+    data = request.json
+
+    # Validate payload
+    email = data.get('email')
+    items = data.get('items')  # Expecting an array of items
+
+    if not email or not items:
+        return jsonify({"message": "Email and items are required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Insert each item into the database
+        for item in items:
+            cursor.execute('''
+                INSERT INTO Items (email, item_id, item_name, item_description, item_price)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (email, item['id'], item['name'], item['description'], item['price']))
+
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"message": f"Error inserting items into database: {str(e)}"}), 500
+    finally:
+        conn.close()
+
+    return jsonify({"message": "Items successfully purchased and added to inventory"}), 200
 
 def get_db_connection():
     conn = sqlite3.connect('users.db')
