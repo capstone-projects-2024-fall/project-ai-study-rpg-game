@@ -115,9 +115,9 @@ const UserProfile = ({ email }) => {
             <Typography  style={{ marginBottom: 50 }} sx={{ fontSize: '30px' }} >
               {`Motto: "${user.selectedMotto}"`}
             </Typography>
-            <Button variant="contained" color="primary">
+            {/* <Button variant="contained" color="primary">
               Edit Profile
-            </Button>
+            </Button> */}
           </Grid>
         </Grid>
       </ProfilePaper>
