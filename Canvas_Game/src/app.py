@@ -703,6 +703,24 @@ def buyItems():
 
     return jsonify({"message": "Items successfully purchased and added to inventory"}), 200
 
+@app.route('/api/getUserItems', methods=['GET'])
+def getUserItems():
+    email = request.args.get('email')
+    if not email:
+        return jsonify({"message": "Email is required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT item_id, item_name, item_description, item_price FROM Items WHERE email = ?', (email,))
+    items = cursor.fetchall()
+    conn.close()
+
+    items_list = [
+        {"id": item[0], "name": item[1], "description": item[2], "price": item[3]}
+        for item in items
+    ]
+    return jsonify(items_list), 200
+
 def get_db_connection():
     conn = sqlite3.connect('users.db')
     conn.row_factory = sqlite3.Row  # Makes fetching rows easier with named columns
