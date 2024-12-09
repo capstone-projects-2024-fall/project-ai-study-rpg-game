@@ -2,13 +2,14 @@ const X_VELOCITY = 150
 const Y_VELOCITY = 150
 
 class Player {
-  constructor({ x, y, size, velocity = { x: 0, y: 0 }, initialItems = [] }) {
+  constructor({ x, y, size, velocity = { x: 0, y: 0 }, initialItems = [], gold = 100  }) {
     this.x = x
     this.y = y
     this.width = size
     this.height = size
     this.velocity = velocity
     this.inventory = initialItems;
+    this.gold = gold; // Player's starting gold
     this.inventory = initialItems.length > 0 ? initialItems : [
       new Item({ name: "Health Potion", type: "Potion", description: "A strange liquid that gives you 1 heart" }),
       new Item({ name: "Lance of Destiny", type: "Weapon", description: "A powerful lance with a legendary history.." })
@@ -141,15 +142,46 @@ class Player {
     this.elapsedInvincibilityTime = 0
     this.invincibilityInterval = 0.8
   }
-  addItem(item) {
+  
+  buyItem(item) {
     if (this.inventory.length >= this.inventoryCapacity) {
       console.warn("Inventory is full! Cannot add item:", item.name);
       return false;
     }
+  
+    if (this.currentGold < item.price) {
+      console.warn("Not enough gold to buy this item:", item.name);
+      showDialogueBox(`You don't have enough gold to buy ${item.name}!`);
+      return false;
+    }
+  
+    this.currentGold -= item.price; // Deduct item price from gold
+    localStorage.setItem('gold', this.currentGold); // Update in localStorage
     this.inventory.push(item);
-    inspectBox(`Added item: ${item.name}`);
+    showDialogueBox(`You bought ${item.name} for ${item.price} gold!`);
+  
+    // Optionally, update gold amount via API
+    const data = {
+      email: localStorage.getItem('email'),
+      currentGold: this.currentGold,
+    };
+    fetch("http://127.0.0.1:5000/api/updatePlayerGold", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
+      .then(response => {
+        if (!response.ok) throw new Error("Failed to update gold");
+        return response.json();
+      })
+      .then(() => {
+        updateGoldAmount(); // Update UI
+      })
+      .catch(error => console.error("Error updating gold:", error));
+  
     return true;
   }
+  
   removeItem(itemName) {
     const index = this.inventory.findIndex(item => item.name === itemName);
     if (index === -1) {
