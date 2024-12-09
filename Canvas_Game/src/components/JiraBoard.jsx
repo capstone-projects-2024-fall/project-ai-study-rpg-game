@@ -29,6 +29,9 @@ const JiraBoard = ({email}) => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const [isHintDialogOpen, setIsHintDialogOpen] = useState(false);
+  const [assignmentHint, setAssignmentHint] = useState('');
+
   const formatDateTime = (dateTimeString) => {
     const dateObj = new Date(dateTimeString);
     const formattedDate = dateObj.toLocaleDateString(); // Formats to "MM/DD/YYYY"
@@ -42,10 +45,23 @@ const JiraBoard = ({email}) => {
     setIsDialogOpen(true);
   };
 
+  const openHintDialog = (task) => {
+    console.log("Task passed to openHintDialog:", task); 
+    setSelectedTask(task);
+    setIsHintDialogOpen(true);
+
+  }
+
   const closeDialog = () => {
     setSelectedTask(null);
     setIsDialogOpen(false);
   };
+
+  const closeHintDialog = () => {
+
+    setIsHintDialogOpen(false);
+    setAssignmentHint('');
+  }
   
 
   // Fetch tasks from the backend
@@ -76,6 +92,7 @@ const JiraBoard = ({email}) => {
             course: task.course_name,
             due_at: task.due_at,
             assignment_url: task.assignment_url,
+            assignment_hint: task.assignment_hint
           });
         });
 
@@ -291,7 +308,7 @@ const JiraBoard = ({email}) => {
           )}
     </DialogContent>
     <DialogActions>
-    <Button color="primary">
+    <Button  onClick={() => openHintDialog(selectedTask)} color="primary">
         Get AI Help
       </Button>
       <Button onClick={closeDialog} color="primary">
@@ -299,6 +316,21 @@ const JiraBoard = ({email}) => {
       </Button>
     </DialogActions>
   </Dialog>
+
+  {/* AI Help Dialog */}
+  <Dialog open={isHintDialogOpen} onClose={closeHintDialog}>
+        <DialogTitle>Assignment Hint</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+              {selectedTask?.assignment_hint || "No hint available for this assignment."}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeHintDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
 </>
   );
 };
