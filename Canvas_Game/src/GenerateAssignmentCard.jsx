@@ -14,6 +14,13 @@ const GenerateAssignmentCard = (props) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
+    const formatDateTime = (dateTimeString) => {
+        const dateObj = new Date(dateTimeString);
+        const formattedDate = dateObj.toLocaleDateString(); // Formats to "MM/DD/YYYY"
+        const formattedTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Formats to "HH:MM AM/PM"
+        return `${formattedDate} at ${formattedTime}`;
+    };
+
     return (
         <div className="GenerateAssignmentCard">
             <Card 
@@ -30,7 +37,7 @@ const GenerateAssignmentCard = (props) => {
 
                 <CardContent>
                     <Typography variant="h5">{assignment.assignment_name}</Typography>
-                    <Typography color="textSecondary">{assignment.due_at}</Typography>
+                    <Typography color="textSecondary">{formatDateTime(assignment.due_at)}</Typography>
                     <Typography color="textSecondary">{assignment.in_game_status}</Typography>
                 </CardContent>
 

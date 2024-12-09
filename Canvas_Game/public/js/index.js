@@ -1,3 +1,4 @@
+window.onload = loadInAssignments()
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 const dpr = window.devicePixelRatio || 1
@@ -22,15 +23,19 @@ const VIEWPORT_CENTER_Y = VIEWPORT_HEIGHT / 2
 const MAX_SCROLL_X = MAP_WIDTH - VIEWPORT_WIDTH
 const MAX_SCROLL_Y = MAP_HEIGHT - VIEWPORT_HEIGHT
 
-
+/*
 if(localStorage.getItem("worldState")=== null){
   localStorage.setItem("worldState", 0)
 }
 const worldState = localStorage.getItem("worldState")
+*/
 const email = localStorage.getItem('email')
-updateGoldAmount()
 
-
+const worldState = localStorage.getItem('worldState')
+//console.log(worldState)
+//const worldState = 4
+const goldContainer = document.getElementById('gold')
+goldContainer.innerHTML = localStorage.getItem('gold')
 const layersData = {
   l_Terrain: l_Terrain,
   l_Trees_1: l_Trees_1,
@@ -41,6 +46,20 @@ const layersData = {
   l_Landscape_Decorations_2: l_Landscape_Decorations_2,
   l_Houses: l_Houses,
   l_House_Decorations: l_House_Decorations,
+  l_Characters: l_Characters,
+  l_Collisions: l_Collisions,
+}
+
+const layersData_WS0 = {
+  l_Terrain: l_Terrain,
+  l_Trees_1: l_Trees_1,
+  l_Trees_2: l_Trees_2,
+  l_Trees_3: l_Trees_3,
+  l_Trees_4: l_Trees_4,
+  l_Landscape_Decorations: l_Landscape_Decorations,
+  l_Landscape_Decorations_2: l_Landscape_Decorations_2,
+  l_Houses: l_Houses_WS0,
+  l_House_Decorations: l_House_Decorations_WS0,
   l_Characters: l_Characters,
   l_Collisions: l_Collisions,
 }
@@ -58,6 +77,62 @@ const layersData_WS1 = {
   l_Characters: l_Characters,
   l_Collisions: l_Collisions,
 }
+const layersData_WS2 = {
+  l_Terrain: l_Terrain,
+  l_Trees_1: l_Trees_1,
+  l_Trees_2: l_Trees_2,
+  l_Trees_3: l_Trees_3,
+  l_Trees_4: l_Trees_4,
+  l_Landscape_Decorations: l_Landscape_Decorations,
+  l_Landscape_Decorations_2: l_Landscape_Decorations_2,
+  l_Houses: l_Houses_WS2,
+  l_House_Decorations: l_House_Decorations_WS1,
+  l_Characters: l_Characters,
+  l_Collisions: l_Collisions,
+}
+
+const layersData_WS3 = {
+  l_Terrain: l_Terrain,
+  l_Trees_1: l_Trees_1,
+  l_Trees_2: l_Trees_2,
+  l_Trees_3: l_Trees_3,
+  l_Trees_4: l_Trees_4,
+  l_Landscape_Decorations: l_Landscape_Decorations,
+  l_Landscape_Decorations_2: l_Landscape_Decorations_2,
+  l_Houses: l_Houses_WS3,
+  l_House_Decorations: l_House_Decorations_WS1,
+  l_Characters: l_Characters,
+  l_Collisions: l_Collisions,
+}
+
+const layersData_WS4 = {
+  l_Terrain: l_Terrain,
+  l_Trees_1: l_Trees_1,
+  l_Trees_2: l_Trees_2,
+  l_Trees_3: l_Trees_3,
+  l_Trees_4: l_Trees_4,
+  l_Landscape_Decorations: l_Landscape_Decorations,
+  l_Landscape_Decorations_2: l_Landscape_Decorations_2,
+  l_Houses: l_Houses_WS4,
+  l_House_Decorations: l_House_Decorations_WS4,
+  l_Characters: l_Characters,
+  l_Collisions: l_Collisions,
+}
+
+const layersData_WS5 = {
+  l_Terrain: l_Terrain,
+  l_Trees_1: l_Trees_1,
+  l_Trees_2: l_Trees_2,
+  l_Trees_3: l_Trees_3,
+  l_Trees_4: l_Trees_4,
+  l_Landscape_Decorations: l_Landscape_Decorations,
+  l_Landscape_Decorations_2: l_Landscape_Decorations_2,
+  l_Houses: l_Houses_WS5,
+  l_House_Decorations: l_House_Decorations_WS5,
+  l_Characters: l_Characters,
+  l_Collisions: l_Collisions,
+}
+
 
 const frontRendersLayersData = {
   l_Front_Renders: l_Front_Renders,
@@ -95,21 +170,95 @@ const tilesets = {
 // Tile setup
 const collisionBlocks = []
 const blockSize = 16 // Assuming each tile is 16x16 pixels
-
-collisions.forEach((row, y) => {
-  row.forEach((symbol, x) => {
-    if (symbol === 1) {
-      collisionBlocks.push(
-        new CollisionBlock({
-          x: x * blockSize,
-          y: y * blockSize,
-          size: blockSize,
-        })
-      )
-    }
+if(worldState == 0){
+  collisions_WS0.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
   })
-})
-
+}
+else if (worldState == 1){
+  collisions_WS1.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
+  })
+}
+else if(worldState == 2){
+  collisions_WS2.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
+  })
+}
+else if(worldState == 3){
+  collisions_WS3.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
+  })
+}
+else if(worldState == 4){
+  collisions_WS4.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
+  })
+}else if (worldState >= 5){
+  collisions_WS5.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+      if (symbol === 1) {
+        collisionBlocks.push(
+          new CollisionBlock({
+            x: x * blockSize,
+            y: y * blockSize,
+            size: blockSize,
+          })
+        )
+      }
+    })
+  })
+}
 const renderLayer = (tilesData, tilesetImage, tileSize, context) => {
   tilesData.forEach((row, y) => {
     row.forEach((symbol, x) => {
@@ -170,7 +319,13 @@ const player = new Player({
   y: 100,
   size: 15,
 })
+window.player=player;// Making player global
 
+if (email) {
+    fetchUserItems(email);
+} else {
+    console.error("Email not found in localStorage.");
+}
 
 const monsterSprites = {
   walkDown: {
@@ -368,8 +523,8 @@ function animate(backgroundCanvas) {
   c.clearRect(0, 0, canvas.width, canvas.height)
   c.drawImage(backgroundCanvas, 0, 0)
   player.draw(c)
-  console.log(player.y)
-  if(worldState == 1){
+  //console.log(player.y)
+  if(worldState >= 5){
     if(player.x >= 85 && player.x <= 98){
       if(player.y >= 300 && player.y <= 325){
         window.location.href = 'interior-1/index.html'
@@ -458,7 +613,7 @@ function animate(backgroundCanvas) {
       if (npc === npc2[0]) { // Specific dialogue for the first NPC (princess)
         if(player.worldState == 0){
           showDialogueBox('Hello, traveler! Welcome to our village.');
-        }else if(player.worldState == 1){
+        }else if(player.worldState >= 5){
           showDialogueBox('Thank you for your much needed aid, traveler. The villiage samurai and blacksmith are grateful for your help.')
         }
         
@@ -467,13 +622,13 @@ function animate(backgroundCanvas) {
       } else if (npc === npc2[2]) {
         if(player.worldState == 0){
           showDialogueBox('I am the samurai of the village. Help me build my dojo and I can make you stonger. :::: Complete an assignment to advance the world state');
-        }else if (player.worldState == 1){
+        }else if (player.worldState >= 4){
           showDialogueBox('Thank you for helping build my dojo. Come by and I can train you to get stronger.')
         }
       } else if (npc === npc2[3]){
         if(player.worldState == 0){
           showDialogueBox('Please help me build my weapon forge, I can upgrade your weapon :::: Complete an assignment to advance the world state')
-        }else if(player.worldState == 1){
+        }else if(player.worldState >= 5){
           showDialogueBox('Thank you for helping me build my weapon forge, as a reward you can pick a weapon of your choosing and I can make it for you')
         }
       }
@@ -510,16 +665,23 @@ function animate(backgroundCanvas) {
 //Dialogue Box
 function showDialogueBox(message) {
   const dialogueBox = document.getElementById('dialogueBox');
-  dialogueBox.innerText = message;
+  const dialogueText = document.getElementById('dialogueText')
+  dialogueText.innerText = message;
   dialogueBox.style.display = 'block';
   dialogueBox.style.width = '940px'; 
   dialogueBox.style.height = '380px'; 
-
-  setTimeout(hideDialogueBox, 5000); // Auto-hide after 5 seconds
+  /*document.onclick = function(e){
+    if(e.target.id != 'dialogueBox' || e.target.id != 'dialogueText' || e.target.id != 'assignmentsList' || e.target.class != 'container'){
+      dialogueText.innerHTML = ""
+      //dialogueBox.style.display = "none"
+    }
+  }*/
+  //setTimeout(hideDialogueBox, 5000); // Auto-hide after 5 seconds
 }
 
+//gets the amount of gold for current user from database
 function updateGoldAmount(){
-  fetch("http://127.0.0.1:5000/api/getPlayerGold?email="+email)
+  fetch("http://127.0.0.1:5000/api/getPlayerData?email="+email)
 .then(response=>{
   if (response.ok){
     return response.json();
@@ -528,17 +690,19 @@ function updateGoldAmount(){
   }
 })
 .then(data=>{
-  console.log(data)
+  //console.log(data)
   const goldContainer = document.getElementById("gold")
-  goldContainer.innerHTML = data.gold;
-  localStorage.setItem('gold', data.gold);
+  goldContainer.innerHTML = data[0].gold
+  return data[1].world_state
 })
+
 }
 
 let isInventoryVisible = false; // Tracks inventory visibility
 let currentInspectItem = null; // Tracks the currently inspected item
 
 function toggleInventoryBox() {
+  /*
   const inventoryBox = document.getElementById("inventoryBox");
   const inventoryList = document.getElementById("inventoryList");
   const inspectBox = document.getElementById("inspectBox");
@@ -569,15 +733,46 @@ function toggleInventoryBox() {
     inventoryBox.style.display = "block";
     isInventoryVisible = true;
   }
+    */
+
+  const inventoryBox = document.getElementById("inventoryBox");
+    const inventoryList = document.getElementById("inventoryList");
+    const inspectBox = document.getElementById("inspectBox");
+
+    if (isInventoryVisible) {
+        inventoryBox.style.display = "none";
+        inspectBox.style.display = "none";
+        isInventoryVisible = false;
+    } else {
+        inventoryList.innerHTML = ""; // Clear existing inventory of its items
+
+        // Populate inventory items
+        player.inventory.forEach((item, index) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${item.name}`;
+            listItem.dataset.index = index; // Store index for reference
+
+            // Add click event to show description
+            listItem.addEventListener("click", () => {
+                showInspectBox(item);
+            });
+
+            inventoryList.appendChild(listItem);
+        });
+
+        inventoryBox.style.display = "block";
+        isInventoryVisible = true;
+    }
 }
 
 function showInspectBox(item) {
+
   const inspectBox = document.getElementById("inspectBox");
   inspectBox.style.display = "block";
   inspectBox.innerHTML = `
-    <h3>${item.name}</h3>
-    <p><strong>Type:</strong> ${item.type}</p>
-    <p><strong>Description:</strong> ${item.description}</p>
+      <h3>${item.name}</h3>
+      <p><strong>Type:</strong> ${item.type}</p>
+      <p><strong>Description:</strong> ${item.description}</p>
   `;
 }
 
@@ -596,19 +791,55 @@ function hideDialogueBox() {
   dialogueBox.style.display = 'none';
 }
 
+async function fetchUserItems(email) {
+  try {
+      const response = await fetch(`http://127.0.0.1:5000/api/getUserItems?email=${email}`);
+      if (!response.ok) {
+          throw new Error("Failed to fetch user items");
+      }
+      const items = await response.json();
+      console.log("Fetched Items:", items);
+
+      // Add the fetched items to the player's inventory
+      items.forEach((item) => {
+          player.addItem(new Item({
+              name: item.name,
+              type: "Bought Item",
+              description: item.description
+          }));
+      });
+  } catch (error) {
+      console.error("Error fetching items:", error);
+  }
+}
+
 const startRendering = async () => {
   try {
     /*const backgroundCanvas  = await renderStaticLayers(layersData)
     frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)*/
     let backgroundCanvas
-    if(player.worldState == 0){
+    if(worldState == 0){
+      backgroundCanvas = await renderStaticLayers(layersData_WS0)
+      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
+    }else if(worldState == 1){
       backgroundCanvas = await renderStaticLayers(layersData_WS1)
       frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
-    }else if(player.worldState == 1){
-      backgroundCanvas = await renderStaticLayers(layersData)
+    }else if(worldState == 2){
+      backgroundCanvas = await renderStaticLayers(layersData_WS2)
+      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
+    }
+    else if(worldState == 3){
+      backgroundCanvas = await renderStaticLayers(layersData_WS3)
+      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
+    }
+    else if(worldState == 4){
+      backgroundCanvas = await renderStaticLayers(layersData_WS4)
+      frontRendersCanvas = await renderStaticLayers(frontRendersLayersData_WS1)
+    }
+    else if(worldState == 5){
+      backgroundCanvas = await renderStaticLayers(layersData_WS5)
       frontRendersCanvas = await renderStaticLayers(frontRendersLayersData)
     }
-    
     if (backgroundCanvas== null) {
       console.error('Failed to create the background canvas')
       return
