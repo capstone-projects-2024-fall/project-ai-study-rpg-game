@@ -141,7 +141,7 @@ const JiraBoard = ({email}) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ taskId: task.id, status: targetColumn }),
+      body: JSON.stringify({ taskId: task.id, status: targetColumn, email: email }),
     }).catch((error) => console.error('Error updating task status:', error));
   };
 
