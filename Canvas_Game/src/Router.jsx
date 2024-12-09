@@ -48,7 +48,7 @@ const AppRouter = () => {
           <Route path="/" element={<Dashboard email={userEmail}/>} />
           <Route path="/LoginPage" element={<LoginPage />} />
           <Route path="/userProfile" element={<UserProfile email={userEmail} />} />
-          <Route path="/game" element={<GamePage/>}/>
+          <Route path="/game" element={<GamePage email={userEmail}/>}/>
           <Route path="/store" element={<Store/>}/>
         
           <Route path="/help" element={<HelpPage />} />

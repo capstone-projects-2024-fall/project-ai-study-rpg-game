@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import sqlite3
 import requests
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 
 app = Flask(__name__)
@@ -241,6 +241,19 @@ def get_assignments_for_dashboard():
     user_id = user_row['id']
     print("User ID:", user_id)
 
+    # Calculate the date range
+    current_date = datetime.now(timezone.utc)
+    one_week_before = current_date - timedelta(weeks=1)
+
+    # Convert dates to strings in the format compatible with the database
+    current_date_str = current_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+    one_week_before_str = one_week_before.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    print("The week before:", one_week_before_str)
+    print("Current date:", current_date_str)
+
+
+
     # Fetch assignments for the user
     cursor.execute('''
         SELECT 
@@ -262,8 +275,8 @@ def get_assignments_for_dashboard():
             courses.course_name
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
-        WHERE assignments.user_id = ? AND assignments.is_submitted = 0
-    ''', (user_id,))
+        WHERE assignments.user_id = ? AND assignments.is_submitted = 0 AND assignments.due_at >= ?
+    ''', (user_id,one_week_before_str))
     
     assignments = cursor.fetchall()
     # print("Assignments:", assignments)    #testing
@@ -420,29 +433,6 @@ def get_courselist_from_database():
     return jsonify({"courses": course_list}), 200   #returns list of course dictionaries 
 
 
-#update assignment status of the Jira Board               
-@app.route('/api/updateTaskStatus', methods=['POST'])
-def update_task_status():
-    data = request.json
-    task_id = data.get('taskId')
-    new_status = data.get('status')
-
-    if not task_id or not new_status:
-        return jsonify({"message": "Task ID and new status are required"}), 400
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('UPDATE assignments SET in_game_status = ? WHERE id = ?', (new_status, task_id))
-    conn.commit()
-    conn.close()
-
-    print('Received task ID:', task_id)
-    print('Received new status:', new_status)
-
-    return jsonify({"message": "Task status updated successfully"}), 200
-
-
-
 #fetches course and assignment info from canvasAPI and puts them in the user database
 @app.route('/getCourseAndAssignmentsInfoFromCanvas', methods=['POST'])
 def getAllAssignments(): 
@@ -500,6 +490,49 @@ def getAllAssignments():
     
     else:
         return jsonify({"message": "SOMETHING WENT WRONG IN getAssignments"}), 400
+
+#update assignment status of the Jira Board               
+@app.route('/api/updateTaskStatus', methods=['POST'])
+def update_task_status():
+    data = request.json
+    task_id = data.get('taskId')
+    new_status = data.get('status')
+
+    if not task_id or not new_status:
+        return jsonify({"message": "Task ID and new status are required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE assignments SET in_game_status = ? WHERE id = ?', (new_status, task_id))
+    conn.commit()
+    conn.close()
+
+    print('Received task ID:', task_id)
+    print('Received new status:', new_status)
+
+    return jsonify({"message": "Task status updated successfully"}), 200
+
+#delete assignment from db
+@app.route('/api/deleteTask', methods=['POST'])
+def delete_task():
+    data = request.json
+    task_id = data.get('taskId')
+
+    if not task_id:
+        return jsonify({"message": "Task ID is required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Delete the task from the assignments table
+    cursor.execute('DELETE FROM assignments WHERE id = ?', (task_id,))
+    conn.commit()
+    conn.close()
+
+    print('Deleted task ID:', task_id)
+
+    return jsonify({"message": "Task deleted successfully"}), 200
+
 
 
 #gets assignments data from canvas API, parses through it, puts data we want into assignments table in user database
@@ -562,14 +595,14 @@ def getAssignmentsByCourse(course_id, canvasKey):
             if submission_response.status_code == 200:
                 submission_data = submission_response.json()
 
-                submission_status = submission_data.get('workflow_state', '')  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
+                is_submitted = submission_data.get('workflow_state', '')== 'submitted'  #workflow_state = 'submitted', 'unsubmitted', 'graded', 'pending_review'
                 #print(submission_status)    #testing
-                if(submission_status == 'unsubmitted'):
-                    is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
-                    print("GLITCH?? is_submitted = False")  #testing
-                else:
-                    is_submitted = True #assignment has been submitted
-                    print(submission_status)    #testing
+                # if(submission_status == 'unsubmitted'):
+                #     is_submitted= False    #this shouldnt be in here maybe its a glitch idk (or like it was submitted than unsubmitted)
+                #     print("GLITCH?? is_submitted = False")  #testing
+                # else:
+                #     is_submitted = True #assignment has been submitted
+                #     print(submission_status)    #testing
             else:
                 is_submitted = False
                 print("in else: is_submitted = False")  #testing
@@ -588,10 +621,57 @@ def getAssignmentsByCourse(course_id, canvasKey):
         return jsonify({"message": "SOMETHING WENT WRONG IN getAssignmentsByCourse()"}), 400
 
 
+@app.route('/api/updatePlayerGold', methods=['POST'])
+def updatePlayerGold():
+    data = request.json
+    #gets email and amount from request
+    email = data.get('email')
+    amount = data.get('amount')  # Positive for earning, negative for spending
+    #throws error if email or amount is not supplied in payload
+    if not email or amount is None:
+        return jsonify({"message": "Email and amount are required"}), 400
 
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT gold from users where email = ?', (email,))
+    queryRes = cursor.fetchone()
 
+    if queryRes is None:
+        return jsonify({"message": "Email does not exist"}), 400
 
+    usersGold = queryRes[0]
+    currentGold = usersGold + amount  # Handles both addition and subtraction
 
+    if currentGold < 0:
+        return jsonify({"message": "Not enough gold for this transaction"}), 400
+
+    cursor.execute('UPDATE users SET gold = ? WHERE email = ?', (currentGold, email))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Gold amount updated successfully"}), 200
+
+    
+
+@app.route('/api/getPlayerGold', methods=['GET'])
+def getPlayerGold():
+    #gets user's email from request URL
+    email = request.args.get('email')
+    
+    if not email:
+         return jsonify({"message": "Email is required"}), 400
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT gold from users where email = ?', (email,))
+    #makes sure user's gold was returned
+    queryRes = cursor.fetchone()
+    if queryRes == None:
+        return jsonify({"message": "Email does not exist"}), 400
+    
+
+    #gets users gold from query response
+    usersGold = queryRes[0]
+
+    return jsonify({"gold": usersGold}), 200
 
 
 def get_db_connection():
