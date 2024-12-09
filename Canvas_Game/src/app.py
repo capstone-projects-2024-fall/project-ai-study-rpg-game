@@ -29,7 +29,8 @@ def init_db():
             score INTEGER DEFAULT 0,
             selectedMotto TEXT NOT NULL,
             picture_url TEXT DEFAULT '',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            world_state INTEGER DEFAULT 0
 
         )
     ''')
@@ -500,6 +501,7 @@ def update_task_status():
     data = request.json
     task_id = data.get('taskId')
     new_status = data.get('status')
+    email = data.get('email')
 
     if not task_id or not new_status:
         return jsonify({"message": "Task ID and new status are required"}), 400
@@ -508,12 +510,51 @@ def update_task_status():
     cursor = conn.cursor()
     cursor.execute('UPDATE assignments SET in_game_status = ? WHERE id = ?', (new_status, task_id))
     conn.commit()
+
+    cursor.execute('SELECT id from users where email = ?',(email,))
+    resp = cursor.fetchone()
+    if resp == None:
+        return jsonify({"message": "Email does not exist"}), 400
+    userId = resp[0]
+
+    
+    cursor.execute("SELECT count(1) FROM assignments WHERE user_id = ? AND in_game_status = 'Done'", (userId,))
+    countResp = cursor.fetchone()
+    doneCount = countResp[0]
+    cursor.execute("SELECT count(1) FROM assignments WHERE user_id = ?", (userId,))
+    countResp = cursor.fetchone()
+    otherCount = countResp[0]
+    ratio = doneCount / otherCount
+    print(ratio)
+    if(ratio <= 0.20):
+        worldState = 0
+    elif(ratio >= 0.20 and ratio <= 0.40):
+        worldState = 1
+    elif(ratio >= 0.40 and ratio <= 0.60):
+        worldState = 2
+    elif(ratio >= 0.60 and ratio <= 0.80):
+        worldState = 3
+    elif(ratio >= 0.80 and ratio <= 0.90):
+        worldState = 4
+    elif(ratio >= 0.90):
+        worldState = 5
+
+    cursor.execute("SELECT world_state from Users where id=?",(userId,))
+    db_worldState_res = cursor.fetchone()
+    db_worldState = db_worldState_res[0]
+    worldStateUpdated = False
+
+    if(worldState != db_worldState):
+        cursor.execute("UPDATE users SET world_state = ? where id = ?",(worldState, userId))
+        conn.commit()
+        worldStateUpdated = True
+
     conn.close()
 
     print('Received task ID:', task_id)
     print('Received new status:', new_status)
 
-    return jsonify({"message": "Task status updated successfully"}), 200
+    return jsonify({"worldStateUpdated": worldStateUpdated}), 200
 
 #delete assignment from db
 @app.route('/api/deleteTask', methods=['POST'])
@@ -652,10 +693,9 @@ def updatePlayerGold():
     conn.commit()
     conn.close()
     return jsonify({"message": "Gold amount updated successfully"}), 200
-
     
 
-@app.route('/api/getPlayerGold', methods=['GET'])
+@app.route('/api/getPlayerData', methods=['GET'])
 def getPlayerGold():
     #gets user's email from request URL
     email = request.args.get('email')
@@ -664,17 +704,84 @@ def getPlayerGold():
          return jsonify({"message": "Email is required"}), 400
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT gold from users where email = ?', (email,))
+    res = cursor.execute('SELECT gold, world_state from users where email = ? LIMIT 1', (email,))
     #makes sure user's gold was returned
-    queryRes = cursor.fetchone()
-    if queryRes == None:
+    gold, worldState = res.fetchone()
+    if (gold == None or worldState == None):
         return jsonify({"message": "Email does not exist"}), 400
+
+    return jsonify({"gold": gold},{"worldState": worldState}), 200
     
+@app.route('/api/updatePlayerWorldState', methods=['POST'])
+def updatePlayerWorldState():
+    data = request.json
+    #gets email from request
+    email = data.get('email')
+    ws = data.get('worldState')
+    if not email:
+         return jsonify({"message": "Email is required"}), 400
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    res = cursor.execute('UPDATE users SET world_state=? WHERE email=?', (ws,email))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "WorldState updated successfully"}), 200
 
-    #gets users gold from query response
-    usersGold = queryRes[0]
+#Getting assignment data from the database
+@app.route('/assignmentFromDb', methods=['GET'])
+def get_assignments():
+    email = request.args.get('email')  # Email is provided as a query parameter
 
-    return jsonify({"gold": usersGold}), 200
+    if not email:
+        return jsonify({"message": "Email is required"}), 400
+
+    # Connect to the database and fetch the user's assignments
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Get the user ID based on the email
+    cursor.execute('SELECT id FROM users WHERE email = ?', (email,))
+    user_row = cursor.fetchone()
+
+    if not user_row:
+        conn.close()
+        return jsonify({"message": "User not found"}), 404
+
+    user_id = user_row['id']
+
+    # Fetch assignments for the user
+    cursor.execute('''
+        SELECT 
+            assignments.assignment_name,
+            assignments.assignment_description,
+            assignments.due_at,
+            assignments.in_game_status,
+            assignments.id,
+            courses.course_name
+        FROM assignments
+        JOIN courses ON assignments.course_id = courses.course_id
+        WHERE assignments.user_id = ?
+    ''', (user_id,))
+    
+    assignments = cursor.fetchall()
+    conn.close()
+
+    if not assignments:
+        return jsonify({"message": "No assignments found for the user"}), 404
+
+    # Convert rows to a list of dictionaries
+    assignment_list = [
+        {
+            "assignment_name": row["assignment_name"],
+            "assignment_description": row["assignment_description"],
+            "due_at": row["due_at"],
+            "in_game_status": row["in_game_status"],
+            "course_name": row["course_name"],
+            "id": row["id"]
+        } for row in assignments
+    ]
+
+    return jsonify({"assignments": assignment_list}), 200
 
 
 def get_db_connection():

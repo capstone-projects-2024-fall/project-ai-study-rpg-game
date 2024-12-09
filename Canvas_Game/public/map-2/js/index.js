@@ -130,6 +130,22 @@ const keys = {
   },
 }
 
+let frontRendersCanvas
+const hearts = [
+  new Heart({
+    x: 10,
+    y: 10,
+  }),
+  new Heart({
+    x: 32,
+    y: 10,
+  }),
+  new Heart({
+    x: 54,
+    y: 10,
+  }),
+]
+
 let lastTime = performance.now()
 function animate(backgroundCanvas) {
   // Calculate delta time
