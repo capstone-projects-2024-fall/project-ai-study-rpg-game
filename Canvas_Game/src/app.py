@@ -581,6 +581,61 @@ def updatePlayerWorldState():
     conn.close()
     return jsonify({"message": "WorldState updated successfully"}), 200
 
+#Getting assignment data from the database
+@app.route('/assignmentFromDb', methods=['GET'])
+def get_assignments():
+    email = request.args.get('email')  # Email is provided as a query parameter
+
+    if not email:
+        return jsonify({"message": "Email is required"}), 400
+
+    # Connect to the database and fetch the user's assignments
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Get the user ID based on the email
+    cursor.execute('SELECT id FROM users WHERE email = ?', (email,))
+    user_row = cursor.fetchone()
+
+    if not user_row:
+        conn.close()
+        return jsonify({"message": "User not found"}), 404
+
+    user_id = user_row['id']
+
+    # Fetch assignments for the user
+    cursor.execute('''
+        SELECT 
+            assignments.assignment_name,
+            assignments.assignment_description,
+            assignments.due_at,
+            assignments.in_game_status,
+            assignments.id,
+            courses.course_name
+        FROM assignments
+        JOIN courses ON assignments.course_id = courses.course_id
+        WHERE assignments.user_id = ?
+    ''', (user_id,))
+    
+    assignments = cursor.fetchall()
+    conn.close()
+
+    if not assignments:
+        return jsonify({"message": "No assignments found for the user"}), 404
+
+    # Convert rows to a list of dictionaries
+    assignment_list = [
+        {
+            "assignment_name": row["assignment_name"],
+            "assignment_description": row["assignment_description"],
+            "due_at": row["due_at"],
+            "in_game_status": row["in_game_status"],
+            "course_name": row["course_name"],
+            "id": row["id"]
+        } for row in assignments
+    ]
+
+    return jsonify({"assignments": assignment_list}), 200
 
 
 def get_db_connection():
