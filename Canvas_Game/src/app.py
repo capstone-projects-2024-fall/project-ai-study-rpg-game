@@ -53,7 +53,7 @@ def init_db():
             assignment_id INTEGER,
             assignment_name TEXT,
             assignment_description TEXT,
-            due_at TEXT, 
+            due_at DATETIME, 
             course_id INTEGER,
             submission_types TEXT,
             points_possible INTEGER,
@@ -277,6 +277,7 @@ def get_assignments_for_dashboard():
         FROM assignments
         JOIN courses ON assignments.course_id = courses.course_id
         WHERE assignments.user_id = ? AND assignments.is_submitted = 0
+        ORDER BY datetime(assignments.due_at) ASC
     ''', (user_id,))
     
     assignments = cursor.fetchall()
