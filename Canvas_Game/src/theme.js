@@ -3,6 +3,80 @@ import { useMemo } from "react";
 import { useState } from "react";
 import { createContext } from "react";
 
+export const tokens = (mode) => ({
+  ...(mode === "dark"
+    ? {
+        gray: {
+          100: "#e0e0e0",
+          200: "#c2c2c2",
+          300: "#a3a3a3",
+          400: "#858585",
+          500: "#666666",
+          600: "#525252",
+          700: "#3d3d3d",
+          800: "#292929",
+          900: "#141414",
+        },
+        primary: {
+          100: "#f5f5f5", // White
+          200: "#e8e8e8", 
+          300: "#d9d9d9", 
+          400: "#c9c9c9", 
+          500: "#bfbfbf", 
+          600: "#a6a6a6", 
+          700: "#8c8c8c", 
+          800: "#737373", 
+          900: "#595959",
+        },
+        greenAccent: {
+          100: "#d7f7e8", // Light green
+          200: "#aff0d1",
+          300: "#87e9ba",
+          400: "#5fe2a3",
+          500: "#37db8c", // Main green
+          600: "#2fb874",
+          700: "#26855d",
+          800: "#1e6245",
+          900: "#15402e",
+        },
+      }
+    : {
+        gray: {
+          100: "#141414",
+          200: "#292929",
+          300: "#3d3d3d",
+          400: "#525252",
+          500: "#666666",
+          600: "#858585",
+          700: "#a3a3a3",
+          800: "#c2c2c2",
+          900: "#e0e0e0",
+        },
+        primary: {
+          100: "#ffffff", // White
+          200: "#f7f7f7",
+          300: "#f0f0f0",
+          400: "#e8e8e8",
+          500: "#e0e0e0", // Light gray
+          600: "#d4d4d4",
+          700: "#bcbcbc",
+          800: "#a4a4a4",
+          900: "#8c8c8c",
+        },
+        greenAccent: {
+          100: "#e8f9f1", // Light green
+          200: "#d1f3e3",
+          300: "#baedd5",
+          400: "#a3e7c7",
+          500: "#8ce1b9", // Main green
+          600: "#75dbab",
+          700: "#5ed59d",
+          800: "#47cf8f",
+          900: "#30c981",
+        },
+      }),
+});
+    
 // Color Design Tokens
 // export const tokens = (mode) => ({
 //   ...(mode === "dark"
@@ -122,125 +196,125 @@ import { createContext } from "react";
 //       }),
 // });
 
-export const tokens = (mode) => ({
-  ...(mode === "dark"
-    ? {
-        gray: {
-          100: "#f0f0f0", // lighter gray
-          200: "#d9d9d9",
-          300: "#c2c2c2",
-          400: "#ababab",
-          500: "#949494", // medium gray
-          600: "#7d7d7d",
-          700: "#666666", // darker gray
-          800: "#4f4f4f",
-          900: "#383838",
-        },
-        primary: {
-          100: "#e8efff", // very light blue
-          200: "#d0e0ff",
-          300: "#b8d1ff",
-          400: "#a0c2ff",
-          500: "#88b3ff", // soft blue
-          600: "#709aff",
-          700: "#5881ff", // deeper blue
-          800: "#4068ff",
-          900: "#284fff",
-          1000: "D1E7FB"
-        },
-        greenAccent: {
-          100: "#e8f9f1",
-          200: "#d1f3e3",
-          300: "#baedd5",
-          400: "#a3e7c7",
-          500: "#8ce1b9", // greenish accent
-          600: "#75dbab",
-          700: "#5ed59d",
-          800: "#47cf8f",
-          900: "#30c981",
+// export const tokens = (mode) => ({
+//   ...(mode === "dark"
+//     ? {
+//         gray: {
+//           100: "#f0f0f0", // lighter gray
+//           200: "#d9d9d9",
+//           300: "#c2c2c2",
+//           400: "#ababab",
+//           500: "#949494", // medium gray
+//           600: "#7d7d7d",
+//           700: "#666666", // darker gray
+//           800: "#4f4f4f",
+//           900: "#383838",
+//         },
+//         primary: {
+//           100: "#e8efff", // very light blue
+//           200: "#d0e0ff",
+//           300: "#b8d1ff",
+//           400: "#a0c2ff",
+//           500: "#88b3ff", // soft blue
+//           600: "#709aff",
+//           700: "#5881ff", // deeper blue
+//           800: "#4068ff",
+//           900: "#284fff",
+//           1000: "D1E7FB"
+//         },
+//         greenAccent: {
+//           100: "#e8f9f1",
+//           200: "#d1f3e3",
+//           300: "#baedd5",
+//           400: "#a3e7c7",
+//           500: "#8ce1b9", // greenish accent
+//           600: "#75dbab",
+//           700: "#5ed59d",
+//           800: "#47cf8f",
+//           900: "#30c981",
           
-        },
-        redAccent: {
-          100: "#fce8e8",
-          200: "#f9d1d1",
-          300: "#f6baba",
-          400: "#f3a3a3",
-          500: "#f08c8c", // reddish accent
-          600: "#ed7575",
-          700: "#ea5e5e",
-          800: "#e74747",
-          900: "#e43030",
-        },
-        blueAccent: {
-          100: "#f0f8ff",
-          200: "#e0f1ff",
-          300: "#d0eaff",
-          400: "#c0e3ff",
-          500: "#b0dcff", // light blue accent
-          600: "#a0d5ff",
-          700: "#90ceff",
-          800: "#80c7ff",
-          900: "#70c0ff",
-        },
-      }
-    : { // Light mode colors can mirror Dark or be adjusted separately
-        gray: {
-          100: "#f0f0f0",
-          200: "#d9d9d9",
-          300: "#c2c2c2",
-          400: "#ababab",
-          500: "#949494",
-          600: "#7d7d7d",
-          700: "#666666",
-          800: "#4f4f4f",
-          900: "#383838",
-        },
-        primary: {
-          100: "#e8efff",
-          200: "#d0e0ff",
-          300: "#b8d1ff",
-          400: "#a0c2ff",
-          500: "#88b3ff",
-          600: "#709aff",
-          700: "#5881ff",
-          800: "#4068ff",
-          900: "#284fff",
-        },
-        greenAccent: {
-          100: "#e8f9f1",
-          200: "#d1f3e3",
-          300: "#baedd5",
-          400: "#a3e7c7",
-          500: "#8ce1b9",
-          600: "#75dbab",
-          700: "#5ed59d",
-          800: "#47cf8f",
-          900: "#30c981",
-        },
-        redAccent: {
-          100: "#fce8e8",
-          200: "#f9d1d1",
-          300: "#f6baba",
-          400: "#f3a3a3",
-          500: "#f08c8c",
-          600: "#ed7575",
-          700: "#ea5e5e",
-          800: "#e74747",
-          900: "#e43030",
-        },
-        blueAccent: {
-          100: "#f0f8ff",
-          200: "#e0f1ff",
-          300: "#d0eaff",
-          400: "#c0e3ff",
-          500: "#b0dcff",
-          600: "#a0d5ff",
-          700: "#90ceff",
-          800: "#80c7ff",
-          900: "#70c0ff",
-        },
-      }),
-});
+//         },
+//         redAccent: {
+//           100: "#fce8e8",
+//           200: "#f9d1d1",
+//           300: "#f6baba",
+//           400: "#f3a3a3",
+//           500: "#f08c8c", // reddish accent
+//           600: "#ed7575",
+//           700: "#ea5e5e",
+//           800: "#e74747",
+//           900: "#e43030",
+//         },
+//         blueAccent: {
+//           100: "#f0f8ff",
+//           200: "#e0f1ff",
+//           300: "#d0eaff",
+//           400: "#c0e3ff",
+//           500: "#b0dcff", // light blue accent
+//           600: "#a0d5ff",
+//           700: "#90ceff",
+//           800: "#80c7ff",
+//           900: "#70c0ff",
+//         },
+//       }
+//     : { // Light mode colors can mirror Dark or be adjusted separately
+//         gray: {
+//           100: "#f0f0f0",
+//           200: "#d9d9d9",
+//           300: "#c2c2c2",
+//           400: "#ababab",
+//           500: "#949494",
+//           600: "#7d7d7d",
+//           700: "#666666",
+//           800: "#4f4f4f",
+//           900: "#383838",
+//         },
+//         primary: {
+//           100: "#e8efff",
+//           200: "#d0e0ff",
+//           300: "#b8d1ff",
+//           400: "#a0c2ff",
+//           500: "#88b3ff",
+//           600: "#709aff",
+//           700: "#5881ff",
+//           800: "#4068ff",
+//           900: "#284fff",
+//         },
+//         greenAccent: {
+//           100: "#e8f9f1",
+//           200: "#d1f3e3",
+//           300: "#baedd5",
+//           400: "#a3e7c7",
+//           500: "#8ce1b9",
+//           600: "#75dbab",
+//           700: "#5ed59d",
+//           800: "#47cf8f",
+//           900: "#30c981",
+//         },
+//         redAccent: {
+//           100: "#fce8e8",
+//           200: "#f9d1d1",
+//           300: "#f6baba",
+//           400: "#f3a3a3",
+//           500: "#f08c8c",
+//           600: "#ed7575",
+//           700: "#ea5e5e",
+//           800: "#e74747",
+//           900: "#e43030",
+//         },
+//         blueAccent: {
+//           100: "#f0f8ff",
+//           200: "#e0f1ff",
+//           300: "#d0eaff",
+//           400: "#c0e3ff",
+//           500: "#b0dcff",
+//           600: "#a0d5ff",
+//           700: "#90ceff",
+//           800: "#80c7ff",
+//           900: "#70c0ff",
+//         },
+//       }),
+// });
 
 // Mui Theme Settings
 export const themeSettings = (mode) => {

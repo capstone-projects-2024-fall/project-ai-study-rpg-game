@@ -10,7 +10,8 @@ const MenuItems = ({ colors }) => {
       menuItemStyles={{
         button: {
           ":hover": {
-            color: "#868dfb",
+            color: "white",
+            fontWeight: "bold",
             background: "transparent",
             transition: ".4s ease",
           },
@@ -20,7 +21,7 @@ const MenuItems = ({ colors }) => {
       <Item
         title="Dashboard"
         path="/"
-        colors={colors}
+        colors={colors.primary[100]}
         icon={<DashboardOutlined />}
       />
       <Item
