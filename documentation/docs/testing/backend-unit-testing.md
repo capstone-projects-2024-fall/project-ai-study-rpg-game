@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
 ---
-# Backend unit tests  
+# Back end unit tests  
 ### Overview
 This section outlines the unit tests for backend functionalities to ensure API endpoints, services, and database operations are working as expected. The tests focus on the following areas:
 

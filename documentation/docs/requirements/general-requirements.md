@@ -3,4 +3,9 @@ sidebar_position: 3
 ---
 
 # General Requirements
-Android or IOS
+
+# Hardware 
+Desktop, laptop, or mobile device with Internet access
+
+
+
