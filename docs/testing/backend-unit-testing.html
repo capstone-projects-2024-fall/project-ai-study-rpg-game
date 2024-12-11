@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.3.2">
 <title data-rh="true">Backend unit tests | Project Ai Study Rpg Game</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://capstone-projects-2024-fall.github.io/project-ai-study-rpg-game/docs/testing/backend-unit-testing"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Backend unit tests | Project Ai Study Rpg Game"><meta data-rh="true" name="description" content="Overview"><meta data-rh="true" property="og:description" content="Overview"><link data-rh="true" rel="icon" href="/project-ai-study-rpg-game/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://capstone-projects-2024-fall.github.io/project-ai-study-rpg-game/docs/testing/backend-unit-testing"><link data-rh="true" rel="alternate" href="https://capstone-projects-2024-fall.github.io/project-ai-study-rpg-game/docs/testing/backend-unit-testing" hreflang="en"><link data-rh="true" rel="alternate" href="https://capstone-projects-2024-fall.github.io/project-ai-study-rpg-game/docs/testing/backend-unit-testing" hreflang="x-default"><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><link rel="stylesheet" href="/project-ai-study-rpg-game/assets/css/styles.e4cc120d.css">
-<script src="/project-ai-study-rpg-game/assets/js/runtime~main.9dcfe743.js" defer="defer"></script>
+<script src="/project-ai-study-rpg-game/assets/js/runtime~main.41e7334a.js" defer="defer"></script>
 <script src="/project-ai-study-rpg-game/assets/js/main.fcc84c7a.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -17,28 +17,124 @@
 <li><strong>Service Logic:</strong> Verifying that services handle business logic as expected.</li>
 <li><strong>Error Handling:</strong> Testing that appropriate errors are returned for edge cases.</li>
 </ol>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="setup-and-configuration">Setup and Configuration<a href="#setup-and-configuration" class="hash-link" aria-label="Direct link to Setup and Configuration" title="Direct link to Setup and Configuration">​</a></h3>
+<ul>
+<li><strong>Testing Frameworks:</strong> <code>pytest</code>, <code>unittest</code></li>
+<li><strong>Database:</strong> SQLite in-memory (<code>:memory:</code>)</li>
+<li><strong>Mocking Tools:</strong> <code>unittest.mock</code>, `pytest-mock</li>
+</ul>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="general-testing-guidelines">General Testing Guidelines<a href="#general-testing-guidelines" class="hash-link" aria-label="Direct link to General Testing Guidelines" title="Direct link to General Testing Guidelines">​</a></h3>
 <ul>
 <li><strong>Mocking External Services:</strong> Use mocks for external API calls (e.g., Canvas API) to simulate responses.</li>
 <li><strong>Test Database:</strong> Use an in-memory database (SQLite) to run tests without affecting production data.</li>
-<li><strong>Coverage Requirements:</strong> Aim for 90%+ coverage of key backend functions.</li>
+<li><strong>Coverage Requirements:</strong> Aim for 85%+ coverage of key backend functions.</li>
 <li><strong>Input Validation:</strong> Verify that invalid inputs are properly handled with appropriate error responses.</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="signuplogin-tests">SignUp/Login Tests<a href="#signuplogin-tests" class="hash-link" aria-label="Direct link to SignUp/Login Tests" title="Direct link to SignUp/Login Tests">​</a></h3>
-<p><strong><code>test_signup()</code></strong>:</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="test-coverage">Test Coverage<a href="#test-coverage" class="hash-link" aria-label="Direct link to Test Coverage" title="Direct link to Test Coverage">​</a></h2>
+<details class="details_lb9f alert alert--info details_b_Ee" data-collapsed="true"><summary>Covarage Report</summary><div><div class="collapsibleContent_i85q"><p><a href="/project-ai-study-rpg-game/assets/files/Coverage-report-070ddd5de297f5f3e06eaf049751302e.pdf" target="_blank">View Coverage Report PDF</a></p></div></div></details>
+<details class="details_lb9f alert alert--info details_b_Ee" data-collapsed="true"><summary>Test Covarage</summary><div><div class="collapsibleContent_i85q"><p><img decoding="async" loading="lazy" alt="Alt Text" src="/project-ai-study-rpg-game/assets/images/backend-test-coverage-7eb1f1092f8231fe0b7dcb79f89a0a41.png" width="1758" height="370" class="img_ev3q"></p></div></div></details>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="test-categories">Test Categories<a href="#test-categories" class="hash-link" aria-label="Direct link to Test Categories" title="Direct link to Test Categories">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="1-user-management-tests">1. <strong>User Management Tests</strong><a href="#1-user-management-tests" class="hash-link" aria-label="Direct link to 1-user-management-tests" title="Direct link to 1-user-management-tests">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="signup-tests"><strong>Signup Tests:</strong><a href="#signup-tests" class="hash-link" aria-label="Direct link to signup-tests" title="Direct link to signup-tests">​</a></h4>
 <ul>
-<li>Tests the <code>/signup</code> endpoint by registering a new user with valid details.</li>
-<li>Verifies that a successful signup returns a <strong>201</strong> status code and the message <code>&#x27;User registered successfully&#x27;</code>.</li>
-<li>Checks for proper handling of duplicate signups by reattempting to register the same user, expecting a <strong>400</strong> status code and the message <code>&#x27;User already exists&#x27;</code>.</li>
+<li><code>test_signup_success</code>: Verifies successful user registration.</li>
+<li><code>test_signup_existing_user</code>: Tests registration with an already existing user.</li>
 </ul>
-<p><strong><code>test_login()</code></strong>:</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="login-tests"><strong>Login Tests:</strong><a href="#login-tests" class="hash-link" aria-label="Direct link to login-tests" title="Direct link to login-tests">​</a></h4>
 <ul>
-<li>First, registers a user to enable testing of login functionality.</li>
-<li>Validates that logging in with correct credentials returns a <strong>200</strong> status code and the message <code>&#x27;Login successful&#x27;</code>.</li>
-<li>Ensures that incorrect login attempts (e.g., with an invalid password) return a <strong>401</strong> status code and the message <code>&#x27;Invalid credentials&#x27;</code>.</li>
+<li><code>test_login_success</code>: Verifies successful login.</li>
+<li><code>test_login_invalid_password</code>: Tests login with incorrect password.</li>
+<li><code>test_login_nonexistent_user</code>: Tests login for a non-existent user.</li>
 </ul>
-<p>For each method, one or more test cases.</p>
-<p>A test case consists of input parameter values and expected results.</p>
-<p>All external classes should be stubbed using mock objects.</p></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col"><a href="https://github.com/capstone-projects-2024-fall/project-ai-study-rpg-game/edit/main/documentation/docs/testing/backend-unit-testing.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"><details><summary>Revision History</summary><table><thead><tr><th scope="row">Author</th><th scope="row">Revision</th><th scope="row">Date</th></tr></thead><tbody>nothing</tbody></table></details><span class="theme-last-updated">Last updated<!-- --> by <b>Barry Lin</b></span></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/project-ai-study-rpg-game/docs/category/test-procedures"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Test Procedures</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/project-ai-study-rpg-game/docs/testing/frontend-unit-testing"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Frontend unit tests</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#overview" class="table-of-contents__link toc-highlight">Overview</a></li><li><a href="#general-testing-guidelines" class="table-of-contents__link toc-highlight">General Testing Guidelines</a></li><li><a href="#signuplogin-tests" class="table-of-contents__link toc-highlight">SignUp/Login Tests</a></li></ul></div></div></div></div></main></div></div></div><footer class="footer"><div class="container container-fluid"><div class="row footer__links"><div class="col footer__col"><div class="footer__title">Docs</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/project-ai-study-rpg-game/docs/intro">Documentation</a></li></ul></div><div class="col footer__col"><div class="footer__title">More</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/capstone-projects-2024-fall/project-ai-study-rpg-game" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="margin-bottom--sm"><img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Temple_T_logo.svg" alt="My Site Logo" class="footer__logo themedComponent_mlkZ themedComponent--light_NVdE"><img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Temple_T_logo.svg" alt="My Site Logo" class="footer__logo themedComponent_mlkZ themedComponent--dark_xIcU"></div><div class="footer__copyright">Copyright © 2024 Project Ai Study Rpg Game, Inc. Built with Docusaurus.</div></div></div></footer></div>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="user-data-retrieval"><strong>User Data Retrieval:</strong><a href="#user-data-retrieval" class="hash-link" aria-label="Direct link to user-data-retrieval" title="Direct link to user-data-retrieval">​</a></h4>
+<ul>
+<li><code>test_get_user_by_email</code>: Retrieves user details by email.</li>
+<li><code>test_get_user_not_found</code>: Checks response when the user is not found.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="2-task-management-tests">2. <strong>Task Management Tests</strong><a href="#2-task-management-tests" class="hash-link" aria-label="Direct link to 2-task-management-tests" title="Direct link to 2-task-management-tests">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="task-deletion"><strong>Task Deletion:</strong><a href="#task-deletion" class="hash-link" aria-label="Direct link to task-deletion" title="Direct link to task-deletion">​</a></h4>
+<ul>
+<li><code>test_delete_task_missing_task_id</code>: Verifies error when task ID is missing.</li>
+<li><code>test_delete_task_nonexistent</code>: Simulates deleting a non-existent task.</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="task-status-update"><strong>Task Status Update:</strong><a href="#task-status-update" class="hash-link" aria-label="Direct link to task-status-update" title="Direct link to task-status-update">​</a></h4>
+<ul>
+<li><code>test_update_task_status_success</code>: Updates task status successfully.</li>
+<li><code>test_update_task_status_missing_fields</code>: Tests missing fields for task updates.</li>
+<li><code>test_update_task_status_invalid_task_id</code>: Simulates invalid task ID input.</li>
+<li><code>test_update_task_status_invalid_email</code>: Tests update with invalid email.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="3-player-management-tests">3. <strong>Player Management Tests</strong><a href="#3-player-management-tests" class="hash-link" aria-label="Direct link to 3-player-management-tests" title="Direct link to 3-player-management-tests">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="gold-management"><strong>Gold Management:</strong><a href="#gold-management" class="hash-link" aria-label="Direct link to gold-management" title="Direct link to gold-management">​</a></h4>
+<ul>
+<li><code>test_update_gold_success</code>: Successfully updates player gold.</li>
+<li><code>test_update_gold_insufficient_funds</code>: Tests insufficient funds handling.</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="player-data-retrieval"><strong>Player Data Retrieval:</strong><a href="#player-data-retrieval" class="hash-link" aria-label="Direct link to player-data-retrieval" title="Direct link to player-data-retrieval">​</a></h4>
+<ul>
+<li><code>test_get_player_data_success</code>: Retrieves player data successfully.</li>
+<li><code>test_get_player_data_missing_email</code>: Verifies missing email error.</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="world-state-management"><strong>World State Management:</strong><a href="#world-state-management" class="hash-link" aria-label="Direct link to world-state-management" title="Direct link to world-state-management">​</a></h4>
+<ul>
+<li><code>test_update_player_world_state</code>: Updates player world state.</li>
+<li><code>test_update_player_world_state_missing_email</code>: Tests missing email for world state update.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="4-assignment-management-tests">4. <strong>Assignment Management Tests</strong><a href="#4-assignment-management-tests" class="hash-link" aria-label="Direct link to 4-assignment-management-tests" title="Direct link to 4-assignment-management-tests">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="assignment-retrieval"><strong>Assignment Retrieval:</strong><a href="#assignment-retrieval" class="hash-link" aria-label="Direct link to assignment-retrieval" title="Direct link to assignment-retrieval">​</a></h4>
+<ul>
+<li><code>test_get_assignments_missing_email</code>: Checks missing email handling.</li>
+<li><code>test_get_assignments_user_not_found</code>: Tests response for nonexistent user.</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="unsubmitted-assignments"><strong>Unsubmitted Assignments:</strong><a href="#unsubmitted-assignments" class="hash-link" aria-label="Direct link to unsubmitted-assignments" title="Direct link to unsubmitted-assignments">​</a></h4>
+<ul>
+<li><code>test_get_Unsubmitted_assignments_missing_email</code>: Checks missing email error.</li>
+<li><code>test_get_unsubmitted_assignments_user_not_found</code>: Simulates a user not found scenario.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="5-item-management-tests">5. <strong>Item Management Tests</strong><a href="#5-item-management-tests" class="hash-link" aria-label="Direct link to 5-item-management-tests" title="Direct link to 5-item-management-tests">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="buying-items"><strong>Buying Items:</strong><a href="#buying-items" class="hash-link" aria-label="Direct link to buying-items" title="Direct link to buying-items">​</a></h4>
+<ul>
+<li><code>test_buy_items_success</code>: Tests successful item purchase.</li>
+<li><code>test_buy_items_missing_data</code>: Verifies missing purchase data.</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="retrieving-items"><strong>Retrieving Items:</strong><a href="#retrieving-items" class="hash-link" aria-label="Direct link to retrieving-items" title="Direct link to retrieving-items">​</a></h4>
+<ul>
+<li><code>test_get_user_items_success</code>: Retrieves items successfully.</li>
+<li><code>test_get_user_items_not_found</code>: Tests no items found scenario.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="6-canvas-integration-tests">6. <strong>Canvas Integration Tests</strong><a href="#6-canvas-integration-tests" class="hash-link" aria-label="Direct link to 6-canvas-integration-tests" title="Direct link to 6-canvas-integration-tests">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="canvas-key-management"><strong>Canvas Key Management:</strong><a href="#canvas-key-management" class="hash-link" aria-label="Direct link to canvas-key-management" title="Direct link to canvas-key-management">​</a></h4>
+<ul>
+<li><code>test_log_canvas_key_success</code>: Tests successful Canvas key submission.</li>
+<li><code>test_log_canvas_key_invalid</code>: Tests invalid Canvas key.</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="fetching-assignments-from-canvas"><strong>Fetching Assignments from Canvas:</strong><a href="#fetching-assignments-from-canvas" class="hash-link" aria-label="Direct link to fetching-assignments-from-canvas" title="Direct link to fetching-assignments-from-canvas">​</a></h4>
+<ul>
+<li><code>test_get_all_assignments_form_Canvas_api_failure</code>: Simulates Canvas API failure.</li>
+<li><code>test_get_all_assignments_from_Canvas_success</code>: Tests successful assignment fetch.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="7-course-management-tests">7. <strong>Course Management Tests</strong><a href="#7-course-management-tests" class="hash-link" aria-label="Direct link to 7-course-management-tests" title="Direct link to 7-course-management-tests">​</a></h3>
+<ul>
+<li><code>test_get_courses_success</code>: Successfully fetches courses.</li>
+<li><code>test_get_courses_not_found</code>: Tests no courses found scenario.</li>
+<li><code>test_fetch_courses_invalid_email</code>: Checks invalid email handling.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="8-error-handling-and-edge-cases">8. <strong>Error Handling and Edge Cases</strong><a href="#8-error-handling-and-edge-cases" class="hash-link" aria-label="Direct link to 8-error-handling-and-edge-cases" title="Direct link to 8-error-handling-and-edge-cases">​</a></h3>
+<ul>
+<li><code>test_invalid_endpoint</code>: Tests accessing an invalid endpoint.</li>
+<li><code>test_missing_email_on_buy_items</code>: Verifies email requirement for buying items.</li>
+<li><code>test_update_player_gold_negative_amount</code>: Simulates negative gold update.</li>
+</ul>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="conclusion">Conclusion<a href="#conclusion" class="hash-link" aria-label="Direct link to Conclusion" title="Direct link to Conclusion">​</a></h2>
+<p>This test suite comprehensively covers expected functionality, input validation, and integration behavior for the Flask-based application. It ensures system reliability, stability, and proper error handling across various endpoints.
+For each method, one or more test cases.</p></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col"><a href="https://github.com/capstone-projects-2024-fall/project-ai-study-rpg-game/edit/main/documentation/docs/testing/backend-unit-testing.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"><details><summary>Revision History</summary><table><thead><tr><th scope="row">Author</th><th scope="row">Revision</th><th scope="row">Date</th></tr></thead><tbody>nothing</tbody></table></details><span class="theme-last-updated">Last updated<!-- --> by <b>IskraLlupa25</b></span></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/project-ai-study-rpg-game/docs/category/test-procedures"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Test Procedures</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/project-ai-study-rpg-game/docs/testing/frontend-unit-testing"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Frontend unit tests</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#overview" class="table-of-contents__link toc-highlight">Overview</a></li><li><a href="#setup-and-configuration" class="table-of-contents__link toc-highlight">Setup and Configuration</a></li><li><a href="#general-testing-guidelines" class="table-of-contents__link toc-highlight">General Testing Guidelines</a></li><li><a href="#test-coverage" class="table-of-contents__link toc-highlight">Test Coverage</a></li><li><a href="#test-categories" class="table-of-contents__link toc-highlight">Test Categories</a><ul><li><a href="#1-user-management-tests" class="table-of-contents__link toc-highlight">1. <strong>User Management Tests</strong></a></li><li><a href="#2-task-management-tests" class="table-of-contents__link toc-highlight">2. <strong>Task Management Tests</strong></a></li><li><a href="#3-player-management-tests" class="table-of-contents__link toc-highlight">3. <strong>Player Management Tests</strong></a></li><li><a href="#4-assignment-management-tests" class="table-of-contents__link toc-highlight">4. <strong>Assignment Management Tests</strong></a></li><li><a href="#5-item-management-tests" class="table-of-contents__link toc-highlight">5. <strong>Item Management Tests</strong></a></li><li><a href="#6-canvas-integration-tests" class="table-of-contents__link toc-highlight">6. <strong>Canvas Integration Tests</strong></a></li><li><a href="#7-course-management-tests" class="table-of-contents__link toc-highlight">7. <strong>Course Management Tests</strong></a></li><li><a href="#8-error-handling-and-edge-cases" class="table-of-contents__link toc-highlight">8. <strong>Error Handling and Edge Cases</strong></a></li></ul></li><li><a href="#conclusion" class="table-of-contents__link toc-highlight">Conclusion</a></li></ul></div></div></div></div></main></div></div></div><footer class="footer"><div class="container container-fluid"><div class="row footer__links"><div class="col footer__col"><div class="footer__title">Docs</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/project-ai-study-rpg-game/docs/intro">Documentation</a></li></ul></div><div class="col footer__col"><div class="footer__title">More</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/capstone-projects-2024-fall/project-ai-study-rpg-game" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="margin-bottom--sm"><img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Temple_T_logo.svg" alt="My Site Logo" class="footer__logo themedComponent_mlkZ themedComponent--light_NVdE"><img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Temple_T_logo.svg" alt="My Site Logo" class="footer__logo themedComponent_mlkZ themedComponent--dark_xIcU"></div><div class="footer__copyright">Copyright © 2024 Project Ai Study Rpg Game, Inc. Built with Docusaurus.</div></div></div></footer></div>
 </body>
 </html>
