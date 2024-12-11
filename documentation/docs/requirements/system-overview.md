@@ -14,7 +14,7 @@ What makes this app unique is the gamification aspect for canvas assignments. Th
 
 # Conceptual Design 
 
-The app will be available for both Android and iOS. We will be using React to build the app. The app will help walkthrough new and returning users to sign up or  login. New users will have to input their Canvas Key, name, nickname, email, password, and a motto.
+The app will be available on through a webpage. We will be using React to build the app. The app will help walkthrough new and returning users to sign up or  login. New users will have to input their Canvas Key, name, nickname, email, password, and a motto.
 
 There will be a dashboard upon login where it will show all current semester assignments. Students will be greeted with a customizable dashboard. The dashboard will offer the ability to personalize the layout; not only that, but students can also navigate through different sections such as Assignments, Store, Profile, and view current tasks, deadlines, and progress at a glance. Users will also be able to get ai generated hints on their assignments if they need help. 
 
@@ -26,5 +26,4 @@ Python will power the backend, managing user interactions, data processing, and 
 # Background
 
 To differentiate from an existing platform like Habitica, we are trying to push the gamification aspect even further and focus specifically on helping students achieve educational goals. The main goal is to be more immersive and deepen engagement while maintaining a focus on academic productivity. Instead of simple lists, each assignment could be part of an evolving quest where the student can freely move around the map and talk to an NPC to start an assignment. Users will earn gold upon completion of tasks and they will contribute to building up the map. Students can earn customizable gear that directly influences their avatar’s strength in the game. The state of their map and inventory can be tied directly to long-term academic growth, encouraging students to not only complete tasks but also reflect on their learning progress. Ultimately, the Study RPG Game Organizer app offers a more immersive, engaging, and adaptive experience than Habitica, deeply integrating academic tasks with RPG gameplay for long-term motivation and productivity. 
-
-Borrowing the foundation from traditional RPGs. Completing tasks not only earns gold and . This introduces deeper RPG mechanics where academic progress influences gameplay. This is necessary for "boss battles" which represent larger or difficult assignments. For example, completing tasks on a consistent schedule might unlock advanced or rare gears.
+.

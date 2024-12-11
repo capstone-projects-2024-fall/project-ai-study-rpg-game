@@ -14,6 +14,8 @@ sidebar_position: 4
 
 - Users will be able to change assignment status to done in the game map
 
+- changes to assignments in game will be reflected on dashboard
+
 - Users will earn gold for completing assignments
 
 - New buildings and map features will be added to the map as players complete more of their assignments
