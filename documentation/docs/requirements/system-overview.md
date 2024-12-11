@@ -14,7 +14,7 @@ What makes this app unique is the gamification aspect for canvas assignments. Th
 
 # Conceptual Design 
 
-The app will be available on through a webpage. We will be using React to build the app. The app will help walkthrough new and returning users to sign up or  login. New users will have to input their Canvas Key, name, nickname, email, password, and a motto.
+The app will be available on through a webpage on a desktop or laptop. We will be using React to build the app. The app will help walkthrough new and returning users to sign up or  login. New users will have to input their Canvas Key, name, nickname, email, password, and a motto.
 
 There will be a dashboard upon login where it will show all current semester assignments. Students will be greeted with a customizable dashboard. The dashboard will offer the ability to personalize the layout; not only that, but students can also navigate through different sections such as Assignments, Store, Profile, and view current tasks, deadlines, and progress at a glance. Users will also be able to get ai generated hints on their assignments if they need help. 
 
