@@ -70,7 +70,7 @@ Ensure you have <a href = 'https://nodejs.org/en/download/package-manager'>NPM/N
         <a href="https://github.com/ApplebaumIan">
             <img src="https://avatars.githubusercontent.com/u/9451941?v=4" width="100;" alt="ApplebaumIan"/>
             <br />
-            <sub><b>Jordan</b></sub>
+            <sub><b>Jordan Santoli</b></sub>
         </a>
     </td>
     <td align="center">
@@ -81,24 +81,24 @@ Ensure you have <a href = 'https://nodejs.org/en/download/package-manager'>NPM/N
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/ApplebaumIan">
-            <img src="https://avatars.githubusercontent.com/u/9451941?v=4" width="100;" alt="ApplebaumIan"/>
+        <a href="https://github.com/Lyss1303">
+            <img src="https://avatars.githubusercontent.com/Lyss1303" width="100;" alt="ApplebaumIan"/>
             <br />
-            <sub><b>Alyssa</b></sub>
+            <sub><b>Alyssa Richner</b></sub>
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/ApplebaumIan">
-            <img src="https://avatars.githubusercontent.com/u/9451941?v=4" width="100;" alt="ApplebaumIan"/>
+        <a href="https://github.com/IskraLlupa25">
+            <img src="https://avatars.githubusercontent.com/IskraLlupa25" width="100;" alt="ApplebaumIan"/>
             <br />
-            <sub><b>Iskra</b></sub>
+            <sub><b>Iskra Lupa</b></sub>
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/ApplebaumIan">
-            <img src="https://avatars.githubusercontent.com/u/9451941?v=4" width="100;" alt="ApplebaumIan"/>
+        <a href="https://github.com/MTruong5">
+            <img src="https://avatars.githubusercontent.com/MTruong5" width="100;" alt="ApplebaumIan"/>
             <br />
-            <sub><b>Madison</b></sub>
+            <sub><b>Madison Truong</b></sub>
         </a>
     </td>
 </tr>
