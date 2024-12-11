@@ -4,47 +4,51 @@ sidebar_position: 4
 
 # Features and Requirements
 # Functional Requirements
-- The application will require the user to have a Canvas account.
+- Progam will save allow the user to create an account they can log into
 
-- Use of Canvas API.
+- Progam will allow user to connect to their canvas account to the game
 
-- The Canvas home page will be shown first to the user. 
+- Program will save game and assignment progress
 
-- User will be able to import assignments and information about them from canvas 
-    - Assignments can be sorted into categories and given different weights according to data from canvas
+- Users will be able to view in-progress assignments and start assignments on the game map 
 
-- Program will sort assignments based on different criteria such as difficulty, due dates, and the amount of effort to complete an assignment. 
+- Users will be able to change assignment status to done in the game map
 
-- Theme is chosen by the user to reflect the map and quests.
-    - Various themes for the user to choose from
+- Users will earn gold for completing assignments
 
-- A map showing the assignments for the user.
-    - Multiple different areas on the map depending on the subjects and classes of the user.
-    - Users will be able to move around the map however they want.
+- New buildings and map features will be added to the map as players complete more of their assignments
 
-- User can create and customize avatar 
+- Users will be able to move around the map
 
-- Shop for the user to buy items and gear for their characters.
-    - Multiple different items and gear for parts of the body.
+- Users will be able to interact with characters on the map
 
-- Rewards players for completing assignments via gold and experience points. 
-    - Could gain skills from quests as well
+- Users will be able to buy inventory at the shop
 
-- Tells the user a story through the quests.
-    - Quests in an area are linked together to make a cohesive and coherent story line of sorts.
+- Users will be able to view the inventory they purchased in the game map
 
-- User can sign out of the app.
+- users will be able to use the inventory they purchased in the game map
+
+- Program  will display information about canvas assignments to user on the dashboard
+
+- Users will be able to adjust assignment status on the dashboard
+
+- Users will be able to get hints to help them complete their assignments on the dashboard
+
+- Program will display information about canvas assignments on assignment page
 
 
 # Nonfunctional Requirements
-
 - The App will have a Practical and Comprehensible user interface
-    - The main way users will interact with the app will be through the world map
-        - Users can move their character around to different locations on the map and interact with different icons on the map to initiate different tasks. The map will have a legend for these icons that will tell the user what type of task/location is marked on the map 
-        - The map background displayed will be based on what theme the user picks when they start.
     - There will be clear messaging during interactions with the app
         - When a user fails to connect their canvas account due to improper credentials, or their account isn’t registered in any graded courses on canvas, then the app will alert them of the issue
         - Users will be able to see due dates clearly and icons will indicate the type of assignment/task
-- To ensure a consistent theme is kept, the requests and responses from the ChatGPT api will be kept to reference back to or re-generate responses for later.
-- User login information will be tied to their canvas account and use SSO.
-- A help button will be used to make sure users can log support tickets in the event that the ChatGPT api sends a bad response
+- user's should be able to move to different tabs quickly
+- game map should allow users to move around in real time
+- npc dialogue should be updated when user gets close to different npcs
+- changes to gold, or inventory the character has in the game should be applied immediately
+- pages should not take more than 1-2 seconds to load when user clicks on them
+- system should save updated user data and load it up when user logs in
+
+- system will use a canvas token to connect to the Canvas API and grab assignment information 
+- user, assignments and game information will be stored in and SQLite database
+- python and flask will be used to put data into and take data out of the user database
