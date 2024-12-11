@@ -74,10 +74,10 @@ Ensure you have <a href = 'https://nodejs.org/en/download/package-manager'>NPM/N
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/leighflagg">
-            <img src="https://avatars.githubusercontent.com/u/77810293?v=4" width="100;" alt="leighflagg"/>
+        <a href="https://github.com/mikey6002">
+            <img src="https://avatars.githubusercontent.com/u/77810293?v=4" width="100;" alt="Barry"/>
             <br />
-            <sub><b>Barry</b></sub>
+            <sub><b>Barry Lin</b></sub>
         </a>
     </td>
     <td align="center">
