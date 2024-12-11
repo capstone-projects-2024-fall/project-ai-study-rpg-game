@@ -36,3 +36,12 @@ Tests to demonstrate each use-case based on the use-case descriptions and the se
 
 8. Use-Case 8 Integration Tests:
     - avatar is rerendered w/ hat on after "save avatar" button is clicked
+
+ # Integration Test Report   
+
+ <details>
+  <summary>Integration Test Report</summary>
+
+  [View Integration Test Report PDF](integration_report.pdf)
+
+</details>
