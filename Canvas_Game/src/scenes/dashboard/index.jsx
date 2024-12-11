@@ -40,7 +40,7 @@ function Dashboard({email}) {
     const fetchGold = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/getPlayerGold?email=${email}`
+          `http://localhost:5000/api/getPlayerData?email=${email}`
         );
         const data = await response.json();
         if (response.ok) {
