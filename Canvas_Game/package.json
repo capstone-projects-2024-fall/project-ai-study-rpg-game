@@ -16,6 +16,7 @@
     "@mui/icons-material": "^6.1.6",
     "@mui/material": "^6.1.6",
     "@mui/x-data-grid": "^7.22.2",
+    "axios": "^1.7.9",
     "canvas-game": "file:",
     "html-react-parser": "^5.2.0",
     "react": "^18.3.1",

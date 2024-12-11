@@ -359,7 +359,7 @@ const JiraBoard = ({email}) => {
         <DialogContent>
           <Typography variant="body1">
             {aiHint}
-
+          </Typography>
           <Typography  style={{ color: "white" }} variant="body1">
               {selectedTask?.assignment_hint || "No hint available for this assignment."}
 

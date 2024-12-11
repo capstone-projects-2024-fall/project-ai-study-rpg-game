@@ -859,7 +859,7 @@ function togglePopupBox() {
 // Add event listener for toggling the inventory
 document.addEventListener("keydown", (event) => {
   if (event.key.toLowerCase() === "q") { // Press 'Q' to get quest mission
-    toggleInventoryBox();
+    togglePopupBox();
   }
 });
 
