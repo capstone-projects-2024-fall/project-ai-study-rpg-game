@@ -67,8 +67,8 @@ Ensure you have <a href = 'https://nodejs.org/en/download/package-manager'>NPM/N
 <table>
 <tr>
     <td align="center">
-        <a href="https://github.com/ApplebaumIan">
-            <img src="https://avatars.githubusercontent.com/u/9451941?v=4" width="100;" alt="ApplebaumIan"/>
+        <a href="https://github.com/tug94192">
+            <img src="https://avatars.githubusercontent.com/tug94192" width="100;" alt="ApplebaumIan"/>
             <br />
             <sub><b>Jordan Santoli</b></sub>
         </a>
@@ -99,6 +99,13 @@ Ensure you have <a href = 'https://nodejs.org/en/download/package-manager'>NPM/N
             <img src="https://avatars.githubusercontent.com/MTruong5" width="100;" alt="ApplebaumIan"/>
             <br />
             <sub><b>Madison Truong</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/ApplebaumIan">
+            <img src="https://avatars.githubusercontent.com/u/9451941?v=4" width="100;" alt="ApplebaumIan"/>
+            <br />
+            <sub><b>Ian Applebaum</b></sub>
         </a>
     </td>
 </tr>
