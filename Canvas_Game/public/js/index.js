@@ -845,13 +845,19 @@ let isPopupVisible = false;
 function togglePopupBox() {
 	const popupBox = document.getElementById('popupBox');	//gets html container from index.html
 	const popupBoxText = document.getElementById('popupBoxText')
+  const popupBoxText2 = document.getElementById('popupBoxText2')
+  const popupBoxText3 = document.getElementById('popupBoxText3')
+  const popupBoxText4 = document.getElementById('popupBoxText4')
   if (isPopupVisible) {
     // Hide the inventory box
     popupBox.style.display = "none";
     isPopupVisible = false;
   } else {
     popupBoxText.innerText = "Lo! Upon you quest to complete all the assignments and become the best student, it appears you've fallen into a strange portal where down is up and up is down etc. etc. Upon further inspection you discover an evil wizard has stolen all of your assignments and evenly distributed them amongst the townsfolk. oh no! You will simply have to steal them back. sorry townfolk! Upon further inspection you discover the town you've found yourself in is very sparsely decorated. Upon further inspection you discover the evil wizard wil ONLY give these people their homes back if you complete your assignments!"
-    //"will you help the villagers build back their village?""
+    popupBoxText2.innerText = "Will you help the villagers build back their village?"
+    popupBoxText3.innerText = "Also watch out for the evil wizards minions! They will try to hurt you! Luckily you can fight back by pressing the spacebar!"
+    popupBoxText4.innerText = "press Q to exit, press I for inventory"
+    
     popupBox.style.display = "block";
     isPopupVisible = true;
   }
