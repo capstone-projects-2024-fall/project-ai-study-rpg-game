@@ -3,7 +3,7 @@ sidebar_position: 2
 ---
 
 
-# Class Diagrams
+# Design Overview
 
 ## Front End Class Diagram
 ```mermaid 
@@ -179,7 +179,13 @@ class Weapon{
   AssignmentsPage *--AssignmentSettingsPage :Contains
   
   MapPage o--MapBanner
+```
+## Entity Relationship (ER) Diagram
+![ER_Diagram](ERD.png) 
 
+# Back End
+## Relational Diagram
+![Relational](Relational.webp) 
 
 
 

@@ -4,13 +4,14 @@ sidebar_position: 5
 
 # Use-case descriptions
 # Use-Case 1
-A student wants to finish a large assignment. (Boss battle) 
-1. After logging into the app and Canvas, the user clicks on a rpg theme to start.
-2. User is then directed to a map with their avatar to navigate the world 
-3. User taps on the quest finder to help reach the npc quest giver.
-4. Users can read the story dialogue made from ChatGPT or choose to skip.
-5. The user then navigates around the map trying to get to the Boss.
-6. Once the user gets to the boss, a pomodoro timer will be shown and activated.
+A student has just started using the application. 
+1. The user logs in to the app and connects to Canvas.
+2. They download their assignments from Canvas onto a board to be organized.
+3. The user organizes their assignments based on what they are in order to group them and make it more readable.
+4. The user creates their basic avatar, customizing looks.
+5. The user chooses a class for their character.
+6. Afterwards, a game theme is chosen by the user to reflect the map, quests, and shop items.
+
 
 # Use-Case 2
 A student wants to buy some items and gear for their character. 
@@ -22,13 +23,14 @@ A student wants to buy some items and gear for their character.
 6. The changes made are reflected onto the user character, including stats, and on the map. Looking fancy.
 
 # Use-Case 3
-A student has just started using the application. 
-1. The user logs in to the app and connects to Canvas.
-2. They download their assignments from Canvas onto a board to be organized.
-3. The user organizes their assignments based on what they are in order to group them and make it more readable.
-4. The user creates their basic avatar, customizing looks.
-5. The user chooses a class for their character.
-6. Afterwards, a game theme is chosen by the user to reflect the map, quests, and shop items.
+A student wants to finish a large assignment. (Boss battle) 
+1. After logging into the app and Canvas, the user clicks on a rpg theme to start.
+2. User is then directed to a map with their avatar to navigate the world 
+3. User taps on the quest finder to help reach the npc quest giver.
+4. Users can read the story dialogue made from ChatGPT or choose to skip.
+5. The user then navigates around the map trying to get to the Boss.
+6. Once the user gets to the boss, a pomodoro timer will be shown and activated.
+
 
 
 # Use-Case 4
