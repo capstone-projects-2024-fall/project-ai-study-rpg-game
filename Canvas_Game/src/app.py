@@ -456,6 +456,7 @@ def getAllAssignments():
         for course in getCourseList: 
             length = len(course)
             if(length> 3):  #filters out courses with 'access_restricted_by_date' key 
+                # print("found course " + course)
                 if(course['enrollment_term_id'] == 142):    #only grab classes for the current semester, check if u can grab current enrollment_term_id from profile page instead
                     #print(course['end_at'], '\n\n') #testing
                 
