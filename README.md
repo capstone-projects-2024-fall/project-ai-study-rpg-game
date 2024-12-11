@@ -1,7 +1,7 @@
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=15801643)
 <div align="center">
 
-# Project Name
+# Canvas Quest
 [![Report Issue on Jira](https://img.shields.io/badge/Report%20Issues-Jira-0052CC?style=flat&logo=jira-software)](https://temple-cis-projects-in-cs.atlassian.net/jira/software/c/projects/DT/issues)
 [![Deploy Docs](https://github.com/ApplebaumIan/tu-cis-4398-docs-template/actions/workflows/deploy.yml/badge.svg)](https://github.com/ApplebaumIan/tu-cis-4398-docs-template/actions/workflows/deploy.yml)
 [![Documentation Website Link](https://img.shields.io/badge/-Documentation%20Website-brightgreen)](https://applebaumian.github.io/tu-cis-4398-docs-template/)
@@ -12,27 +12,40 @@
 
 ## Keywords
 
-Section #, as well as any words that quickly give your peers insights into the application like programming language, development platform, type of application, etc.
+Section 02, web application, JavaScript, HTML, CSS, Python, Flask, SQL, education, learning, studying, Canvas, RPG game
 
 ## Project Abstract
+Canvas Quest will streamline the assignment process and enhance student engagement through gamification of coursework. This application is catered towards students who often struggle with organizing, prioritizing, and finishing assignments. 
 
-This document proposes a novel application of a text message (SMS or Email) read-out and hands-free call interacted between an Android Smartphone and an infotainment platform (headunit) in a car environment. When a phone receives an SMS or Email, the text message is transferred from the phone to the headunit through a Bluetooth connection. On the headunit, user can control which and when the received SMS or E-mail to be read out through the in-vehicle audio system. The user may press one button on the headunit to activate the hands-free feature to call back the SMS sender.
+The software will integrate Canvas API  by gathering students’ assignments, deadlines, and coursework details from Canvas. Once all of this data has been collected, it will then pass information to our website allowing users to have an overview of their assignments, and help prioritize specific assignments. Users will have the ability to sort assignments based on different criteria such as difficulty, due dates, and the amount of effort to complete an assignment. The difficulty will be calculated by the length of the due date for the assignment and effort required to finish a task. 
+
+What makes this app unique is the gamification aspect for canvas assignments. The app will turn task completion into an RPG gaming experience. The theme of the game is set in a fantasy world of edo period Japan where players can gain experience points and in-game currency (gold), buy gear for aesthetic purposes, and unlock achievements by completing assignments on time. This can help students stay organized and also transforms studying into a more engaging and enjoyable process.
 
 ## High Level Requirement
 
-Describe the requirements – i.e., what the product does and how it does it from a user point of view – at a high level.
+This app requires an internet connection to function and is accessible on any device with a modern web browser. Users must have Python 3.11 (any version), SQLite, Node.js, and Flask installed on their devices. Additionally, users can connect their Canvas accounts to the app for seamless integration.
+
+The app incorporates a reward system inspired by RPG mechanics. Users earn gold for completing assignments, with the amount awarded based on the size of the assignment. As users complete more assignments, the in-game world evolves—new NPCs (non-playable characters) and buildings are introduced, enhancing the experience.
+
+By integrating directly with Canvas, the app enables users to access, track, and manage their assignments in an engaging and interactive way.
 
 ## Conceptual Design
 
-Describe the initial design concept: Hardware/software architecture, programming language, operating system, etc.
+The app will be available for both Android and iOS. We will be using React to build the app. The app will help walkthrough new and returning users to sign up or  login. New users will have to input their Canvas Key, name,nickname,email,password, and a motto.
+
+There will be a dashboard upon login where it will show all current semester assignments. Students will be greeted with a customizable dashboard. The dashboard will offer the ability to personalize the layout and theme for the gameplay; not only that, but students can also navigate through different sections such as Assignments, Study Progress, Gear/Inventory, and view current tasks, deadlines, and progress at a glance. 
+
+Python will power the backend, managing user interactions, data processing, and integration with external APIs. Another technology that will be utilized is SQL, SQL will be used to store student-related data, including their avatar's gear, experience points, achievements, and progression within the RPG game. Students will have an avatar that can earn XP by completing assignments, unlock new gear that could drop randomly by again, completing assignments, or purchase it through the shop. There will be achievements based on their academic performance and task completion. As the app evolves, new features like study groups, competitive leaderboards, and in-app study challenges could be added to enhance both individual and group motivation.
 
 ## Background
 
-The background will contain a more detailed description of the product and a comparison to existing similar projects/products. A literature search should be conducted and the results listed. Proper citation of sources is required. If there are similar open-source products, you should state whether existing source will be used and to what extent. If there are similar closed-source/proprietary products, you should state how the proposed product will be similar and different.
+To differentiate from an existing platform like Habitica, we are trying to push the gamification aspect even further and focus specifically on helping students achieve educational goals. The main goal is to be more immersive and deepen engagement while maintaining a focus on academic productivity. Instead of simple lists, each assignment could be part of an evolving quest where the student can freely move around the map and talk to an NPC to start an assignment. 
+
+Borrowing the foundation from traditional RPGs. Completing tasks not only earns XP. This introduces deeper RPG mechanics where academic progress influences gameplay. This is necessary for "boss battles" which represent larger or difficult assignments. Students can earn customizable gear that directly influences their avatar’s strength in the game. The leveling system can be tied directly to long-term academic growth, encouraging students to not only complete tasks but also reflect on their learning progress. For example, completing tasks on a consistent schedule might unlock advanced or rare gears. Ultimately, the Study RPG Game Organizer app offers a more immersive, engaging, and adaptive experience than Habitica, deeply integrating academic tasks with RPG gameplay for long-term motivation and productivity. 
 
 ## Required Resources
+This project leverages a diverse set of software technologies and frameworks, including JavaScript, React, HTML/CSS, Flask, SQLite, the Canvas API, and the OpenAI API. The front-end will be built using React for an interactive and responsive user experience, while the back-end will be powered by Flask, seamlessly integrated with SQLite for efficient data management. 
 
-Discuss what you need to develop this project. This includes background information you will need to acquire, hardware resources, and software resources. If these are not part of the standard Computer Science Department lab resources, these must be identified early and discussed with the instructor.
 
 ##Instructions
 Ensure you have <a href = 'https://nodejs.org/en/download/package-manager'>NPM/Node.js</a> and python installed before attempting to run the website.
