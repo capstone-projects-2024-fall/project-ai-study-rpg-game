@@ -1,9 +1,9 @@
 ---
 sidebar_position: 1
 ---
-# Front end unit tests
+# Front End Unit Tests
 
-## Front end Unit Tests for React Components  
+## Front End Unit Tests for React Components  
 ### Overview
 This section outlines the unit tests for key React components used in the **Canvas Quest** RPG game. Each React component will have its corresponding test file, ensuring core functionality is tested without redundancy.
 
