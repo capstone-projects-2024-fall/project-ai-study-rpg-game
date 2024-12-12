@@ -56,7 +56,7 @@ Ensure you have <a href = 'https://nodejs.org/en/download/package-manager'>NPM/N
     4. Then run: npm install
     5. Finally, run: npm run dev
     6. Next, open a new terminal window and navigate to the project's src folder (Canvas_Quest/src)
-    7. Run the following command: pip install requests flask flask-cors
+    7. Run the following command: pip install requests flask flask-cors openai sqlite3
     8. Finally, run: Python app.py
     9. In a browser, navigate to http://localhost:5173/ and the site will display.
 
