@@ -47,7 +47,7 @@ To differentiate from an existing platform like Habitica, we are trying to push 
 This project leverages a diverse set of software technologies and frameworks, including JavaScript, React, HTML/CSS, Flask, SQLite, the Canvas API, and the OpenAI API. The front-end will be built using React for an interactive and responsive user experience, while the back-end will be powered by Flask, seamlessly integrated with SQLite for efficient data management. 
 
 
-##Instructions
+## Instructions
 Ensure you have <a href = 'https://nodejs.org/en/download/package-manager'>NPM/Node.js</a> and python installed before attempting to run the website.
 
     1. Clone a local copy of CanvasQuest
@@ -59,6 +59,10 @@ Ensure you have <a href = 'https://nodejs.org/en/download/package-manager'>NPM/N
     7. Run the following command: pip install requests flask flask-cors
     8. Finally, run: Python app.py
     9. In a browser, navigate to http://localhost:5173/ and the site will display.
+
+## Website
+Link: https://subtle-chimera-6e4cea.netlify.app/ 
+Backend not integrated!!
 
 ## Collaborators
 
