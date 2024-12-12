@@ -7,5 +7,7 @@ sidebar_position: 3
 # Hardware 
 Desktop, laptop, or mobile device with Internet access
 
+# Software
+VsCode 1.95.3 >, Python 3.11, NPM 1.5.0, React 19.0.0, Pip 22.3.1, SQLlite 3.37.1
 
 
