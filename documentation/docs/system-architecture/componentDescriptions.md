@@ -13,7 +13,7 @@ sidebar-position: 3
 ## MySQL Database
 ```MySQL is a free open-source relational database software. Databases will store user credentials as well as canvas tokens, items, character details and quest details.``` 
 
-## Django REST API
+## Flask REST API
 ```Python based API that will allow our app to send data to and from our database, as well as hit the Canvas and ChatGPT APIs```
 
 ## Canvas API
