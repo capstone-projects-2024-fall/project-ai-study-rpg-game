@@ -109,7 +109,6 @@ def signup():
         
         cursor = conn.execute('INSERT INTO users (name, last_name, nickname, email, password, canvas_key, selectedMotto) VALUES (?, ?, ?, ?, ?, ?, ?)', 
                        (name, last_name, nickname, email, password, canvas_key, selectedMotto))
-        cursor.commit()
         conn.close()
         return jsonify({"message": "User registered successfully"}), 201
     except sqlite3.IntegrityError:
@@ -172,7 +171,7 @@ def login():
 
     # Check if the account exists
     cursor = conn.execute('SELECT * FROM users WHERE email = ?', (email,))
-    user = cursor.fetchone()
+    user = cursor
 
     if not user:
         conn.close()
@@ -180,7 +179,7 @@ def login():
 
     # Validate the password for the existing account
     cursor.execute('SELECT * FROM users WHERE email = ? AND password = ?', (email, password))
-    user = cursor.fetchone()
+    user = cursor
     conn.close()
 
     if user:
@@ -491,7 +490,7 @@ def getAllAssignments():
 
                     #gets user_id from users table
                     cursor = conn.execute("SELECT id FROM users WHERE canvas_key = ?", (canvasKey,))
-                    user_row = cursor.fetchone()
+                    user_row = cursor.fetchall()
                         
                     if user_row is None:
                         conn.close()
