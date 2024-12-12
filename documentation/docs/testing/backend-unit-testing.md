@@ -1,9 +1,9 @@
 ---
 sidebar_position: 1
 ---
-# Back end unit tests  
+# Back End Unit Tests  
 ### Overview
-This section outlines the unit tests for backend functionalities to ensure API endpoints, services, and database operations are working as expected. The tests focus on the following areas:
+This section outlines the unit tests for Back End functionalities to ensure API endpoints, services, and database operations are working as expected. The tests focus on the following areas:
 
 1. **API Endpoints:** Validating requests and responses.
 2. **Database Operations:** Ensuring CRUD operations execute correctly.
@@ -18,7 +18,7 @@ This section outlines the unit tests for backend functionalities to ensure API e
 ### General Testing Guidelines
 * **Mocking External Services:** Use mocks for external API calls (e.g., Canvas API) to simulate responses.
 * **Test Database:** Use an in-memory database (SQLite) to run tests without affecting production data.
-* **Coverage Requirements:** Aim for 85%+ coverage of key backend functions.
+* **Coverage Requirements:** Aim for 85%+ coverage of key Back End functions.
 * **Input Validation:** Verify that invalid inputs are properly handled with appropriate error responses.
 
 ## Test Coverage
