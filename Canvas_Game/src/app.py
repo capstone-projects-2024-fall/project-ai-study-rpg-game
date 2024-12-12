@@ -6,15 +6,24 @@ from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 import openai  # Import OpenAI Python SDK
 import json
+import sqlitecloud
+
+
 app = Flask(__name__)
 CORS(app,  resources={r"/*": {"origins": "http://localhost:5173"}})  # To allow cross-origin requests from your React frontend
 openai.api_key = ' '  # Add your OpenAI API key here
 
+
+
 # Will Create SQLite database and table if not exists
 def init_db():
-    conn = sqlite3.connect('users.db')
-    cursor = conn.cursor()
-    cursor.execute('''
+    #conn = sqlite3.connect('users.db')
+    conn = sqlitecloud.connect('sqlitecloud://cjc4bge4hz.sqlite.cloud:8860?apikey=CsKKyitE5YFMm0gqqKhChtRPBTX14G3NtwS8WbjWO58')
+
+    db_name = 'users'
+    conn.execute(f"USE DATABASE {db_name}")
+
+    cursor= conn.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
@@ -77,7 +86,7 @@ def init_db():
         )
     ''')
 
-    conn.commit()
+    #conn.commit()
     conn.close()
     
 #sign up logic here
@@ -93,11 +102,15 @@ def signup():
     selectedMotto = data['selectedMotto']
 
     try:
-        conn = sqlite3.connect('users.db')
-        cursor = conn.cursor()
-        cursor.execute('INSERT INTO users (name, last_name, nickname, email, password, canvas_key, selectedMotto) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+        conn = sqlitecloud.connect('sqlitecloud://cjc4bge4hz.sqlite.cloud:8860?apikey=CsKKyitE5YFMm0gqqKhChtRPBTX14G3NtwS8WbjWO58')
+
+        db_name = 'users'
+        conn.execute(f"USE DATABASE {db_name}")
+        
+        cursor = conn.execute('INSERT INTO users (name, last_name, nickname, email, password, canvas_key, selectedMotto) VALUES (?, ?, ?, ?, ?, ?, ?)', 
                        (name, last_name, nickname, email, password, canvas_key, selectedMotto))
-        conn.commit()
+        cursor.commit()
+        conn.close()
         return jsonify({"message": "User registered successfully"}), 201
     except sqlite3.IntegrityError:
         return jsonify({"message": "User already exists"}), 400
@@ -130,10 +143,12 @@ def logCanvasKey():
                 print("picture is" + picture)
 
                 # Save the token in the database
-                conn = sqlite3.connect('users.db')
-                cursor = conn.cursor()
-                cursor.execute("UPDATE users SET canvas_key = ?, picture_url = ? WHERE email = ?", (canvasKey, picture, email ))
-                conn.commit()
+                conn = sqlitecloud.connect('sqlitecloud://cjc4bge4hz.sqlite.cloud:8860?apikey=CsKKyitE5YFMm0gqqKhChtRPBTX14G3NtwS8WbjWO58')
+
+                db_name = 'users'
+                conn.execute(f"USE DATABASE {db_name}")
+
+                cursor = conn.execute("UPDATE users SET canvas_key = ?, picture_url = ? WHERE email = ?", (canvasKey, picture, email ))
                 conn.close()
                 return jsonify({"message": "Canvas key successfully validated and stored"}), 200
             else:
@@ -150,11 +165,13 @@ def login():
     email = data['email']
     password = data['password']
 
-    conn = sqlite3.connect('users.db')
-    cursor = conn.cursor()
+    conn = sqlitecloud.connect('sqlitecloud://cjc4bge4hz.sqlite.cloud:8860?apikey=CsKKyitE5YFMm0gqqKhChtRPBTX14G3NtwS8WbjWO58')
+
+    db_name = 'users'
+    conn.execute(f"USE DATABASE {db_name}")
 
     # Check if the account exists
-    cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
+    cursor = conn.execute('SELECT * FROM users WHERE email = ?', (email,))
     user = cursor.fetchone()
 
     if not user:
@@ -468,11 +485,12 @@ def getAllAssignments():
                     enrollment_term_id = course['enrollment_term_id']
 
                     #puts data into courses table in user database
-                    conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT
-                    cursor = conn.cursor()
+                    conn = sqlitecloud.connect('sqlitecloud://cjc4bge4hz.sqlite.cloud:8860?apikey=CsKKyitE5YFMm0gqqKhChtRPBTX14G3NtwS8WbjWO58')
+                    db_name = 'users'
+                    conn.execute(f"USE DATABASE {db_name}")
 
                     #gets user_id from users table
-                    cursor.execute("SELECT id FROM users WHERE canvas_key = ?", (canvasKey,))
+                    cursor = conn.execute("SELECT id FROM users WHERE canvas_key = ?", (canvasKey,))
                     user_row = cursor.fetchone()
                         
                     if user_row is None:
@@ -569,7 +587,7 @@ def delete_task():
 
     # Delete the task from the assignments table
     cursor.execute('DELETE FROM assignments WHERE id = ?', (task_id,))
-    conn.commit()
+
     conn.close()
 
     print('Deleted task ID:', task_id)
@@ -588,12 +606,14 @@ def getAssignmentsByCourse(course_id, canvasKey):
     if response.status_code == 200:		#check if its good, TROUBLESHOOT BETTER lol
         getAssignmentList = response.json()  #get assignments list(array of assignment objects) from canvas
         #print(getAssignmentList[1], '\n') #testing
+        conn = sqlitecloud.connect('sqlitecloud://cjc4bge4hz.sqlite.cloud:8860?apikey=CsKKyitE5YFMm0gqqKhChtRPBTX14G3NtwS8WbjWO58')
 
-        conn = sqlite3.connect('users.db')  #NEED TO TROUBLESHOOT, maybe do it differently idk
-        cursor = conn.cursor()
+        db_name = 'users'
+        conn.execute(f"USE DATABASE {db_name}")
+
         
         #gets user_id from users table
-        cursor.execute("SELECT id FROM users WHERE canvas_key = ?", (canvasKey,))
+        cursor = conn.execute("SELECT id FROM users WHERE canvas_key = ?", (canvasKey,))
         user_row = cursor.fetchone()
                         
         if user_row is None:
@@ -677,8 +697,8 @@ def updatePlayerGold():
         return jsonify({"message": "Email and amount are required"}), 400
 
     conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT gold from users where email = ?', (email,))
+    
+    cursor=conn.execute('SELECT gold from users where email = ?', (email,))
     queryRes = cursor.fetchone()
 
     if queryRes is None:
@@ -691,7 +711,6 @@ def updatePlayerGold():
         return jsonify({"message": "Not enough gold for this transaction"}), 400
 
     cursor.execute('UPDATE users SET gold = ? WHERE email = ?', (currentGold, email))
-    conn.commit()
     conn.close()
     return jsonify({"message": "Gold amount updated successfully"}), 200
     
@@ -704,8 +723,8 @@ def getPlayerGold():
     if not email:
          return jsonify({"message": "Email is required"}), 400
     conn = get_db_connection()
-    cursor = conn.cursor()
-    res = cursor.execute('SELECT gold, world_state from users where email = ? LIMIT 1', (email,))
+    cursor= conn.execute('SELECT gold, world_state from users where email = ? LIMIT 1', (email,))
+    res = cursor
     #makes sure user's gold was returned
     gold, worldState = res.fetchone()
     if (gold == None or worldState == None):
@@ -722,8 +741,9 @@ def updatePlayerWorldState():
     if not email:
          return jsonify({"message": "Email is required"}), 400
     conn = get_db_connection()
-    cursor = conn.cursor()
-    res = cursor.execute('UPDATE users SET world_state=? WHERE email=?', (ws,email))
+    
+    cursor=conn.execute('UPDATE users SET world_state=? WHERE email=?', (ws,email))
+    res=cursor
     conn.commit()
     conn.close()
     return jsonify({"message": "WorldState updated successfully"}), 200
@@ -738,10 +758,9 @@ def get_assignments():
 
     # Connect to the database and fetch the user's assignments
     conn = get_db_connection()
-    cursor = conn.cursor()
 
     # Get the user ID based on the email
-    cursor.execute('SELECT id FROM users WHERE email = ?', (email,))
+    cursor = conn.execute('SELECT id FROM users WHERE email = ?', (email,))
     user_row = cursor.fetchone()
 
     if not user_row:
@@ -797,12 +816,11 @@ def buyItems():
         return jsonify({"message": "Email and items are required"}), 400
 
     conn = get_db_connection()
-    cursor = conn.cursor()
 
     try:
         # Insert each item into the database
         for item in items:
-            cursor.execute('''
+            cursor = conn.execute('''
                 INSERT INTO Items (email, item_id, item_name, item_description, item_price)
                 VALUES (?, ?, ?, ?, ?)
             ''', (email, item['id'], item['name'], item['description'], item['price']))
@@ -823,8 +841,8 @@ def getUserItems():
         return jsonify({"message": "Email is required"}), 400
 
     conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT item_id, item_name, item_description, item_price FROM Items WHERE email = ?', (email,))
+    
+    cursor = conn.execute('SELECT item_id, item_name, item_description, item_price FROM Items WHERE email = ?', (email,))
     items = cursor.fetchall()
     conn.close()
 
@@ -835,7 +853,9 @@ def getUserItems():
     return jsonify(items_list), 200
 
 def get_db_connection():
-    conn = sqlite3.connect('users.db')
+    conn = sqlitecloud.connect('sqlitecloud://cjc4bge4hz.sqlite.cloud:8860?apikey=CsKKyitE5YFMm0gqqKhChtRPBTX14G3NtwS8WbjWO58')
+    db_name = 'users'
+    conn.execute(f"USE DATABASE {db_name}")
     conn.row_factory = sqlite3.Row  # Makes fetching rows easier with named columns
     return conn
 
