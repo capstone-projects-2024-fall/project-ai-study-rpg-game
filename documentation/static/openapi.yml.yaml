@@ -128,7 +128,7 @@ paths:
 
   /generate_steps:
     post:
-      summary: Generate steps for an assignment.
+      summary: Get AI-Generated assignment steps from ChatGPT API.
       requestBody:
         required: true
         content:
